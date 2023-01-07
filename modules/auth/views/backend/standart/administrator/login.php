@@ -11,7 +11,7 @@
 	<!-- Tell the browser to be responsive to screen width -->
 	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
-	<title>Log in | <?= getopt('site_name');?></title>
+	<title>Log in | <?= get_option('site_name');?></title>
 
 	<link rel="apple-touch-icon" sizes="57x57" href="<?= BASE_ASSET; ?>img/favicon/apple-icon-57x57.png">
 	<link rel="apple-touch-icon" sizes="60x60" href="<?= BASE_ASSET; ?>img/favicon/apple-icon-60x60.png">

@@ -51,6 +51,8 @@
 		.login-page{
 			background:linear-gradient(0deg, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url('<?= BASE_ASSET;?>img/Inlog-Bansos.jpg');
 			background-size: cover;
+			background-repeat: no-repeat;
+			height: auto;
 		}
 
 		.login-logo a{

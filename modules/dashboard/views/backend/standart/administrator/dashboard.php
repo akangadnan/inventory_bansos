@@ -9,7 +9,7 @@
 				<div class="icon">
 					<i class="fa fa-database"></i>
 				</div>
-				<a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+				<a href="<?= BASE_URL;?>administrator/barang" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
 			</div>
 		</div>
 
@@ -22,7 +22,7 @@
 				<div class="icon">
 					<i class="fa fa-database"></i>
 				</div>
-				<a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+				<a href="<?= BASE_URL;?>administrator/barangmasuk" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
 			</div>
 		</div>
 
@@ -35,7 +35,7 @@
 				<div class="icon">
 					<i class="fa fa-database"></i>
 				</div>
-				<a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+				<a href="<?= BASE_URL;?>administrator/barangkeluar" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
 			</div>
 		</div>
 
@@ -48,7 +48,7 @@
 				<div class="icon">
 					<i class="fa fa-database"></i>
 				</div>
-				<a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+				<a href="<?= BASE_URL;?>administrator/retur" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
 			</div>
 		</div>
 	</div>

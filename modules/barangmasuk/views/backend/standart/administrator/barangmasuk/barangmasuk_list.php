@@ -101,16 +101,12 @@
 										<select type="text" class="form-control chosen chosen-select" name="f"
 											id="field">
 											<option value=""><?= cclang('all'); ?></option>
-											<option <?= $this->input->get('f') == 'asal_posko' ? 'selected' :''; ?>
-												value="asal">Asal Posko</option>
-											<option <?= $this->input->get('f') == 'asal' ? 'selected' :''; ?>
-												value="asal">Asal</option>
-											<option <?= $this->input->get('f') == 'id_barang' ? 'selected' :''; ?>
-												value="id_barang">Nama Barang</option>
-											<option <?= $this->input->get('f') == 'jumlah' ? 'selected' :''; ?>
-												value="jumlah">Jumlah Stok</option>
-											<option <?= $this->input->get('f') == 'keterangan' ? 'selected' :''; ?>
-												value="keterangan">Keterangan</option>
+											<option <?= $this->input->get('f') == 'tanggal' ? 'selected' :''; ?> value="tanggal">Asal Posko</option>
+											<option <?= $this->input->get('f') == 'asal_posko' ? 'selected' :''; ?> value="asal">Asal Posko</option>
+											<option <?= $this->input->get('f') == 'asal' ? 'selected' :''; ?> value="asal">Asal</option>
+											<option <?= $this->input->get('f') == 'id_barang' ? 'selected' :''; ?> value="id_barang">Nama Barang</option>
+											<option <?= $this->input->get('f') == 'jumlah' ? 'selected' :''; ?> value="jumlah">Jumlah Stok</option>
+											<option <?= $this->input->get('f') == 'keterangan' ? 'selected' :''; ?> value="keterangan">Keterangan</option>
 										</select>
 									</div>
 									<div class="col-sm-1 padd-left-0 ">
@@ -144,6 +140,8 @@
 												<input type="checkbox" class="flat-red toltip" id="check_all"
 													name="check_all" title="check all">
 											</th>
+											<th data-field="tanggal" data-sort="1" data-primary-key="0">
+												<?= cclang('tanggal') ?></th>
 											<th data-field="asal_posko" data-sort="1" data-primary-key="0">
 												<?= cclang('asal_posko') ?></th>
 											<th data-field="asal" data-sort="1" data-primary-key="0">
@@ -164,6 +162,7 @@
 												<input type="checkbox" class="flat-red check" name="id[]" value="<?= $barangmasuk->id_barangmasuk; ?>">
 											</td>
 
+											<td><?php echo $barangmasuk->tanggal;?></td>
 											<td><?php echo $barangmasuk->posko_nama;?></td>
 											<td><?php echo $barangmasuk->sumber_nama_sumber;?></td>
 

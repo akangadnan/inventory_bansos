@@ -9,11 +9,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 *| Kecamatan site
 *|
 */
-class Kecamatan extends Admin	
-{
-	
-	public function __construct()
-	{
+class Kecamatan extends Admin {
+	public function __construct() {
 		parent::__construct();
 
 		$this->load->model('model_kecamatan');
@@ -78,7 +75,7 @@ class Kecamatan extends Admin
 		
 		
 
-		$this->form_validation->set_rules('kecamatan_nama', 'Nama Kecamatan', 'trim|required|max_length[65]');
+		$this->form_validation->set_rules('kecamatan_nama', 'Nama Kecamatan', 'trim|required|max_length[100]');
 		
 
 		
@@ -98,7 +95,7 @@ class Kecamatan extends Admin
 			
 			
 			$save_kecamatan = $id = $this->model_kecamatan->store($save_data);
-            
+			
 
 			if ($save_kecamatan) {
 				
@@ -118,7 +115,7 @@ class Kecamatan extends Admin
 						anchor('administrator/kecamatan/edit/' . $save_kecamatan, 'Edit Kecamatan')
 					]), 'success');
 
-            		$this->data['success'] = true;
+					$this->data['success'] = true;
 					$this->data['redirect'] = base_url('administrator/kecamatan');
 				}
 			} else {
@@ -126,8 +123,8 @@ class Kecamatan extends Admin
 					$this->data['success'] = false;
 					$this->data['message'] = cclang('data_not_change');
 				} else {
-            		$this->data['success'] = false;
-            		$this->data['message'] = cclang('data_not_change');
+					$this->data['success'] = false;
+					$this->data['message'] = cclang('data_not_change');
 					$this->data['redirect'] = base_url('administrator/kecamatan');
 				}
 			}
@@ -170,7 +167,7 @@ class Kecamatan extends Admin
 				]);
 			exit;
 		}
-				$this->form_validation->set_rules('kecamatan_nama', 'Nama Kecamatan', 'trim|required|max_length[65]');
+				$this->form_validation->set_rules('kecamatan_nama', 'Nama Kecamatan', 'trim|required|max_length[100]');
 		
 
 		
@@ -207,7 +204,7 @@ class Kecamatan extends Admin
 						cclang('success_update_data_redirect', [
 					]), 'success');
 
-            		$this->data['success'] = true;
+					$this->data['success'] = true;
 					$this->data['redirect'] = base_url('administrator/kecamatan');
 				}
 			} else {
@@ -215,8 +212,8 @@ class Kecamatan extends Admin
 					$this->data['success'] = false;
 					$this->data['message'] = cclang('data_not_change');
 				} else {
-            		$this->data['success'] = false;
-            		$this->data['message'] = cclang('data_not_change');
+					$this->data['success'] = false;
+					$this->data['message'] = cclang('data_not_change');
 					$this->data['redirect'] = base_url('administrator/kecamatan');
 				}
 			}
@@ -252,10 +249,10 @@ class Kecamatan extends Admin
 		}
 
 		if ($remove) {
-            set_message(cclang('has_been_deleted', 'kecamatan'), 'success');
-        } else {
-            set_message(cclang('error_delete', 'kecamatan'), 'error');
-        }
+			set_message(cclang('has_been_deleted', 'kecamatan'), 'success');
+		} else {
+			set_message(cclang('error_delete', 'kecamatan'), 'error');
+		}
 
 		redirect_back();
 	}
@@ -325,31 +322,31 @@ class Kecamatan extends Admin
 
 		$table = $title = 'kecamatan';
 		$this->load->library('HtmlPdf');
-      
-        $config = array(
-            'orientation' => 'p',
-            'format' => 'a4',
-            'marges' => array(5, 5, 5, 5)
-        );
+	  
+		$config = array(
+			'orientation' => 'p',
+			'format' => 'a4',
+			'marges' => array(5, 5, 5, 5)
+		);
 
-        $this->pdf = new HtmlPdf($config);
-        $this->pdf->setDefaultFont('stsongstdlight'); 
+		$this->pdf = new HtmlPdf($config);
+		$this->pdf->setDefaultFont('stsongstdlight'); 
 
-        $result = $this->db->get($table);
-       
-        $data = $this->model_kecamatan->find($id);
-        $fields = $result->list_fields();
+		$result = $this->db->get($table);
+	   
+		$data = $this->model_kecamatan->find($id);
+		$fields = $result->list_fields();
 
-        $content = $this->pdf->loadHtmlPdf('core_template/pdf/pdf_single', [
-            'data' => $data,
-            'fields' => $fields,
-            'title' => $title
-        ], TRUE);
+		$content = $this->pdf->loadHtmlPdf('core_template/pdf/pdf_single', [
+			'data' => $data,
+			'fields' => $fields,
+			'title' => $title
+		], TRUE);
 
-        $this->pdf->initialize($config);
-        $this->pdf->pdf->SetDisplayMode('fullpage');
-        $this->pdf->writeHTML($content);
-        $this->pdf->Output($table.'.pdf', 'H');
+		$this->pdf->initialize($config);
+		$this->pdf->pdf->SetDisplayMode('fullpage');
+		$this->pdf->writeHTML($content);
+		$this->pdf->Output($table.'.pdf', 'H');
 	}
 
 	

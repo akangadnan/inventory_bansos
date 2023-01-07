@@ -77,10 +77,9 @@
 									placeholder=""
 									value="<?= set_value('kecamatan_nama', $kecamatan->kecamatan_nama); ?>">
 								<small class="info help-block">
-									<b>Input Kecamatan Nama</b> Max Length : 65.</small>
+									<b>Input Kecamatan Nama</b> Max Length : 100.</small>
 							</div>
 						</div>
-
 
 						<div class="message"></div>
 						<div class="row-fluid col-md-7 container-button-bottom">

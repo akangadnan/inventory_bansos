@@ -154,10 +154,10 @@
 											</td>
 											<td width="200">
 
-												<!-- <?php is_allowed('kecamatan_view', function() use ($kecamatan){?>
+												<?php is_allowed('kecamatan_view', function() use ($kecamatan){?>
 												<a href="<?= site_url('administrator/kecamatan/view/' . $kecamatan->kecamatan_id); ?>"
 													class="label-default"><i class="fa fa-newspaper-o"></i>
-													<?= cclang('view_button'); ?></a> -->
+													<?= cclang('view_button'); ?>
 													<?php }) ?>
 													<?php is_allowed('kecamatan_update', function() use ($kecamatan){?>
 													<a href="<?= site_url('administrator/kecamatan/edit/' . $kecamatan->kecamatan_id); ?>"

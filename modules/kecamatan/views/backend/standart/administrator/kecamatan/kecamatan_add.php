@@ -72,9 +72,9 @@
 								<input type="text" class="form-control" name="kecamatan_nama" id="kecamatan_nama"
 									placeholder="Nama Kecamatan" value="<?= set_value('kecamatan_nama'); ?>">
 								<small class="info help-block">
-									<b>Input Kecamatan Nama</b> Max Length : 65.</small>
+									<b>Input Kecamatan Nama</b> Max Length : 100.</small>
 							</div>
-					</div>
+						</div>
 
 
 

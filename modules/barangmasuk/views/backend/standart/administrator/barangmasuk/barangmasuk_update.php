@@ -124,7 +124,7 @@
 
 
 
-						<div class="form-group group-asal">
+						<!-- <div class="form-group group-asal">
 							<label for="asal" class="col-sm-2 control-label">Asal Posko<i class="required">*</i></label>
 							<div class="col-sm-8">
 								<select class="form-control chosen chosen-select-deselect" name="asal_posko" id="asal_posko" data-placeholder="Select Asal">
@@ -140,7 +140,7 @@
 								<small class="info help-block">
 								</small>
 							</div>
-						</div>
+						</div> -->
 						<div class="form-group group-asal">
 							<label for="asal" class="col-sm-2 control-label">Asal <i class="required">*</i>
 							</label>

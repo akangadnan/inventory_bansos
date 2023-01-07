@@ -9,11 +9,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 *| Barangkeluar site
 *|
 */
-class Barangkeluar extends Admin	
-{
-	
-	public function __construct()
-	{
+class Barangkeluar extends Admin {
+	public function __construct() {
 		parent::__construct();
 
 		$this->load->model('model_barangkeluar');
@@ -77,7 +74,7 @@ class Barangkeluar extends Admin
 		}
 
 		$this->form_validation->set_rules('id_barang', 'Nama Barang', 'trim|required');
-		$this->form_validation->set_rules('tujuan_posko', 'Tujuan Posko', 'trim|required');
+		// $this->form_validation->set_rules('tujuan_posko', 'Tujuan Posko', 'trim|required');
 		$this->form_validation->set_rules('tujuan', 'Penerima', 'trim|required');
 		$this->form_validation->set_rules('jumlah', 'Banyaknya', 'trim|required|max_length[12]');
 		$this->form_validation->set_rules('tanggal', 'Tanggal', 'trim|required');
@@ -89,7 +86,7 @@ class Barangkeluar extends Admin
 		
 			$save_data = [
 				'id_barang' 	=> $id_barang,
-				'tujuan_posko' 	=> $this->input->post('tujuan_posko'),
+				// 'tujuan_posko' 	=> $this->input->post('tujuan_posko'),
 				'tujuan' 		=> $this->input->post('tujuan'),
 				'jumlah' 		=> $jumlah,
 				'keterangan' 	=> $this->input->post('keterangan'),
@@ -176,7 +173,7 @@ class Barangkeluar extends Admin
 			exit;
 		}
 
-		$this->form_validation->set_rules('tujuan_posko', 'Tujuan Posko', 'trim|required');
+		// $this->form_validation->set_rules('tujuan_posko', 'Tujuan Posko', 'trim|required');
 		$this->form_validation->set_rules('id_barang', 'Nama Barang', 'trim|required');
 		$this->form_validation->set_rules('tujuan', 'Penerima', 'trim|required');
 		$this->form_validation->set_rules('jumlah', 'Banyaknya', 'trim|required|max_length[12]');
@@ -189,7 +186,7 @@ class Barangkeluar extends Admin
 
 			$save_data = [
 				'id_barang'		=> $id_barang,
-				'tujuan_posko' 	=> $this->input->post('tujuan_posko'),
+				// 'tujuan_posko' 	=> $this->input->post('tujuan_posko'),
 				'tujuan' 		=> $this->input->post('tujuan'),
 				'jumlah' 		=> $jumlah,
 				'keterangan' 	=> $this->input->post('keterangan'),

@@ -9,11 +9,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 *| user site
 *|
 */
-class User extends Admin	
-{
-	
-	public function __construct()
-	{
+class User extends Admin {
+	public function __construct() {
 		parent::__construct();
 
 		$this->load->model('model_user');
@@ -31,8 +28,8 @@ class User extends Admin
 		$filter = $this->input->get('q');
 		$field 	= $this->input->get('f');
 
-		$this->data['users'] = $this->model_user->get($filter, $field, $this->limit_page, $offset);
-		$this->data['user_counts'] = $this->model_user->count_all($filter, $field);
+		$this->data['users'] 		= $this->model_user->get($filter, $field, $this->limit_page, $offset);
+		$this->data['user_counts'] 	= $this->model_user->count_all($filter, $field);
 
 		$config = [
 			'base_url'     => 'administrator/user/index/',
@@ -75,8 +72,10 @@ class User extends Admin
 
 		$this->form_validation->set_rules('username', 'Username', 'trim|required|is_unique[aauth_users.username]');
 		$this->form_validation->set_rules('email', 'Email', 'trim|required|is_unique[aauth_users.email]|valid_email');
-		$this->form_validation->set_rules('full_name', 'Full Name', 'trim|required');
+		$this->form_validation->set_rules('full_name', 'Full Name', 'trim|required|max_length[60]');
+		$this->form_validation->set_rules('user_panggilan', 'Nick Name', 'trim|required|max_length[60]');
 		$this->form_validation->set_rules('password', 'Password', 'trim|required|min_length[6]');
+		$this->form_validation->set_rules('posko_id', 'Posko', 'trim|required');
 
 		if ($this->form_validation->run()) {
 			$user_avatar_uuid = $this->input->post('user_avatar_uuid');
@@ -102,7 +101,18 @@ class User extends Admin
 				$save_data['avatar'] = $user_avatar_name_copy;
 			}
 
-			$save_user = $this->aauth->create_user($this->input->post('email'), $this->input->post('password'), $this->input->post('username'), $save_data);
+			$save_user = $userid = $this->aauth->create_user($this->input->post('email'), $this->input->post('password'), $this->input->post('username'), $save_data);
+
+			$simpan_data_user = [
+				'aauth_user_id' 	=> $userid,
+				'user_nama_lengkap' => $this->input->post('full_name'),
+				'user_panggilan' 	=> $this->input->post('user_panggilan'),
+				'posko_id' 			=> $this->input->post('posko_id'),
+				'user_created_at' 	=> date('Y-m-d H:i:s'),
+				'user_user_created' => get_user_data('id'),
+			];
+
+			$this->db->insert('users', $simpan_data_user);
 
 			if ($save_user) {
 				//add user to group
@@ -209,6 +219,15 @@ class User extends Admin
 			}
 
 			$save_user = $this->aauth->update_user($id, $this->input->post('email'), $password, $this->input->post('username'), $save_data);
+
+			$update_data_user = [
+				'user_nama_lengkap' => $this->input->post('full_name'),
+				'user_panggilan' 	=> $this->input->post('user_panggilan'),
+				'posko_id' 			=> $this->input->post('posko_id'),
+			];
+
+			$this->db->where('aauth_user_id', $id);
+        	$this->db->update('users', $update_data_user);
 
 			if ($save_user) {
 				//update user to group
@@ -395,8 +414,7 @@ class User extends Admin
 	*
 	* @var $id String
 	*/
-	private function _remove($id)
-	{
+	private function _remove($id) {
 		$user = $this->model_user->find($id);
 
 		if (!empty($user->image)) {
@@ -406,6 +424,9 @@ class User extends Admin
 				$delete_file = delete_files($path);
 			}
 		}
+
+		$this->db->where('aauth_user_id', $id);
+        $this->db->delete('users');
 
 		return $this->model_user->remove($id);
 	}
@@ -618,6 +639,7 @@ class User extends Admin
 
 		$this->model_user->pdf('aauth_users', 'User');
 	}
+
 }
 
 /* End of file User.php */

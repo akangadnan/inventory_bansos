@@ -3,13 +3,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 
 class Model_user extends MY_Model {
-
 	private $primary_key 	= 'id';
 	private $table_name 	= 'aauth_users';
 	private $field_search 	= array('email', 'username', 'full_name');
 
-	public function __construct()
-	{
+	public function __construct() {
 		$config = array(
 			'primary_key' 	=> $this->primary_key,
 		 	'table_name' 	=> $this->table_name,
@@ -19,13 +17,12 @@ class Model_user extends MY_Model {
 		parent::__construct($config);
 	}
 
-	public function count_all($q = '', $field = '')
-	{
-		$iterasi = 1;
-        $num = count($this->field_search);
-        $where = NULL;
-        $q = $this->scurity($q);
-		$field = $this->scurity($field);
+	public function count_all($q = '', $field = '') {
+		$iterasi 	= 1;
+        $num 		= count($this->field_search);
+        $where 		= NULL;
+        $q 			= $this->scurity($q);
+		$field 		= $this->scurity($field);
 
         if (empty($field)) {
 	        foreach ($this->field_search as $field) {
@@ -42,19 +39,21 @@ class Model_user extends MY_Model {
         	$where .= "(" . $field . " LIKE '%" . $q . "%' )";
         }
 
-        $this->db->where($where);
+        $this->join_available();
+		$this->db->where($where);
+		$this->db->order_by($this->primary_key, 'DESC');
+		
 		$query = $this->db->get($this->table_name);
 
 		return $query->num_rows();
 	}
 
-	public function get($q = '', $field = '', $limit = 0, $offset = 0)
-	{
-		$iterasi = 1;
-        $num = count($this->field_search);
-        $where = NULL;
-        $q = $this->scurity($q);
-		$field = $this->scurity($field);
+	public function get($q = '', $field = '', $limit = 0, $offset = 0) {
+		$iterasi 	= 1;
+        $num 		= count($this->field_search);
+        $where 		= NULL;
+        $q 			= $this->scurity($q);
+		$field 		= $this->scurity($field);
 
         if (empty($field)) {
 	        foreach ($this->field_search as $field) {
@@ -71,7 +70,9 @@ class Model_user extends MY_Model {
         	$where .= "(" . $field . " LIKE '%" . $q . "%' )";
         }
 
-        $this->db->where($where);
+        $this->join_available();
+		$this->db->where($where);
+		$this->db->order_by($this->primary_key, 'DESC');
         $this->db->limit($limit, $offset);
         $this->sortable();
 		$query = $this->db->get($this->table_name);
@@ -79,11 +80,11 @@ class Model_user extends MY_Model {
 		return $query->result();
 	}
 
-	public function get_group_user($user_id = false)
-	{
+	public function get_group_user($user_id = false) {
 		if ($user_id === false) {
 			$user_id = get_user_data('id');
 		}
+
 		$result_group_user = [];
 
 		$query = $this->db->get_where('aauth_user_to_group', ['user_id' => $user_id]);
@@ -95,13 +96,34 @@ class Model_user extends MY_Model {
 	}
 
 
-	public function get_user_oauth($email = null, $provider = null)
-	{
+	public function get_user_oauth($email = null, $provider = null) {
 		$this->db->where('email', $email);
 		$this->db->where('oauth_provider', $provider);
 		$query = $this->db->get($this->table_name);
 
 		return $query->result();
+	}
+	
+	public function join_available() {
+		$this->db->select('aauth_users.*,users.*,posko.*,');
+		$this->db->join('users', 'aauth_users.id = users.aauth_user_id', 'LEFT');
+		$this->db->join('posko', 'users.posko_id = posko.posko_id', 'LEFT');
+		
+		return $this;
+	}
+
+	public function detail_group_user($id) {
+		$groups 		= db_get_all_data('aauth_groups');
+		$groups_user 	= $this->get_group_user($id);
+
+		$user_groups = [];
+		foreach ($groups as $group) {
+			if (array_search($group->id, $groups_user) !== false) {
+				$user_groups[] = $group->name;
+			}
+		}
+
+		return implode(', ', $user_groups);
 	}
 
 }

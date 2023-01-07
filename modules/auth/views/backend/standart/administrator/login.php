@@ -53,6 +53,7 @@
 			background-size: cover;
 			background-repeat: no-repeat;
 			height: auto;
+			background-position: center;
 		}
 
 		.login-logo a{

@@ -22,7 +22,7 @@
 	<link rel="apple-touch-icon" sizes="144x144" href="<?= BASE_ASSET; ?>img/favicon/apple-icon-144x144.png">
 	<link rel="apple-touch-icon" sizes="152x152" href="<?= BASE_ASSET; ?>img/favicon/apple-icon-152x152.png">
 	<link rel="apple-touch-icon" sizes="180x180" href="<?= BASE_ASSET; ?>img/favicon/apple-icon-180x180.png">
-	<link rel="icon" type="image/png" sizes="192x192"  href="<?= BASE_ASSET; ?>img/favicon/android-icon-192x192.png">
+	<link rel="icon" type="image/png" sizes="192x192" href="<?= BASE_ASSET; ?>img/favicon/android-icon-192x192.png">
 	<link rel="icon" type="image/png" sizes="32x32" href="<?= BASE_ASSET; ?>img/favicon/favicon-32x32.png">
 	<link rel="icon" type="image/png" sizes="96x96" href="<?= BASE_ASSET; ?>img/favicon/favicon-96x96.png">
 	<link rel="icon" type="image/png" sizes="16x16" href="<?= BASE_ASSET; ?>img/favicon/favicon-16x16.png">
@@ -47,6 +47,15 @@
 		.login-box-body {
 			border-top: 5px solid #D7320C;
 		}
+
+		.login-page{
+			background:linear-gradient(0deg, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url('<?= BASE_ASSET;?>img/Inlog-Bansos.jpg');
+			background-size: cover;
+		}
+
+		.login-logo a{
+			color: white;
+		}
 	</style>
 
 	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -60,7 +69,7 @@
 <body class="hold-transition login-page">
 	<div class="login-box">
 		<div class="login-logo">
-			<a href=""><b><?= cclang('login'); ?></b> <?= get_option('site_name'); ?></a>
+			<a href="javascript:void(0);"><b><?= cclang('login'); ?></b> <?= get_option('site_name'); ?></a>
 		</div>
 		<!-- /.login-logo -->
 		<div class="login-box-body">

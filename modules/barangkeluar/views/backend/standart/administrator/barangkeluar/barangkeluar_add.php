@@ -108,7 +108,7 @@
     						<?php
                         $user_groups = $this->model_group->get_user_group_ids();
                         ?>
-    						<!-- <div class="form-group group-tujuan ">
+    						<div class="form-group group-tujuan ">
     							<label for="tujuan_posko" class="col-sm-2 control-label">Tujuan Posko <i class="required">*</i></label>
     							<div class="col-sm-8">
     								<select class="form-control chosen chosen-select-deselect" name="tujuan_posko" id="tujuan" data-placeholder="Select Penerima">
@@ -125,7 +125,7 @@
     								<small class="info help-block">
     								</small>
     							</div>
-    						</div> -->
+    						</div>
     						
     						<div class="form-group group-tujuan ">
     							<label for="tujuan" class="col-sm-2 control-label">Penerima <i class="required">*</i>

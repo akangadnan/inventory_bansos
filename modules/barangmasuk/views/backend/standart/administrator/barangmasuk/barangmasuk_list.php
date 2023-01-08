@@ -101,7 +101,7 @@
 										<select type="text" class="form-control chosen chosen-select" name="f"
 											id="field">
 											<option value=""><?= cclang('all'); ?></option>
-											<!-- <option <?= $this->input->get('f') == 'asal_posko' ? 'selected' :''; ?> value="asal">Asal Posko</option> -->
+											<option <?= $this->input->get('f') == 'asal_posko' ? 'selected' :''; ?> value="asal">Asal Posko</option>
 											<option <?= $this->input->get('f') == 'asal' ? 'selected' :''; ?> value="asal">Asal</option>
 											<option <?= $this->input->get('f') == 'id_barang' ? 'selected' :''; ?> value="id_barang">Nama Barang</option>
 											<option <?= $this->input->get('f') == 'jumlah' ? 'selected' :''; ?> value="jumlah">Jumlah Stok</option>
@@ -139,7 +139,7 @@
 												<input type="checkbox" class="flat-red toltip" id="check_all" name="check_all" title="check all">
 											</th>
 											<th data-field="tanggal" data-sort="1" data-primary-key="0"><?= cclang('tanggal') ?></th>
-											<!-- <th data-field="asal_posko" data-sort="1" data-primary-key="0"> <?= cclang('asal_posko') ?></th> -->
+											<th data-field="asal_posko" data-sort="1" data-primary-key="0"> <?= cclang('asal_posko') ?></th>
 											<th data-field="asal" data-sort="1" data-primary-key="0"><?= cclang('asal') ?></th>
 											<th data-field="id_barang" data-sort="1" data-primary-key="0"><?= cclang('id_barang') ?></th>
 											<th data-field="jumlah" data-sort="1" data-primary-key="0"><?= cclang('jumlah') ?></th>
@@ -155,7 +155,7 @@
 											</td>
 
 											<td><?php echo $barangmasuk->tanggal;?></td>
-											<!-- <td><?php echo $barangmasuk->posko_nama;?></td> -->
+											<td><?php echo $barangmasuk->posko_nama;?></td>
 											<td><?php echo $barangmasuk->sumber_nama_sumber;?></td>
 
 											<td><?php echo $barangmasuk->barang_nama_barang;?>

@@ -161,7 +161,8 @@ class User extends Admin {
 
 		$this->data = [
 			'user' 			=> $this->model_user->find($id),
-			'group_user' 	=> $this->model_user->get_group_user($id)
+			'group_user' 	=> $this->model_user->get_group_user($id),
+			'detail_user' 	=> $this->model_user->detail_user($id),
 		];
 
 		$this->template->title('User Update');
@@ -184,6 +185,8 @@ class User extends Admin {
 
 		$this->form_validation->set_rules('username', 'Username', 'trim|required');
 		$this->form_validation->set_rules('full_name', 'Full Name', 'trim|required');
+		$this->form_validation->set_rules('user_panggilan', 'Nick Name', 'trim|required');
+		$this->form_validation->set_rules('posko_id', 'Posko', 'trim|required');
 
 		if ($this->form_validation->run()) {
 			$user_avatar_uuid = $this->input->post('user_avatar_uuid');

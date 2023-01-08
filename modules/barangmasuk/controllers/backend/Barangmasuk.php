@@ -76,7 +76,7 @@ class Barangmasuk extends Admin	{
 		
 		
 
-		// $this->form_validation->set_rules('asal_posko', 'Asal Poko', 'trim|required');
+		$this->form_validation->set_rules('asal_posko', 'Asal Poko', 'trim|required');
 		$this->form_validation->set_rules('asal', 'Asal', 'trim|required');
 		
 
@@ -99,7 +99,7 @@ class Barangmasuk extends Admin	{
 			$jumlah 	= $this->input->post('jumlah');
 
 			$save_data = [
-				// 'asal_posko' => $this->input->post('asal_posko'),
+				'asal_posko' => $this->input->post('asal_posko'),
 				'asal' => $this->input->post('asal'),
 				'id_barang' => $id_barang,
 				'jumlah' => $jumlah,
@@ -194,7 +194,7 @@ class Barangmasuk extends Admin	{
 				]);
 			exit;
 		}
-		// $this->form_validation->set_rules('asal_posko', 'Asal Posko', 'trim|required');
+		$this->form_validation->set_rules('asal_posko', 'Asal Posko', 'trim|required');
 		$this->form_validation->set_rules('asal', 'Asal', 'trim|required');
 		
 
@@ -216,7 +216,7 @@ class Barangmasuk extends Admin	{
 			$jumlah 	= $this->input->post('jumlah');
 		
 			$save_data = [
-				// 'asal' 			=> $this->input->post('asal'),
+				'asal' 			=> $this->input->post('asal'),
 				'id_barang' 	=> $id_barang,
 				'jumlah' 		=> $jumlah,
 				'keterangan' 	=> $this->input->post('keterangan'),

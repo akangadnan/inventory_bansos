@@ -126,6 +126,16 @@ class Model_user extends MY_Model {
 		return implode(', ', $user_groups);
 	}
 
+	public function detail_user($id) {
+        $query = $this->db->where('aauth_user_id', $id)->get('users');
+
+        if ($query->num_rows() > 0) {
+            return $query->row();
+        } else {
+            return FALSE;
+        }
+	}
+
 }
 
 

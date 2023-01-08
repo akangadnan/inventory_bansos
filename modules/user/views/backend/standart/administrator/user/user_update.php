@@ -90,6 +90,19 @@
 						</div>
 
 						<div class="form-group ">
+							<label for="posko_id" class="col-sm-2 control-label"><?= cclang('posko') ?> <i class="required">*</i></label>
+							<div class="col-sm-8">
+								<select class="form-control chosen chosen-select" name="posko_id" id="posko_id" placeholder="Select Posko">
+									<option value=""></option>
+									<?php foreach (db_get_all_data('posko') as $row): ?>
+									<option value="<?= $row->posko_id; ?>" <?= $row->posko_id == $detail_user->posko_id ? 'selected="selected"' : '';?> ><?= ucwords($row->posko_nama); ?></option>
+									<?php endforeach; ?>
+								</select>
+								<small class="info help-block"></small>
+							</div>
+						</div>
+
+						<div class="form-group ">
 							<label for="full_name" class="col-sm-2 control-label"><?= cclang('full_name'); ?> <i
 									class="required">*</i></label>
 
@@ -104,8 +117,8 @@
 	<label for="user_panggilan" class="col-sm-2 control-label"><?= cclang('nick_name') ?> <i class="required">*</i></label>
 
 	<div class="col-sm-8">
-		<input type="text" class="form-control" name="user_panggilan" id="user_panggilan" placeholder="Full Name" value="<?= set_value('user_panggilan', $user->user_panggilan); ?>">
-		<small class="info help-block">The full name of user.</small>
+		<input type="text" class="form-control" name="user_panggilan" id="user_panggilan" placeholder="Nick Name" value="<?= set_value('user_panggilan', $detail_user->user_panggilan); ?>">
+		<small class="info help-block">The nick name of user.</small>
 	</div>
 </div>
 						<div class="form-group ">
@@ -113,8 +126,7 @@
 									class="required">*</i></label>
 
 							<div class="col-sm-8">
-								<select class="form-control chosen-select" name="group[]" id="group" multiple
-									placeholder="Select groups">
+								<select class="form-control chosen-select" name="group[]" id="group" multiple placeholder="Select groups">
 									<?php foreach (db_get_all_data('aauth_groups') as $row): ?>
 									<option
 										<?= array_search($row->id, $group_user) !== false? 'selected="selected"' : ''; ?> value="<?= $row->id; ?>"><?= ucwords($row->name); ?></option>

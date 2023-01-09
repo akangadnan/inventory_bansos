@@ -108,8 +108,32 @@
     						<?php
                         $user_groups = $this->model_group->get_user_group_ids();
                         ?>
+    						<div class="form-group group-kecamatan-id ">
+    							<label for="kecamatan_id" class="col-sm-2 control-label">Kecamatan <i class="required">*</i></label>
+    							<div class="col-sm-8">
+    								<select class="form-control chosen chosen-select-deselect" name="kecamatan_id" id="kecamatan_id" data-placeholder="Select Kecamatan">
+    									<option value=""></option>
+									<?php
+										$conditions = [];
+									?>
+    									<?php foreach (db_get_all_data('kecamatan', $conditions) as $row): ?>
+    									<option value="<?= $row->kecamatan_id ?>"><?= $row->kecamatan_nama; ?></option>
+    									<?php endforeach; ?>
+    								</select>
+    								<small class="info help-block"></small>
+    							</div>
+    						</div>
+    						<div class="form-group group-kelurahan-id">
+								<label for="kelurahan_id" class="col-md-2 control-label">Kelurahan <i class="required">*</i></label>
+    							<div class="col-sm-8">
+									<select class="form-control chosen chosen-select-deselect" name="kelurahan_id" id="kelurahan_id" data-placeholder="Select Kelurahan">
+										<option value=""></option>
+									</select>
+									<small class="info help-block"></small>
+								</div>
+							</div>
     						<div class="form-group group-tujuan ">
-    							<label for="tujuan_posko" class="col-sm-2 control-label">Tujuan Posko <i class="required">*</i></label>
+    							<label for="tujuan_posko" class="col-sm-2 control-label">Tujuan Posko </label>
     							<div class="col-sm-8">
     								<select class="form-control chosen chosen-select-deselect" name="tujuan_posko" id="tujuan" data-placeholder="Select Penerima">
     									<option value=""></option>
@@ -127,7 +151,7 @@
     							</div>
     						</div>
     						
-    						<div class="form-group group-tujuan ">
+    						<!-- <div class="form-group group-tujuan ">
     							<label for="tujuan" class="col-sm-2 control-label">Penerima <i class="required">*</i>
     							</label>
     							<div class="col-sm-8">
@@ -146,21 +170,17 @@
     								<small class="info help-block">
     								</small>
     							</div>
-    						</div>
+    						</div> -->
 
 
 
     						<div class="form-group group-id-barang ">
-    							<label for="id_barang" class="col-sm-2 control-label">Nama Barang <i
-    									class="required">*</i>
-    							</label>
+    							<label for="id_barang" class="col-sm-2 control-label">Nama Barang <i class="required">*</i></label>
     							<div class="col-sm-8">
-    								<select class="form-control chosen chosen-select-deselect" name="id_barang"
-    									id="id_barang" data-placeholder="Select Nama Barang">
+    								<select class="form-control chosen chosen-select-deselect" name="id_barang" id="id_barang" data-placeholder="Select Nama Barang">
     									<option value=""></option>
     								</select>
-    								<small class="info help-block">
-    								</small>
+    								<small class="info help-block"></small>
     							</div>
     						</div>
 
@@ -389,9 +409,31 @@
     			return false;
     		}); /*end btn save*/
 
+			$('#kecamatan_id').change(function (event) {
+				var val = $(this).val();
+				$.LoadingOverlay('show')
+				$.ajax({
+					url: BASE_URL + 'administrator/barangkeluar/ajax_kelurahan_id/' + val,
+					dataType: 'JSON',
+				})
+				.done(function (res) {
+					var html = '<option value=""></option>';
+					$.each(res, function (index, val) {
+						html += '<option value="' + val.kelurahan_id + '">' + val.kelurahan_nama + '</option>'
+					});
 
+					$('#kelurahan_id').html(html);
+					$('#kelurahan_id').trigger('chosen:updated');
 
+				})
+				.fail(function () {
+					toastr['error']('Error', 'Getting data fail')
+				})
+				.always(function () {
+					$.LoadingOverlay('hide')
+				});
 
+			});
 
     		function chained_barang(complete) {
 				$.LoadingOverlay('show');
@@ -417,16 +459,11 @@
 
 			};
 
-
-
 			async function chain() {
 				await chained_barang();
 			}
 
 			chain();
-
-
-
 
     	}); /*end doc ready*/
     </script>

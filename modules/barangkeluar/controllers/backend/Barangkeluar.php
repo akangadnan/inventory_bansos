@@ -74,8 +74,10 @@ class Barangkeluar extends Admin {
 		}
 
 		$this->form_validation->set_rules('id_barang', 'Nama Barang', 'trim|required');
-		$this->form_validation->set_rules('tujuan_posko', 'Tujuan Posko', 'trim|required');
-		$this->form_validation->set_rules('tujuan', 'Penerima', 'trim|required');
+		// $this->form_validation->set_rules('tujuan_posko', 'Tujuan Posko', 'trim|required');
+		// $this->form_validation->set_rules('tujuan', 'Penerima', 'trim|required');
+		$this->form_validation->set_rules('kecamatan', 'Kecamatan', 'trim|required');
+		$this->form_validation->set_rules('kelurahan', 'Kelurahan', 'trim|required');
 		$this->form_validation->set_rules('jumlah', 'Banyaknya', 'trim|required|max_length[12]');
 		$this->form_validation->set_rules('tanggal', 'Tanggal', 'trim|required');
 		$this->form_validation->set_rules('waktu', 'Waktu', 'trim|required');
@@ -88,6 +90,8 @@ class Barangkeluar extends Admin {
 				'id_barang' 	=> $id_barang,
 				'tujuan_posko' 	=> $this->input->post('tujuan_posko'),
 				'tujuan' 		=> $this->input->post('tujuan'),
+				'kecamatan_id' 	=> $this->input->post('kecamatan_id'),
+				'kelurahan_id' 	=> $this->input->post('kelurahan_id'),
 				'jumlah' 		=> $jumlah,
 				'keterangan' 	=> $this->input->post('keterangan'),
 				'tanggal' 		=> $this->input->post('tanggal'),
@@ -173,9 +177,11 @@ class Barangkeluar extends Admin {
 			exit;
 		}
 
-		$this->form_validation->set_rules('tujuan_posko', 'Tujuan Posko', 'trim|required');
 		$this->form_validation->set_rules('id_barang', 'Nama Barang', 'trim|required');
-		$this->form_validation->set_rules('tujuan', 'Penerima', 'trim|required');
+		// $this->form_validation->set_rules('tujuan_posko', 'Tujuan Posko', 'trim|required');
+		// $this->form_validation->set_rules('tujuan', 'Penerima', 'trim|required');
+		$this->form_validation->set_rules('kecamatan', 'Kecamatan', 'trim|required');
+		$this->form_validation->set_rules('kelurahan', 'Kelurahan', 'trim|required');
 		$this->form_validation->set_rules('jumlah', 'Banyaknya', 'trim|required|max_length[12]');
 		$this->form_validation->set_rules('tanggal', 'Tanggal', 'trim|required');
 		$this->form_validation->set_rules('waktu', 'Waktu', 'trim|required');
@@ -188,6 +194,8 @@ class Barangkeluar extends Admin {
 				'id_barang'		=> $id_barang,
 				'tujuan_posko' 	=> $this->input->post('tujuan_posko'),
 				'tujuan' 		=> $this->input->post('tujuan'),
+				'kecamatan_id' 	=> $this->input->post('kecamatan_id'),
+				'kelurahan_id' 	=> $this->input->post('kelurahan_id'),
 				'jumlah' 		=> $jumlah,
 				'keterangan' 	=> $this->input->post('keterangan'),
 				'tanggal' 		=> $this->input->post('tanggal'),
@@ -394,8 +402,7 @@ class Barangkeluar extends Admin {
         $this->pdf->Output($table.'.pdf', 'H');
 	}
 
-	public function ajax_barang($id = null)
-	{
+	public function ajax_barang($id = null) {
 		if (!$this->is_allowed('barangkeluar_list', false)) {
 			echo json_encode([
 				'success' => false,
@@ -410,6 +417,19 @@ class Barangkeluar extends Admin {
 			$results = $this->db->join('satuan', 'satuan.id_satuan = barang.satuan', 'left')->get('barang')->result();
 		}
 
+		$this->response($results);	
+	}
+
+	public function ajax_kelurahan_id($id = null) {
+		if (!$this->is_allowed('barangkeluar_list', false)) {
+			echo json_encode([
+				'success' => false,
+				'message' => cclang('sorry_you_do_not_have_permission_to_access')
+				]);
+			exit;
+		}
+
+		$results = db_get_all_data('kelurahan', ['kecamatan_id' => $id]);
 		$this->response($results);	
 	}
 

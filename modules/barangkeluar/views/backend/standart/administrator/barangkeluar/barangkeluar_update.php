@@ -105,10 +105,34 @@
 						$user_groups = $this->model_group->get_user_group_ids();
 						?>
 
+							<div class="form-group group-kecamatan-id ">
+    							<label for="kecamatan_id" class="col-sm-2 control-label">Kecamatan <i class="required">*</i></label>
+    							<div class="col-sm-8">
+    								<select class="form-control chosen chosen-select-deselect" name="kecamatan_id" id="kecamatan_id" data-placeholder="Select Kecamatan">
+    									<option value=""></option>
+									<?php
+										$conditions = [];
+									?>
+    									<?php foreach (db_get_all_data('kecamatan', $conditions) as $row): ?>
+											<option <?= $row->kecamatan_id == $barangkeluar->kecamatan_id ? 'selected="selected"' : ''; ?> value="<?= $row->kecamatan_id ?>"><?= $row->kecamatan_nama; ?></option>
+    									<?php endforeach; ?>
+    								</select>
+    								<small class="info help-block"></small>
+    							</div>
+    						</div>
+    						<div class="form-group group-kelurahan-id">
+								<label for="kelurahan_id" class="col-md-2 control-label">Kelurahan <i class="required">*</i></label>
+    							<div class="col-sm-8">
+									<select class="form-control chosen chosen-select-deselect" name="kelurahan_id" id="kelurahan_id" data-placeholder="Select Kelurahan">
+										<option value=""></option>
+									</select>
+									<small class="info help-block"></small>
+								</div>
+							</div>
 
 
 						<div class="form-group group-tujuan">
-							<label for="tujuan_posko" class="col-sm-2 control-label">Tujuan Posko<i class="required">*</i></label>
+							<label for="tujuan_posko" class="col-sm-2 control-label">Tujuan Posko</label>
 							<div class="col-sm-8">
 								<select class="form-control chosen chosen-select-deselect" name="tujuan_posko"
 									id="tujuan_posko" data-placeholder="Select Penerima">
@@ -414,6 +438,36 @@
 				});
 		}
 
+		function chained_kelurahan_id(selected, complete) {
+			var val = $('#kecamatan_id').val();
+			$.LoadingOverlay('show')
+			return $.ajax({
+				url: BASE_URL + 'administrator/barangkeluar/ajax_kelurahan_id/' + val,
+				dataType: 'JSON',
+			})
+			.done(function(res) {
+				var html = '<option value=""></option>';
+				$.each(res, function(index, val) {
+					html += '<option ' + (selected == val.kelurahan_id ? 'selected' : '') + ' value="' + val.kelurahan_id + '">' + val.kelurahan_nama + '</option>'
+				});
+
+				$('#kelurahan_id').html(html);
+				$('#kelurahan_id').trigger('chosen:updated');
+				if (typeof complete != 'undefined') {
+					complete();
+				}
+			})
+			.fail(function() {
+				toastr['error']('Error', 'Getting data fail')
+			})
+			.always(function() {
+				$.LoadingOverlay('hide')
+			});
+		}
+
+		$('#kecamatan_id').change(function(event) {
+			chained_kelurahan_id('<?= $barangkeluar->kelurahan_id ?>');
+		});
 
 		$('#id_barang').change(function (event) {
 			chained_id_barang('')
@@ -421,12 +475,9 @@
 
 		async function chain() {
 			await chained_id_barang("<?= $barangkeluar->id_barang ?>");
+			await chained_kelurahan_id("<?= $barangkeluar->kelurahan_id ?>");
 		}
 
 		chain();
-
-
-
-
 	}); /*end doc ready*/
 </script>

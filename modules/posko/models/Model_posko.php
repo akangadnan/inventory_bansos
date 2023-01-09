@@ -5,7 +5,7 @@ class Model_posko extends MY_Model {
 
     private $primary_key    = 'posko_id';
     private $table_name     = 'posko';
-    public $field_search   = ['posko_nama'];
+    public $field_search   = ['kecamatan_id', 'kelurahan_id', 'posko_nama', 'posko_penanggung_jawab', 'posko_pic', 'kecamatan.kecamatan_nama', 'kelurahan.kelurahan_nama', 'users.user_nama_lengkap', 'users.user_nama_lengkap'];
     public $sort_option = ['posko_id', 'DESC'];
     
     public function __construct()
@@ -99,15 +99,31 @@ class Model_posko extends MY_Model {
     }
 
     public function join_avaiable() {
+        $this->db->join('kecamatan', 'kecamatan.kecamatan_id = posko.kecamatan_id', 'LEFT');
+        $this->db->join('kelurahan', 'kelurahan.kelurahan_id = posko.kelurahan_id', 'LEFT');
+        $this->db->join('users', 'users.user_id = posko.posko_user_created', 'LEFT');
+        $this->db->join('users penanggung_jawab', 'penanggung_jawab.user_id = posko.posko_penanggung_jawab', 'LEFT');
+		$this->db->join('users pic', 'pic.user_id = posko.posko_pic', 'LEFT');
         
-        $this->db->select('posko.*');
+        $this->db->select('posko.*,
+							posko.posko_nama AS nama_posko,
+							kecamatan.kecamatan_nama AS kecamatan_nama,
+							kelurahan.kelurahan_nama AS kelurahan_nama,
+							penanggung_jawab.user_nama_lengkap AS nama_lengkap_penanggung_jawab,
+							pic.user_nama_lengkap AS nama_lengkap_pic');
+		
+		$this->db->group_by('posko.posko_id');
+							
 
 
         return $this;
     }
 
     public function filter_avaiable() {
-        if (!$this->aauth->is_admin()) {}
+
+        if (!$this->aauth->is_admin()) {
+            $this->db->where($this->table_name.'.posko_user_created', get_user_data('id'));
+        }
 
         return $this;
     }

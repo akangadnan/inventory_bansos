@@ -42,7 +42,6 @@
 <!-- Main content -->
 <section class="content">
 	<div class="row">
-
 		<div class="col-md-12">
 			<div class="box box-primary">
 				<div class="box-body ">
@@ -69,7 +68,7 @@
 								<img class="img-circle" src="<?= BASE_ASSET; ?>/img/list.png" alt="User Avatar">
 							</div>
 							<!-- /.widget-user-image -->
-							<h3 class="widget-user-username"><?= cclang('sumber') ?></h3>
+							<h3 class="widget-user-username" style="font-weight: bold; color: red;"><?= cclang('sumber_donasi') ?></h3>
 							<h5 class="widget-user-desc"><?= cclang('list_all', [cclang('sumber')]); ?> <i
 									class="label bg-yellow"><?= $sumber_counts; ?> <?= cclang('items'); ?></i></h5>
 						</div>

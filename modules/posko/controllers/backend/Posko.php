@@ -10,9 +10,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 *|
 */
 class Posko extends Admin {
-	
-	public function __construct()
-	{
+	public function __construct() {
 		parent::__construct();
 
 		$this->load->model('model_posko');
@@ -25,8 +23,7 @@ class Posko extends Admin {
 	*
 	* @var $offset String
 	*/
-	public function index($offset = 0)
-	{
+	public function index($offset = 0) {
 		$this->is_allowed('posko_list');
 
 		$filter = $this->input->get('q');
@@ -52,8 +49,7 @@ class Posko extends Admin {
 	* Add new poskos
 	*
 	*/
-	public function add()
-	{
+	public function add() {
 		$this->is_allowed('posko_add');
 
 		$this->template->title('Posko New');
@@ -65,45 +61,36 @@ class Posko extends Admin {
 	*
 	* @return JSON
 	*/
-	public function add_save()
-	{
+	public function add_save() {
 		if (!$this->is_allowed('posko_add', false)) {
 			echo json_encode([
 				'success' => false,
 				'message' => cclang('sorry_you_do_not_have_permission_to_access')
-				]);
+			]);
+
 			exit;
 		}
-		
-		
 
+		$this->form_validation->set_rules('kecamatan_id', 'Kecamatan', 'trim|required');
+		$this->form_validation->set_rules('kelurahan_id', 'Kelurahan', 'trim|required');
 		$this->form_validation->set_rules('posko_nama', 'Nama Posko', 'trim|required|max_length[255]');
-		
-
-		
 
 		if ($this->form_validation->run()) {
 			$save_data = [
-				'posko_nama' => $this->input->post('posko_nama'),
-				'posko_created_at' => date('Y-m-d H:i:s'),
-				'posko_user_id' => get_user_data('id'),
+				'kecamatan_id' 				=> $this->input->post('kecamatan_id'),
+				'kelurahan_id' 				=> $this->input->post('kelurahan_id'),
+				'posko_nama' 				=> $this->input->post('posko_nama'),
+				'posko_penanggung_jawab' 	=> $this->input->post('posko_penanggung_jawab'),
+				'posko_pic' 				=> $this->input->post('posko_pic'),
+				'posko_user_created' 		=> get_user_data('id'),
+				'posko_created_at' 			=> date('Y-m-d H:i:s'),
 			];
 
-			
-			
-
-
-
-			
-			
 			$save_posko = $id = $this->model_posko->store($save_data);
-            
 
 			if ($save_posko) {
-				
-				
-					
-				
+				$id = $save_posko;
+
 				if ($this->input->post('save_type') == 'stay') {
 					$this->data['success'] = true;
 					$this->data['id'] 	   = $save_posko;
@@ -130,7 +117,6 @@ class Posko extends Admin {
 					$this->data['redirect'] = base_url('administrator/posko');
 				}
 			}
-
 		} else {
 			$this->data['success'] = false;
 			$this->data['message'] = 'Opss validation failed';
@@ -145,8 +131,7 @@ class Posko extends Admin {
 	*
 	* @var $id String
 	*/
-	public function edit($id)
-	{
+	public function edit($id) {
 		$this->is_allowed('posko_update');
 
 		$this->data['posko'] = $this->model_posko->find($id);
@@ -160,36 +145,34 @@ class Posko extends Admin {
 	*
 	* @var $id String
 	*/
-	public function edit_save($id)
-	{
+	public function edit_save($id) {
 		if (!$this->is_allowed('posko_update', false)) {
 			echo json_encode([
 				'success' => false,
 				'message' => cclang('sorry_you_do_not_have_permission_to_access')
-				]);
+			]);
+
 			exit;
 		}
-				$this->form_validation->set_rules('posko_nama', 'Nama Posko', 'trim|required|max_length[255]');
-		
 
+		$this->form_validation->set_rules('kecamatan_id', 'Kecamatan', 'trim|required');
+		$this->form_validation->set_rules('kelurahan_id', 'Kelurahan', 'trim|required');
+		$this->form_validation->set_rules('posko_nama', 'Nama Posko', 'trim|required|max_length[255]');
 		
 		if ($this->form_validation->run()) {
-		
 			$save_data = [
-				'posko_nama' => $this->input->post('posko_nama'),
+				'kecamatan_id' 				=> $this->input->post('kecamatan_id'),
+				'kelurahan_id' 				=> $this->input->post('kelurahan_id'),
+				'posko_nama' 				=> $this->input->post('posko_nama'),
+				'posko_penanggung_jawab' 	=> $this->input->post('posko_penanggung_jawab'),
+				'posko_pic' 				=> $this->input->post('posko_pic'),
 			];
-
-			
-
-			
-
-
-			
 			
 			$save_posko = $this->model_posko->change($id, $save_data);
 
 			if ($save_posko) {
 
+				
 				
 
 				
@@ -348,6 +331,19 @@ class Posko extends Admin {
         $this->pdf->pdf->SetDisplayMode('fullpage');
         $this->pdf->writeHTML($content);
         $this->pdf->Output($table.'.pdf', 'H');
+	}
+
+	public function ajax_kelurahan_id($id = null)
+	{
+		if (!$this->is_allowed('posko_list', false)) {
+			echo json_encode([
+				'success' => false,
+				'message' => cclang('sorry_you_do_not_have_permission_to_access')
+				]);
+			exit;
+		}
+		$results = db_get_all_data('kelurahan', ['kecamatan_id' => $id]);
+		$this->response($results);	
 	}
 
 	

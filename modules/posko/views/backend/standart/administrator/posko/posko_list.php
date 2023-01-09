@@ -68,15 +68,10 @@
 							</div>
 							<!-- /.widget-user-image -->
 							<h3 class="widget-user-username"><?= cclang('posko') ?></h3>
-							<h5 class="widget-user-desc"><?= cclang('list_all', [cclang('posko')]); ?> <i
-									class="label bg-yellow"><?= $posko_counts; ?> <?= cclang('items'); ?></i></h5>
+							<h5 class="widget-user-desc"><?= cclang('list_all', [cclang('posko')]); ?> <i class="label bg-yellow"><?= $posko_counts; ?> <?= cclang('items'); ?></i></h5>
 						</div>
 
 						<form name="form_posko" id="form_posko" action="<?= base_url('administrator/posko/index'); ?>">
-
-
-
-							<!-- /.widget-user -->
 							<div class="row">
 								<div class="col-md-8">
 									<div class="col-sm-2 padd-left-0 ">
@@ -98,8 +93,17 @@
 										<select type="text" class="form-control chosen chosen-select" name="f"
 											id="field">
 											<option value=""><?= cclang('all'); ?></option>
+											<option <?= $this->input->get('f') == 'kecamatan_id' ? 'selected' :''; ?>
+												value="kecamatan_id">Kecamatan</option>
+											<option <?= $this->input->get('f') == 'kelurahan_id' ? 'selected' :''; ?>
+												value="kelurahan_id">Kelurahan</option>
 											<option <?= $this->input->get('f') == 'posko_nama' ? 'selected' :''; ?>
 												value="posko_nama">Nama Posko</option>
+											<option
+												<?= $this->input->get('f') == 'posko_penanggung_jawab' ? 'selected' :''; ?>
+												value="posko_penanggung_jawab">Penanggung Jawab Posko</option>
+											<option <?= $this->input->get('f') == 'posko_pic' ? 'selected' :''; ?>
+												value="posko_pic">PIC Posko</option>
 										</select>
 									</div>
 									<div class="col-sm-1 padd-left-0 ">
@@ -124,7 +128,6 @@
 								</div>
 							</div>
 							<div class="table-responsive">
-
 								<br>
 								<table class="table table-bordered table-striped dataTable">
 									<thead>
@@ -133,44 +136,44 @@
 												<input type="checkbox" class="flat-red toltip" id="check_all"
 													name="check_all" title="check all">
 											</th>
-											<th data-field="posko_nama" data-sort="1" data-primary-key="0">
-												<?= cclang('posko_nama') ?></th>
+											<th data-field="kecamatan_id" data-sort="1" data-primary-key="0"><?= cclang('kecamatan_id') ?></th>
+											<th data-field="kelurahan_id" data-sort="1" data-primary-key="0"><?= cclang('kelurahan_id') ?></th>
+											<th data-field="posko_nama" data-sort="1" data-primary-key="0"><?= cclang('posko_nama') ?></th>
+											<th data-field="posko_penanggung_jawab" data-sort="1" data-primary-key="0"><?= cclang('posko_penanggung_jawab') ?></th>
+											<th data-field="posko_pic" data-sort="1" data-primary-key="0"><?= cclang('posko_pic') ?></th>
 											<th>Action</th>
 										</tr>
 									</thead>
 									<tbody id="tbody_posko">
-										<?php foreach($poskos as $posko): ?>
+								<?php
+									foreach($poskos as $posko) {
+								?>
 										<tr>
-											<td width="5">
-												<input type="checkbox" class="flat-red check" name="id[]" value="<?= $posko->posko_id; ?>">
-											</td>
-
-											<td><span
-													class="list_group-posko-nama"><?= _ent($posko->posko_nama); ?></span>
-											</td>
+											<td width="5"><input type="checkbox" class="flat-red check" name="id[]" value="<?= $posko->posko_id; ?>"></td>
+											<td><?php if ($posko->kecamatan_id) { echo _ent($posko->kecamatan_nama);}?></td>
+											<td><?php if ($posko->kelurahan_id) { echo _ent($posko->kelurahan_nama);}?></td>
+											<td><span class="list_group-posko-nama"><?= _ent($posko->nama_posko); ?></span></td>
+											<td><?php echo !empty($posko->posko_penanggung_jawab) ? _ent($posko->nama_lengkap_penanggung_jawab) : '<i style="color: red;">Belum ditentukan</i>';?></td>
+											<td><?php echo !empty($posko->posko_pic) ? $posko->nama_lengkap_pic : '<i style="color: red;">Belum ditentukan</i>';?></td>
 											<td width="200">
-
 												<?php is_allowed('posko_view', function() use ($posko){?>
-												<a href="<?= site_url('administrator/posko/view/' . $posko->posko_id); ?>"
-													class="label-default"><i class="fa fa-newspaper-o"></i>
-													<?= cclang('view_button'); ?>
-													<?php }) ?>
-													<?php is_allowed('posko_update', function() use ($posko){?>
-													<a href="<?= site_url('administrator/posko/edit/' . $posko->posko_id); ?>"
-														class="label-default"><i class="fa fa-edit "></i>
-														<?= cclang('update_button'); ?></a>
-													<?php }) ?>
-													<?php is_allowed('posko_delete', function() use ($posko){?>
-													<a href="javascript:void(0);"
-														data-href="<?= site_url('administrator/posko/delete/' . $posko->posko_id); ?>"
-														class="label-default remove-data"><i class="fa fa-close"></i>
-														<?= cclang('remove_button'); ?></a>
-													<?php }) ?>
-
+													<a href="<?= site_url('administrator/posko/view/' . $posko->posko_id); ?>" class="label-default">
+														<i class="fa fa-newspaper-o"></i> <?= cclang('view_button'); ?></a>
+												<?php }) ?>
+												<?php is_allowed('posko_update', function() use ($posko){?>
+													<a href="<?= site_url('administrator/posko/edit/' . $posko->posko_id); ?>" class="label-default">
+														<i class="fa fa-edit "></i> <?= cclang('update_button'); ?></a>
+												<?php }) ?>
+												<?php is_allowed('posko_delete', function() use ($posko){?>
+													<a href="javascript:void(0);" data-href="<?= site_url('administrator/posko/delete/' . $posko->posko_id); ?>" class="label-default remove-data">
+														<i class="fa fa-close"></i> <?= cclang('remove_button'); ?></a>
+												<?php }) ?>
 											</td>
 										</tr>
-										<?php endforeach; ?>
-										<?php if ($posko_counts == 0) :?>
+									<?php
+										}
+
+										if ($posko_counts == 0) :?>
 										<tr>
 											<td colspan="100">
 												Posko data is not available
@@ -199,12 +202,49 @@
 <script>
 	$(document).ready(function () {
 
+		(function () {
 
+		})()
+
+
+		$('.table tbody tr').each(function () {
+			var row = $(this);
+			(function () {
+				var posko_nama = row.find('.list_group-posko-nama');
+
+			})()
+		})
 
 		$('.remove-data').click(function () {
 
 			var url = $(this).attr('data-href');
 
+			swal({
+				title: "<?= cclang('are_you_sure'); ?>",
+				text: "<?= cclang('data_to_be_deleted_can_not_be_restored'); ?>",
+				type: "warning",
+				showCancelButton: true,
+				confirmButtonColor: "#DD6B55",
+				confirmButtonText: "<?= cclang('yes_delete_it'); ?>",
+				cancelButtonText: "<?= cclang('no_cancel_plx'); ?>",
+				closeOnConfirm: true,
+				closeOnCancel: true
+			},
+			function (isConfirm) {
+				if (isConfirm) {
+					document.location.href = url;
+				}
+			});
+
+			return false;
+		});
+
+
+		$('#apply').click(function () {
+			var bulk = $('#bulk');
+			var serialize_bulk = $('#form_posko').serialize();
+
+			if (bulk.val() == 'delete') {
 			swal({
 					title: "<?= cclang('are_you_sure'); ?>",
 					text: "<?= cclang('data_to_be_deleted_can_not_be_restored'); ?>",
@@ -218,40 +258,12 @@
 				},
 				function (isConfirm) {
 					if (isConfirm) {
-						document.location.href = url;
+						document.location.href = BASE_URL + '/administrator/posko/delete?' +
+							serialize_bulk;
 					}
 				});
 
-			return false;
-		});
-
-
-		$('#apply').click(function () {
-
-			var bulk = $('#bulk');
-			var serialize_bulk = $('#form_posko').serialize();
-
-			if (bulk.val() == 'delete') {
-				swal({
-						title: "<?= cclang('are_you_sure'); ?>",
-						text: "<?= cclang('data_to_be_deleted_can_not_be_restored'); ?>",
-						type: "warning",
-						showCancelButton: true,
-						confirmButtonColor: "#DD6B55",
-						confirmButtonText: "<?= cclang('yes_delete_it'); ?>",
-						cancelButtonText: "<?= cclang('no_cancel_plx'); ?>",
-						closeOnConfirm: true,
-						closeOnCancel: true
-					},
-					function (isConfirm) {
-						if (isConfirm) {
-							document.location.href = BASE_URL + '/administrator/posko/delete?' +
-								serialize_bulk;
-						}
-					});
-
 				return false;
-
 			} else if (bulk.val() == '') {
 				swal({
 					title: "Upss",
@@ -268,7 +280,6 @@
 			}
 
 			return false;
-
 		}); /*end appliy click*/
 
 

@@ -139,9 +139,12 @@
 												<input type="checkbox" class="flat-red toltip" id="check_all"
 													name="check_all" title="check all">
 											</th>
+											<th data-field="tanggal" data-sort="1" data-primary-key="0"><?= cclang('tanggal') ?></th>
 											<th data-field="tujuan_posko" data-sort="1" data-primary-key="0"><?= cclang('tujuan_posko') ?></th>
-											<th data-field="tujuan" data-sort="1" data-primary-key="0"><?= cclang('tujuan') ?></th>
-											<th data-field="id_barang" data-sort="1" data-primary-key="0"><?= cclang('id_barang') ?></th>
+											<th data-field="kecamatan_id" data-sort="1" data-primary-key="0"><?= cclang('kecamatan') ?></th>
+											<th data-field="kelurahan_id" data-sort="1" data-primary-key="0"><?= cclang('kelurahan') ?></th>
+											<!-- <th data-field="tujuan" data-sort="1" data-primary-key="0"><?= cclang('tujuan') ?></th> -->
+											<th data-field="id_barang" data-sort="1" data-primary-key="0"><?= cclang('nama_barang') ?></th>
 											<th data-field="jumlah" data-sort="1" data-primary-key="0"><?= cclang('jumlah') ?></th>
 											<th>Action</th>
 										</tr>
@@ -152,8 +155,11 @@
 											<td width="5">
 												<input type="checkbox" class="flat-red check" name="id[]" value="<?= $barangkeluar->id_barangkeluar; ?>">
 											</td>
+											<td><?php echo $barangkeluar->tanggal;?></td>
 											<td><?php echo $barangkeluar->posko_nama;?></td>
-											<td><?php echo $barangkeluar->sumber_nama_sumber;?></td>
+											<td><?php echo $barangkeluar->kecamatan_nama;?></td>
+											<td><?php echo $barangkeluar->kelurahan_nama;?></td>
+											<!-- <td><?php echo $barangkeluar->sumber_nama_sumber;?></td> -->
 											<td><?php echo $barangkeluar->barang_nama_barang;?></td>
 
 											<td><span class="list_group-jumlah"><?= _ent($barangkeluar->jumlah).' '._ent($barangkeluar->nama_satuan); ?></span>

@@ -103,8 +103,10 @@ class Model_barangkeluar extends MY_Model {
         $this->db->join('sumber', 'sumber.id_sumber = barangkeluar.tujuan', 'LEFT');
         $this->db->join('satuan', 'barang.satuan = satuan.id_satuan', 'LEFT');
         $this->db->join('posko', 'barangkeluar.tujuan_posko = posko.posko_id', 'LEFT');
+        $this->db->join('kecamatan', 'kecamatan.kecamatan_id = barangkeluar.kecamatan_id', 'LEFT');
+        $this->db->join('kelurahan', 'kelurahan.kelurahan_id = barangkeluar.kelurahan_id', 'LEFT');
         
-        $this->db->select('barang.nama_barang,sumber.nama_sumber,barangkeluar.*,satuan.*,posko.*,barang.nama_barang as barang_nama_barang,barang.nama_barang as nama_barang,sumber.nama_sumber as sumber_nama_sumber,sumber.nama_sumber as nama_sumber,satuan.nama_satuan AS satuan_nama_satuan');
+        $this->db->select('barang.nama_barang,sumber.nama_sumber,barangkeluar.*,satuan.*,posko.*,kecamatan.*,kelurahan.*,barang.nama_barang as barang_nama_barang,barang.nama_barang as nama_barang,sumber.nama_sumber as sumber_nama_sumber,sumber.nama_sumber as nama_sumber,satuan.nama_satuan AS satuan_nama_satuan');
 
 
         return $this;

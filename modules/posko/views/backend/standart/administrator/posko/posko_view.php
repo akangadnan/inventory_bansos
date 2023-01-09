@@ -65,10 +65,42 @@ jQuery(document).ready(domo);
                     </div>
                                         
                     <div class="form-group ">
+                        <label for="content" class="col-sm-2 control-label">Kecamatan </label>
+
+                        <div class="col-sm-8">
+                           <?= _ent($posko->kecamatan_kecamatan_nama); ?>
+                        </div>
+                    </div>
+                                        
+                    <div class="form-group ">
+                        <label for="content" class="col-sm-2 control-label">Kelurahan </label>
+
+                        <div class="col-sm-8">
+                           <?= _ent($posko->kelurahan_kelurahan_nama); ?>
+                        </div>
+                    </div>
+                                        
+                    <div class="form-group ">
                         <label for="content" class="col-sm-2 control-label">Nama Posko </label>
 
                         <div class="col-sm-8">
                         <span class="detail_group-posko-nama"><?= _ent($posko->posko_nama); ?></span>
+                        </div>
+                    </div>
+                                        
+                    <div class="form-group ">
+                        <label for="content" class="col-sm-2 control-label">Penanggung Jawab Posko </label>
+
+                        <div class="col-sm-8">
+                           <?= _ent($posko->users_user_nama_lengkap); ?>
+                        </div>
+                    </div>
+                                        
+                    <div class="form-group ">
+                        <label for="content" class="col-sm-2 control-label">PIC Posko </label>
+
+                        <div class="col-sm-8">
+                           <?= _ent($posko->users_user_nama_lengkap); ?>
                         </div>
                     </div>
                                         
@@ -99,6 +131,9 @@ jQuery(document).ready(domo);
 
 <script>
 $(document).ready(function(){
-   
+   (function(){
+        var posko_nama = $('.detail_group-posko-nama');
+    })()
+      
    });
 </script>

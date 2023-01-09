@@ -144,8 +144,8 @@
 												<?= cclang('nama_barang') ?></th>
 											<th data-field="stok" data-sort="1" data-primary-key="0">
 												<?= cclang('stok') ?></th>
-											<th data-field="total_bantuan" data-sort="1" data-primary-key="0">
-												<?= cclang('total_bantuan') ?></th>
+											<!-- <th data-field="total_bantuan" data-sort="1" data-primary-key="0">
+												<?= cclang('total_bantuan') ?></th> -->
 											<th data-field="keterangan" data-sort="1" data-primary-key="0">
 												<?= cclang('keterangan') ?></th>
 											<th>Action</th>
@@ -161,7 +161,7 @@
 
 											<td><span class="list_group-nama-barang"><?= _ent($barang->nama_barang); ?></span></td>
 											<td><span class="list_group-stok"><?= _ent($barang->stok).' '._ent($barang->satuan_nama_satuan); ?></span></td>
-											<td><span class="list_group-stok">
+											<!-- <td><span class="list_group-stok">
 											<?php
 												if ($barang->total_bantuan != null) {
 													echo _ent($barang->total_bantuan).' '._ent($barang->satuan_nama_satuan);
@@ -169,7 +169,7 @@
 													echo '0 '._ent($barang->satuan_nama_satuan);
 												}
 											?>
-											</span></td>
+											</span></td> -->
 											<td><span class="list_group-keterangan"><?= _ent($barang->keterangan); ?></span></td>
 											<td width="200">
 

@@ -1,3 +1,6 @@
+<script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.6/dist/loadingoverlay.min.js">
+</script>
+
 <script src="<?= BASE_ASSET; ?>/js/jquery.hotkeys.js"></script>
 <script type="text/javascript">
 	function domo() {
@@ -21,7 +24,18 @@
 	jQuery(document).ready(domo);
 </script>
 <style>
+	/* .group-posko-nama */
+	.group-posko-nama {}
 
+	.group-posko-nama .control-label {}
+
+	.group-posko-nama .col-sm-8 {}
+
+	.group-posko-nama .form-control {}
+
+	.group-posko-nama .help-block {}
+
+	/* end .group-posko-nama */
 </style>
 <!-- Content Header (Page header) -->
 <section class="content-header">
@@ -53,17 +67,58 @@
 							<hr>
 						</div>
 						<?= form_open('', [
-							'name' => 'form_posko',
-							'class' => 'form-horizontal form-step',
-							'id' => 'form_posko',
-							'enctype' => 'multipart/form-data',
-							'method' => 'POST'
-						]); ?>
+						'name' => 'form_posko',
+						'class' => 'form-horizontal form-step',
+						'id' => 'form_posko',
+						'enctype' => 'multipart/form-data',
+						'method' => 'POST'
+					]); ?>
 						<?php
-						$user_groups = $this->model_group->get_user_group_ids();
-						?>
+					$user_groups = $this->model_group->get_user_group_ids();
+					?>
+						<div class="form-group group-kecamatan-id ">
+							<label for="kecamatan_id" class="col-sm-2 control-label">Kecamatan <i
+									class="required">*</i>
+							</label>
+							<div class="col-sm-8">
+								<select class="form-control chosen chosen-select-deselect" name="kecamatan_id"
+									id="kecamatan_id" data-placeholder="Select Kecamatan">
+									<option value=""></option>
+									<?php
+									$conditions = [
+										];
+									?>
+
+									<?php foreach (db_get_all_data('kecamatan', $conditions) as $row): ?>
+									<option value="<?= $row->kecamatan_id ?>"><?= $row->kecamatan_nama; ?></option>
+									<?php endforeach; ?>
+								</select>
+								<small class="info help-block">
+								</small>
+							</div>
+						</div>
+
+
+
+						<div class="form-group group-kelurahan-id ">
+							<label for="kelurahan_id" class="col-sm-2 control-label">Kelurahan <i
+									class="required">*</i>
+							</label>
+							<div class="col-sm-8">
+								<select class="form-control chosen chosen-select-deselect" name="kelurahan_id"
+									id="kelurahan_id" data-placeholder="Select Kelurahan">
+									<option value=""></option>
+								</select>
+								<small class="info help-block">
+								</small>
+							</div>
+						</div>
+
+
+
 						<div class="form-group group-posko-nama ">
-							<label for="posko_nama" class="col-sm-2 control-label">Nama Posko <i class="required">*</i>
+							<label for="posko_nama" class="col-sm-2 control-label">Nama Posko <i
+									class="required">*</i>
 							</label>
 							<div class="col-sm-8">
 								<input type="text" class="form-control" name="posko_nama" id="posko_nama"
@@ -74,17 +129,60 @@
 						</div>
 
 
+						<div class="form-group group-posko_penanggung_jawab ">
+							<label for="posko_penanggung_jawab" class="col-sm-2 control-label">Penanggung Jawab
+								Posko </label>
+							<div class="col-sm-8">
+								<select class="form-control chosen chosen-select-deselect"
+									name="posko_penanggung_jawab" id="posko_penanggung_jawab"
+									data-placeholder="Select Penanggung Jawab Posko">
+									<option value=""></option>
+									<?php
+									$conditions = [
+										];
+									?>
 
+									<?php foreach (db_get_all_data('users', $conditions) as $row): ?>
+									<option value="<?= $row->user_id ?>"><?= $row->user_nama_lengkap; ?></option>
+									<?php endforeach; ?>
+								</select>
+								<small class="info help-block">
+								</small>
+							</div>
+						</div>
+
+
+
+						<div class="form-group group-posko_pic ">
+							<label for="posko_pic" class="col-sm-2 control-label">PIC Posko </label>
+							<div class="col-sm-8">
+								<select class="form-control chosen chosen-select-deselect" name="posko_pic"
+									id="posko_pic" data-placeholder="Select PIC Posko">
+									<option value=""></option>
+									<?php
+									$conditions = [
+										];
+									?>
+
+									<?php foreach (db_get_all_data('users', $conditions) as $row): ?>
+									<option value="<?= $row->user_id ?>"><?= $row->user_nama_lengkap; ?></option>
+									<?php endforeach; ?>
+								</select>
+								<small class="info help-block">
+								</small>
+							</div>
+						</div>
 
 						<div class="message"></div>
 						<div class="row-fluid col-md-7 container-button-bottom">
-							<button class="btn btn-flat btn-primary btn_save btn_action" id="btn_save" data-stype='stay'
-								title="<?= cclang('save_button'); ?> (Ctrl+s)">
+							<button class="btn btn-flat btn-primary btn_save btn_action" id="btn_save"
+								data-stype='stay' title="<?= cclang('save_button'); ?> (Ctrl+s)">
 								<i class="fa fa-save"></i> <?= cclang('save_button'); ?>
 							</button>
 							<a class="btn btn-flat btn-info btn_save btn_action btn_save_back" id="btn_save"
 								data-stype='back' title="<?= cclang('save_and_go_the_list_button'); ?> (Ctrl+d)">
-								<i class="ion ion-ios-list-outline"></i> <?= cclang('save_and_go_the_list_button'); ?>
+								<i class="ion ion-ios-list-outline"></i>
+								<?= cclang('save_and_go_the_list_button'); ?>
 							</a>
 
 							<div class="custom-button-wrapper">
@@ -119,6 +217,13 @@
 
 		window.event_submit_and_action = '';
 
+		(function () {
+			var posko_nama = $('#posko_nama');
+			/* 
+				posko_nama.on('change', function() {});
+				*/
+
+		})()
 
 
 
@@ -163,6 +268,12 @@
 				value: window.event_submit_and_action
 			});
 
+			(function () {
+				data_post.push({
+					name: '_example',
+					value: 'value_of_example',
+				})
+			})()
 
 
 			$('.loading').show();
@@ -199,14 +310,14 @@
 									'has-error');
 								$('form #' + index).parents('.form-group').find('small')
 									.prepend(`
-					  <div class="error-input">` + val + `</div>
-					  `);
+					<div class="error-input">` + val + `</div>
+					`);
 							});
 							$('.steps li').removeClass('error');
 							$('.content section').each(function (index, el) {
 								if ($(this).find('.has-error').length) {
-									$('.steps li:eq(' + index + ')').addClass('error').find(
-										'a').trigger('click');
+									$('.steps li:eq(' + index + ')').addClass('error')
+										.find('a').trigger('click');
 								}
 							});
 						}
@@ -236,6 +347,32 @@
 
 
 
+
+		$('#kecamatan_id').change(function (event) {
+			var val = $(this).val();
+			$.LoadingOverlay('show')
+			$.ajax({
+					url: BASE_URL + '/administrator/posko/ajax_kelurahan_id/' + val,
+					dataType: 'JSON',
+				})
+				.done(function (res) {
+					var html = '<option value=""></option>';
+					$.each(res, function (index, val) {
+						html += '<option value="' + val.kelurahan_id + '">' + val
+							.kelurahan_nama + '</option>'
+					});
+					$('#kelurahan_id').html(html);
+					$('#kelurahan_id').trigger('chosen:updated');
+
+				})
+				.fail(function () {
+					toastr['error']('Error', 'Getting data fail')
+				})
+				.always(function () {
+					$.LoadingOverlay('hide')
+				});
+
+		});
 
 
 

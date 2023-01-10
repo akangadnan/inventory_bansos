@@ -77,19 +77,14 @@
 					$user_groups = $this->model_group->get_user_group_ids();
 					?>
 						<div class="form-group group-kecamatan-id ">
-							<label for="kecamatan_id" class="col-sm-2 control-label">Kecamatan <i
-									class="required">*</i>
-							</label>
+							<label for="kecamatan_id" class="col-sm-2 control-label">Kecamatan <i class="required">*</i></label>
 							<div class="col-sm-8">
-								<select class="form-control chosen chosen-select-deselect" name="kecamatan_id"
-									id="kecamatan_id" data-placeholder="Select Kecamatan">
+								<select class="form-control chosen chosen-select-deselect" name="kecamatan_id" id="kecamatan_id" data-placeholder="Pilih Kecamatan">
 									<option value=""></option>
-									<?php
-									$conditions = [
-										];
-									?>
-
-									<?php foreach (db_get_all_data('kecamatan', $conditions) as $row): ?>
+							<?php
+								$conditions = [];
+								
+								foreach (db_get_all_data('kecamatan', $conditions) as $row): ?>
 									<option value="<?= $row->kecamatan_id ?>"><?= $row->kecamatan_nama; ?></option>
 									<?php endforeach; ?>
 								</select>
@@ -98,66 +93,44 @@
 							</div>
 						</div>
 
-
-
 						<div class="form-group group-kelurahan-id ">
-							<label for="kelurahan_id" class="col-sm-2 control-label">Kelurahan <i
-									class="required">*</i>
-							</label>
+							<label for="kelurahan_id" class="col-sm-2 control-label">Kelurahan <i class="required">*</i></label>
 							<div class="col-sm-8">
-								<select class="form-control chosen chosen-select-deselect" name="kelurahan_id"
-									id="kelurahan_id" data-placeholder="Select Kelurahan">
+								<select class="form-control chosen chosen-select-deselect" name="kelurahan_id" id="kelurahan_id" data-placeholder="Pilih Kelurahan">
 									<option value=""></option>
 								</select>
-								<small class="info help-block">
-								</small>
+								<small class="info help-block"></small>
 							</div>
 						</div>
-
-
 
 						<div class="form-group group-posko-nama ">
-							<label for="posko_nama" class="col-sm-2 control-label">Nama Posko <i
-									class="required">*</i>
-							</label>
+							<label for="posko_nama" class="col-sm-2 control-label">Nama Posko <i class="required">*</i></label>
 							<div class="col-sm-8">
-								<input type="text" class="form-control" name="posko_nama" id="posko_nama"
-									placeholder="Nama Posko" value="<?= set_value('posko_nama'); ?>">
-								<small class="info help-block">
-									<b>Input Posko Nama</b> Max Length : 255.</small>
+								<input type="text" class="form-control" name="posko_nama" id="posko_nama" placeholder="Nama Posko" value="<?= set_value('posko_nama'); ?>">
+								<small class="info help-block"><b>Input Posko Nama</b> Max Length : 255.</small>
 							</div>
 						</div>
 
-
 						<div class="form-group group-posko_penanggung_jawab ">
-							<label for="posko_penanggung_jawab" class="col-sm-2 control-label">Penanggung Jawab
-								Posko </label>
+							<label for="posko_penanggung_jawab" class="col-sm-2 control-label">Penanggung Jawab Posko </label>
 							<div class="col-sm-8">
-								<select class="form-control chosen chosen-select-deselect"
-									name="posko_penanggung_jawab" id="posko_penanggung_jawab"
-									data-placeholder="Select Penanggung Jawab Posko">
+								<select class="form-control chosen chosen-select-deselect" name="posko_penanggung_jawab" id="posko_penanggung_jawab" data-placeholder="Pilih Nama Penanggung Jawab Posko">
 									<option value=""></option>
-									<?php
-									$conditions = [
-										];
-									?>
+							<?php
+								$conditions = [];
 
-									<?php foreach (db_get_all_data('users', $conditions) as $row): ?>
+								foreach (db_get_all_data('users', $conditions) as $row): ?>
 									<option value="<?= $row->user_id ?>"><?= $row->user_nama_lengkap; ?></option>
 									<?php endforeach; ?>
 								</select>
-								<small class="info help-block">
-								</small>
+								<small class="info help-block"></small>
 							</div>
 						</div>
-
-
 
 						<div class="form-group group-posko_pic ">
 							<label for="posko_pic" class="col-sm-2 control-label">PIC Posko </label>
 							<div class="col-sm-8">
-								<select class="form-control chosen chosen-select-deselect" name="posko_pic"
-									id="posko_pic" data-placeholder="Select PIC Posko">
+								<select class="form-control chosen chosen-select-deselect" name="posko_pic" id="posko_pic" data-placeholder="Pilih Nama PIC Posko">
 									<option value=""></option>
 									<?php
 									$conditions = [

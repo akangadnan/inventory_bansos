@@ -246,11 +246,10 @@ class Posko extends Admin {
 	*
 	* @var $id String
 	*/
-	public function view($id)
-	{
+	public function view($id) {
 		$this->is_allowed('posko_view');
 
-		$this->data['posko'] = $this->model_posko->join_avaiable()->filter_avaiable()->find($id);
+		$this->data['posko'] 	= $this->model_posko->join_avaiable()->filter_avaiable()->find($id);
 
 		$this->template->title('Posko Detail');
 		$this->render('backend/standart/administrator/posko/posko_view', $this->data);
@@ -276,15 +275,10 @@ class Posko extends Admin {
 	*
 	* @return Files Excel .xls
 	*/
-	public function export()
-	{
+	public function export() {
 		$this->is_allowed('posko_export');
 
-		$this->model_posko->export(
-			'posko', 
-			'posko',
-			$this->model_posko->field_search
-		);
+		$this->model_posko->export_excel('Rekap Data Posko');
 	}
 
 	/**
@@ -292,8 +286,7 @@ class Posko extends Admin {
 	*
 	* @return Files PDF .pdf
 	*/
-	public function export_pdf()
-	{
+	public function export_pdf() {
 		$this->is_allowed('posko_export');
 
 		$this->model_posko->pdf('posko', 'posko');
@@ -333,8 +326,7 @@ class Posko extends Admin {
         $this->pdf->Output($table.'.pdf', 'H');
 	}
 
-	public function ajax_kelurahan_id($id = null)
-	{
+	public function ajax_kelurahan_id($id = null) {
 		if (!$this->is_allowed('posko_list', false)) {
 			echo json_encode([
 				'success' => false,

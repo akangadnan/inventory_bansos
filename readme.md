@@ -1,3 +1,9 @@
+
+# Aplikasi Inventory dan Logistik Bantuan Sosial 
+
+Aplikasi Inventory dan Logistik merupakan aplikasi yang akan memudahkan dalam proses pengelolaan stok barang dan gudang mulai dari proses input data barang masuk sampai proses pencatatan laporan dengan menggunakan sistem digital yaitu dengan basis web.
+
+
 ###################
 CiCOOL
 ###################

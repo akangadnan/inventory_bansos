@@ -9,11 +9,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 *| Jenis Layanan site
 *|
 */
-class Jenis_layanan extends Admin	
-{
-	
-	public function __construct()
-	{
+class Jenis_layanan extends Admin {
+	public function __construct() {
 		parent::__construct();
 
 		$this->load->model('model_jenis_layanan');
@@ -26,8 +23,7 @@ class Jenis_layanan extends Admin
 	*
 	* @var $offset String
 	*/
-	public function index($offset = 0)
-	{
+	public function index($offset = 0) {
 		$this->is_allowed('jenis_layanan_list');
 
 		$filter = $this->input->get('q');
@@ -53,8 +49,7 @@ class Jenis_layanan extends Admin
 	* Add new jenis_layanans
 	*
 	*/
-	public function add()
-	{
+	public function add() {
 		$this->is_allowed('jenis_layanan_add');
 
 		$this->template->title('Jenis Layanan New');
@@ -66,22 +61,16 @@ class Jenis_layanan extends Admin
 	*
 	* @return JSON
 	*/
-	public function add_save()
-	{
+	public function add_save() {
 		if (!$this->is_allowed('jenis_layanan_add', false)) {
 			echo json_encode([
 				'success' => false,
 				'message' => cclang('sorry_you_do_not_have_permission_to_access')
-				]);
+			]);
 			exit;
 		}
-		
-		
 
 		$this->form_validation->set_rules('jenis_layanan_nama', 'Nama Layanan', 'trim|required|max_length[255]');
-		
-
-		
 
 		if ($this->form_validation->run()) {
 		
@@ -90,26 +79,12 @@ class Jenis_layanan extends Admin
 				'jenis_layanan_created_at' => date('Y-m-d H:i:s'),
 				'jenis_layanan_user_created' => get_user_data('username'),
 			];
-
-			
-			
-//$save_data['_example'] = $this->input->post('_example');
-			
-
-
-
-			
 			
 			$save_jenis_layanan = $id = $this->model_jenis_layanan->store($save_data);
-            
 
 			if ($save_jenis_layanan) {
-				
 				$id = $save_jenis_layanan;
-				
-				
-					
-				
+
 				if ($this->input->post('save_type') == 'stay') {
 					$this->data['success'] = true;
 					$this->data['id'] 	   = $save_jenis_layanan;
@@ -123,7 +98,7 @@ class Jenis_layanan extends Admin
 						anchor('administrator/jenis_layanan/edit/' . $save_jenis_layanan, 'Edit Jenis Layanan')
 					]), 'success');
 
-            		$this->data['success'] = true;
+					$this->data['success'] = true;
 					$this->data['redirect'] = base_url('administrator/jenis_layanan');
 				}
 			} else {
@@ -131,8 +106,8 @@ class Jenis_layanan extends Admin
 					$this->data['success'] = false;
 					$this->data['message'] = cclang('data_not_change');
 				} else {
-            		$this->data['success'] = false;
-            		$this->data['message'] = cclang('data_not_change');
+					$this->data['success'] = false;
+					$this->data['message'] = cclang('data_not_change');
 					$this->data['redirect'] = base_url('administrator/jenis_layanan');
 				}
 			}
@@ -175,7 +150,8 @@ class Jenis_layanan extends Admin
 				]);
 			exit;
 		}
-				$this->form_validation->set_rules('jenis_layanan_nama', 'Nama Layanan', 'trim|required|max_length[255]');
+
+		$this->form_validation->set_rules('jenis_layanan_nama', 'Nama Layanan', 'trim|required|max_length[255]');
 		
 
 		
@@ -183,8 +159,6 @@ class Jenis_layanan extends Admin
 		
 			$save_data = [
 				'jenis_layanan_nama' => $this->input->post('jenis_layanan_nama'),
-				'jenis_layanan_created_at' => date('Y-m-d H:i:s'),
-				'jenis_layanan_user_created' => get_user_data('username'),
 			];
 
 			
@@ -216,7 +190,7 @@ class Jenis_layanan extends Admin
 						cclang('success_update_data_redirect', [
 					]), 'success');
 
-            		$this->data['success'] = true;
+					$this->data['success'] = true;
 					$this->data['redirect'] = base_url('administrator/jenis_layanan');
 				}
 			} else {
@@ -224,8 +198,8 @@ class Jenis_layanan extends Admin
 					$this->data['success'] = false;
 					$this->data['message'] = cclang('data_not_change');
 				} else {
-            		$this->data['success'] = false;
-            		$this->data['message'] = cclang('data_not_change');
+					$this->data['success'] = false;
+					$this->data['message'] = cclang('data_not_change');
 					$this->data['redirect'] = base_url('administrator/jenis_layanan');
 				}
 			}
@@ -261,10 +235,10 @@ class Jenis_layanan extends Admin
 		}
 
 		if ($remove) {
-            set_message(cclang('has_been_deleted', 'jenis_layanan'), 'success');
-        } else {
-            set_message(cclang('error_delete', 'jenis_layanan'), 'error');
-        }
+			set_message(cclang('has_been_deleted', 'jenis_layanan'), 'success');
+		} else {
+			set_message(cclang('error_delete', 'jenis_layanan'), 'error');
+		}
 
 		redirect_back();
 	}
@@ -334,31 +308,31 @@ class Jenis_layanan extends Admin
 
 		$table = $title = 'jenis_layanan';
 		$this->load->library('HtmlPdf');
-      
-        $config = array(
-            'orientation' => 'p',
-            'format' => 'a4',
-            'marges' => array(5, 5, 5, 5)
-        );
+	  
+		$config = array(
+			'orientation' => 'p',
+			'format' => 'a4',
+			'marges' => array(5, 5, 5, 5)
+		);
 
-        $this->pdf = new HtmlPdf($config);
-        $this->pdf->setDefaultFont('stsongstdlight'); 
+		$this->pdf = new HtmlPdf($config);
+		$this->pdf->setDefaultFont('stsongstdlight'); 
 
-        $result = $this->db->get($table);
-       
-        $data = $this->model_jenis_layanan->find($id);
-        $fields = $result->list_fields();
+		$result = $this->db->get($table);
+	   
+		$data = $this->model_jenis_layanan->find($id);
+		$fields = $result->list_fields();
 
-        $content = $this->pdf->loadHtmlPdf('core_template/pdf/pdf_single', [
-            'data' => $data,
-            'fields' => $fields,
-            'title' => $title
-        ], TRUE);
+		$content = $this->pdf->loadHtmlPdf('core_template/pdf/pdf_single', [
+			'data' => $data,
+			'fields' => $fields,
+			'title' => $title
+		], TRUE);
 
-        $this->pdf->initialize($config);
-        $this->pdf->pdf->SetDisplayMode('fullpage');
-        $this->pdf->writeHTML($content);
-        $this->pdf->Output($table.'.pdf', 'H');
+		$this->pdf->initialize($config);
+		$this->pdf->pdf->SetDisplayMode('fullpage');
+		$this->pdf->writeHTML($content);
+		$this->pdf->Output($table.'.pdf', 'H');
 	}
 
 	

@@ -75,20 +75,13 @@
 									<b>Input Nama Barang</b> Max Length : 255.</small>
 							</div>
 						</div>
-
-
-						<div class="form-group group-stok ">
-							<label for="stok" class="col-sm-2 control-label">Stok <i class="required">*</i>
-							</label>
+						<!-- <div class="form-group group-stok ">
+							<label for="stok" class="col-sm-2 control-label">Stok <i class="required">*</i></label>
 							<div class="col-sm-8">
-								<input type="number" class="form-control" name="stok" id="stok" placeholder="Stok"
-									value="<?= set_value('stok'); ?>">
-								<small class="info help-block">
-									<b>Input Stok</b> Max Length : 255.</small>
+								<input type="number" class="form-control" name="stok" id="stok" placeholder="Stok" value="<?= set_value('stok'); ?>">
+								<small class="info help-block"><b>Input Stok</b> Max Length : 255.</small>
 							</div>
-						</div>
-
-
+						</div> -->
 						<div class="form-group group-satuan ">
 							<label for="satuan" class="col-sm-2 control-label">Satuan <i class="required">*</i>
 							</label>
@@ -97,10 +90,8 @@
 									data-placeholder="Select Satuan">
 									<option value=""></option>
 									<?php
-										$conditions = [
-											];
-										?>
-
+									$conditions = [];
+									?>
 									<?php foreach (db_get_all_data('satuan', $conditions) as $row): ?>
 									<option value="<?= $row->id_satuan ?>"><?= $row->nama_satuan; ?></option>
 									<?php endforeach; ?>
@@ -109,9 +100,6 @@
 								</small>
 							</div>
 						</div>
-
-
-
 						<div class="form-group group-keterangan ">
 							<label for="keterangan" class="col-sm-2 control-label">Keterangan </label>
 							<div class="col-sm-8">

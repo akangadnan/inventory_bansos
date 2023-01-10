@@ -9,11 +9,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 *| Barang site
 *|
 */
-class Barang extends Admin	
-{
-	
-	public function __construct()
-	{
+class Barang extends Admin {
+	public function __construct() {
 		parent::__construct();
 
 		$this->load->model('model_barang');
@@ -26,8 +23,7 @@ class Barang extends Admin
 	*
 	* @var $offset String
 	*/
-	public function index($offset = 0)
-	{
+	public function index($offset = 0) {
 		$this->is_allowed('barang_list');
 
 		$filter = $this->input->get('q');
@@ -53,11 +49,10 @@ class Barang extends Admin
 	* Add new barangs
 	*
 	*/
-	public function add()
-	{
+	public function add() {
 		$this->is_allowed('barang_add');
 
-		$this->template->title('Barang New');
+		$this->template->title('Tambah Data Barang Baru');
 		$this->render('backend/standart/administrator/barang/barang_add', $this->data);
 	}
 
@@ -66,54 +61,32 @@ class Barang extends Admin
 	*
 	* @return JSON
 	*/
-	public function add_save()
-	{
+	public function add_save() {
 		if (!$this->is_allowed('barang_add', false)) {
 			echo json_encode([
 				'success' => false,
 				'message' => cclang('sorry_you_do_not_have_permission_to_access')
-				]);
+			]);
 			exit;
 		}
-		
-		
 
 		$this->form_validation->set_rules('nama_barang', 'Nama Barang', 'trim|required|max_length[255]');
-		
-
-		$this->form_validation->set_rules('stok', 'Stok', 'trim|required|max_length[255]');
-		
-
+		// $this->form_validation->set_rules('stok', 'Stok', 'trim|required|max_length[255]');
 		$this->form_validation->set_rules('satuan', 'Satuan', 'trim|required');
-		
-
-		
 
 		if ($this->form_validation->run()) {
-		
 			$save_data = [
-				'nama_barang' => $this->input->post('nama_barang'),
-				'stok' => $this->input->post('stok'),
-				'satuan' => $this->input->post('satuan'),
-				'keterangan' => $this->input->post('keterangan'),
+				'nama_barang' 		=> $this->input->post('nama_barang'),
+				'stok' 				=> '0',
+				'satuan' 			=> $this->input->post('satuan'),
+				'keterangan' 		=> $this->input->post('keterangan'),
 				'tanggal_pembuatan' => date('Y-m-d H:i:s'),
-				'user_created' => get_user_data('id'),			];
+				'user_created' 		=> get_user_data('id'),
+			];
 
-			
-			
-
-
-
-			
-			
 			$save_barang = $id = $this->model_barang->store($save_data);
-            
 
 			if ($save_barang) {
-				
-				
-					
-				
 				if ($this->input->post('save_type') == 'stay') {
 					$this->data['success'] = true;
 					$this->data['id'] 	   = $save_barang;
@@ -127,7 +100,7 @@ class Barang extends Admin
 						anchor('administrator/barang/edit/' . $save_barang, 'Edit Barang')
 					]), 'success');
 
-            		$this->data['success'] = true;
+					$this->data['success'] = true;
 					$this->data['redirect'] = base_url('administrator/barang');
 				}
 			} else {
@@ -135,12 +108,11 @@ class Barang extends Admin
 					$this->data['success'] = false;
 					$this->data['message'] = cclang('data_not_change');
 				} else {
-            		$this->data['success'] = false;
-            		$this->data['message'] = cclang('data_not_change');
+					$this->data['success'] = false;
+					$this->data['message'] = cclang('data_not_change');
 					$this->data['redirect'] = base_url('administrator/barang');
 				}
 			}
-
 		} else {
 			$this->data['success'] = false;
 			$this->data['message'] = 'Opss validation failed';
@@ -155,13 +127,12 @@ class Barang extends Admin
 	*
 	* @var $id String
 	*/
-	public function edit($id)
-	{
+	public function edit($id) {
 		$this->is_allowed('barang_update');
 
 		$this->data['barang'] = $this->model_barang->find($id);
 
-		$this->template->title('Barang Update');
+		$this->template->title('Update Data Barang');
 		$this->render('backend/standart/administrator/barang/barang_update', $this->data);
 	}
 
@@ -170,49 +141,30 @@ class Barang extends Admin
 	*
 	* @var $id String
 	*/
-	public function edit_save($id)
-	{
+	public function edit_save($id) {
 		if (!$this->is_allowed('barang_update', false)) {
 			echo json_encode([
 				'success' => false,
 				'message' => cclang('sorry_you_do_not_have_permission_to_access')
-				]);
+			]);
 			exit;
 		}
-				$this->form_validation->set_rules('nama_barang', 'Nama Barang', 'trim|required|max_length[255]');
-		
 
-		$this->form_validation->set_rules('stok', 'Stok', 'trim|required|max_length[255]');
-		
-
+		$this->form_validation->set_rules('nama_barang', 'Nama Barang', 'trim|required|max_length[255]');
+		// $this->form_validation->set_rules('stok', 'Stok', 'trim|required|max_length[255]');
 		$this->form_validation->set_rules('satuan', 'Satuan', 'trim|required');
 		
-
-		
 		if ($this->form_validation->run()) {
-		
 			$save_data = [
-				'nama_barang' => $this->input->post('nama_barang'),
-				'stok' => $this->input->post('stok'),
-				'satuan' => $this->input->post('satuan'),
-				'keterangan' => $this->input->post('keterangan'),
+				'nama_barang' 	=> $this->input->post('nama_barang'),
+				// 'stok' 			=> $this->input->post('stok'),
+				'satuan' 		=> $this->input->post('satuan'),
+				'keterangan' 	=> $this->input->post('keterangan'),
 			];
 
-			
-
-			
-
-
-			
-			
 			$save_barang = $this->model_barang->change($id, $save_data);
 
 			if ($save_barang) {
-
-				
-
-				
-				
 				if ($this->input->post('save_type') == 'stay') {
 					$this->data['success'] = true;
 					$this->data['id'] 	   = $id;
@@ -224,7 +176,7 @@ class Barang extends Admin
 						cclang('success_update_data_redirect', [
 					]), 'success');
 
-            		$this->data['success'] = true;
+					$this->data['success'] = true;
 					$this->data['redirect'] = base_url('administrator/barang');
 				}
 			} else {
@@ -232,8 +184,8 @@ class Barang extends Admin
 					$this->data['success'] = false;
 					$this->data['message'] = cclang('data_not_change');
 				} else {
-            		$this->data['success'] = false;
-            		$this->data['message'] = cclang('data_not_change');
+					$this->data['success'] = false;
+					$this->data['message'] = cclang('data_not_change');
 					$this->data['redirect'] = base_url('administrator/barang');
 				}
 			}
@@ -251,8 +203,7 @@ class Barang extends Admin
 	*
 	* @var $id String
 	*/
-	public function delete($id = null)
-	{
+	public function delete($id = null) {
 		$this->is_allowed('barang_delete');
 
 		$this->load->helper('file');
@@ -269,10 +220,10 @@ class Barang extends Admin
 		}
 
 		if ($remove) {
-            set_message(cclang('has_been_deleted', 'barang'), 'success');
-        } else {
-            set_message(cclang('error_delete', 'barang'), 'error');
-        }
+			set_message(cclang('has_been_deleted', 'barang'), 'success');
+		} else {
+			set_message(cclang('error_delete', 'barang'), 'error');
+		}
 
 		redirect_back();
 	}
@@ -282,8 +233,7 @@ class Barang extends Admin
 	*
 	* @var $id String
 	*/
-	public function view($id)
-	{
+	public function view($id) {
 		$this->is_allowed('barang_view');
 
 		$this->data['barang'] = $this->model_barang->join_avaiable()->filter_avaiable()->find($id);
@@ -297,16 +247,13 @@ class Barang extends Admin
 	*
 	* @var $id String
 	*/
-	private function _remove($id)
-	{
+	private function _remove($id) {
 		$barang = $this->model_barang->find($id);
-
-		
 		
 		return $this->model_barang->remove($id);
 	}
-	
-	
+
+
 	/**
 	* Export to excel
 	*
@@ -338,31 +285,31 @@ class Barang extends Admin
 
 		$table = $title = 'barang';
 		$this->load->library('HtmlPdf');
-      
-        $config = array(
-            'orientation' => 'p',
-            'format' => 'a4',
-            'marges' => array(5, 5, 5, 5)
-        );
+	  
+		$config = array(
+			'orientation' => 'p',
+			'format' => 'a4',
+			'marges' => array(5, 5, 5, 5)
+		);
 
-        $this->pdf = new HtmlPdf($config);
-        $this->pdf->setDefaultFont('stsongstdlight'); 
+		$this->pdf = new HtmlPdf($config);
+		$this->pdf->setDefaultFont('stsongstdlight'); 
 
-        $result = $this->db->get($table);
-       
-        $data = $this->model_barang->find($id);
-        $fields = $result->list_fields();
+		$result = $this->db->get($table);
+	   
+		$data = $this->model_barang->find($id);
+		$fields = $result->list_fields();
 
-        $content = $this->pdf->loadHtmlPdf('core_template/pdf/pdf_single', [
-            'data' => $data,
-            'fields' => $fields,
-            'title' => $title
-        ], TRUE);
+		$content = $this->pdf->loadHtmlPdf('core_template/pdf/pdf_single', [
+			'data' => $data,
+			'fields' => $fields,
+			'title' => $title
+		], TRUE);
 
-        $this->pdf->initialize($config);
-        $this->pdf->pdf->SetDisplayMode('fullpage');
-        $this->pdf->writeHTML($content);
-        $this->pdf->Output($table.'.pdf', 'H');
+		$this->pdf->initialize($config);
+		$this->pdf->pdf->SetDisplayMode('fullpage');
+		$this->pdf->writeHTML($content);
+		$this->pdf->Output($table.'.pdf', 'H');
 	}
 
 	

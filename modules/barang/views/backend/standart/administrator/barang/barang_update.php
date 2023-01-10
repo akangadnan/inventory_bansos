@@ -80,10 +80,7 @@
 							</div>
 						</div>
 
-
-
-
-						<div class="form-group group-stok  ">
+						<!-- <div class="form-group group-stok  ">
 							<label for="stok" class="col-sm-2 control-label">Stok <i class="required">*</i>
 							</label>
 							<div class="col-sm-8">
@@ -92,10 +89,7 @@
 								<small class="info help-block">
 									<b>Input Stok</b> Max Length : 255.</small>
 							</div>
-						</div>
-
-
-
+						</div> -->
 
 						<div class="form-group group-satuan">
 							<label for="satuan" class="col-sm-2 control-label">Satuan <i class="required">*</i>
@@ -117,13 +111,7 @@
 								</small>
 							</div>
 						</div>
-
-
-
-
-
-
-						<div class="form-group group-keterangan  ">
+						<div class="form-group group-keterangan">
 							<label for="keterangan" class="col-sm-2 control-label">Keterangan </label>
 							<div class="col-sm-8">
 							<input id="keterangan" name="keterangan" class="form-control" placeholder="Keterangan" value="<?= set_value('keterangan', $barang->keterangan); ?>"/>
@@ -131,8 +119,6 @@
 								</small>
 							</div>
 						</div>
-
-
 
 						<div class="message"></div>
 						<div class="row-fluid col-md-7 container-button-bottom">

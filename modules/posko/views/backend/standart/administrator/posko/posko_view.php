@@ -1,6 +1,4 @@
 <?php
-echo json_encode($posko);
-exit;
 	$kontak_pj = db_get_all_data('user_kontak', ['user_id' => $posko->posko_penanggung_jawab]);
 
 	$pj = [];
@@ -49,25 +47,20 @@ exit;
 		<li class="active"><?= cclang('detail'); ?></li>
 	</ol>
 </section>
-<!-- Main content -->
 <section class="content">
 	<div class="row">
 		<div class="col-md-12">
 			<div class="box box-primary">
-				<div class="box-body ">
-					<!-- Widget: user widget style 1 -->
+				<div class="box-body">
 					<div class="box box-widget widget-user-2">
-						<!-- Add the bg color to the header using any of the bg-* classes -->
 						<div class="widget-user-header">
 							<div class="widget-user-image">
 								<img class="img-circle" src="<?= BASE_ASSET; ?>img/view.png" alt="User Avatar">
 							</div>
-							<!-- /.widget-user-image -->
 							<h3 class="widget-user-username">Posko</h3>
 							<h5 class="widget-user-desc">Detail Posko</h5>
 							<hr>
 						</div>
-
 						<div class="row">
 							<div class="col-md-6">
 								<div class="box box-primary">
@@ -126,7 +119,20 @@ exit;
 							<div class="col-md-6">
 								<div class="box box-primary">
 									<div class="box-header"><h3 class="box-title">Detail Layanan Posko</h3></div>
-									<div class="box-body"></div>
+									<div class="box-body">
+										<table class="table table-striped">
+											<tr>
+												<td>Jenis Layanan</td>
+												<td>PIC</td>
+												<td>Nomor Kontak</td>
+											</tr>
+											<tr>
+												<td>Nomor Kontak PIC</td>
+												<td>:</td>
+												<td><?= _ent($kontak_pc);?></td>
+											</tr>
+										</table>
+									</div>
 								</div>
 							</div>
 						</div>

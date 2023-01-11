@@ -145,66 +145,6 @@
 				<?php if ($this->aauth->get_user()) : ?>
 				<div class="navbar-custom-menu">
 					<ul class="nav navbar-nav">
-
-
-
-						<?php
-			  app()->load->model('notification/model_notification');
-
-			  // app()->db->where(['read' => 0]);
-			  $notifications = app()->model_notification->get(null, null, 20, 0);
-			  app()->db->where(['read' => 0]);
-
-			  $total = app()->model_notification->count_all(null, 'read', 0);
-
-			  ?>
-						<!-- Notifications: style can be found in dropdown.less -->
-
-
-						<li class="dropdown notifications-menu">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-								<i class="fa fa-bell-o"></i>
-								<span
-									style="<?= $total == 0 ? 'background: #ccc !important; color#fff !important;' : '' ?>"
-									class="label label-<?= $total > 0 ? 'warning' : '' ?>"><?= $total ?></span>
-							</a>
-							<ul class="dropdown-menu">
-
-								<li class="header"><?= $total ?> Notification
-									<!-- <?php if ($total > 0) { ?> -->
-									<span class="pull-right">
-										<a href="#" class="mark-all-as-read-button">Mark all as read</a>
-									</span>
-									<!-- <?php } ?> -->
-								</li>
-								<li>
-									<!-- inner menu: contains the actual data -->
-									<ul class="menu">
-										<?php
-					  foreach ($notifications as $notif) :
-					  ?>
-										<li>
-											<a href="<?= base_url('administrator/notification/view/' . $notif->id) ?>"
-												data-id="<?= $notif->id ?>"
-												class="<?= $notif->read == 0 ? 'unread-notification' : '' ?>">
-												<i class="fa fa-circle-o text-aqua"></i> <?= $notif->title ?>
-											</a>
-										</li>
-										<?php endforeach ?>
-									</ul>
-								</li>
-								<li class="footer text-center" style="padding: 7px">
-									<?php //if($total>0) { 
-					?>
-									<span class="">
-										<a href="<?php echo base_url(ADMIN_NAMESPACE_URL . '/' . 'notification') ?>"
-											class="">See All</a>
-									</span>
-									<?php //} 
-					?>
-								</li>
-							</ul>
-						</li>
 						<li class="dropdown ">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
 								<span class="flag-icon <?= get_current_initial_lang(); ?>"></span>

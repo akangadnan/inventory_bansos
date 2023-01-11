@@ -132,13 +132,11 @@
 								<table class="table table-bordered table-striped dataTable">
 									<thead>
 										<tr class="">
-											<th>
-												<input type="checkbox" class="flat-red toltip" id="check_all"
-													name="check_all" title="check all">
-											</th>
+											<th><input type="checkbox" class="flat-red toltip" id="check_all" name="check_all" title="check all"></th>
 											<th data-field="kecamatan_id" data-sort="1" data-primary-key="0"><?= cclang('kecamatan_id') ?></th>
 											<th data-field="kelurahan_id" data-sort="1" data-primary-key="0"><?= cclang('kelurahan_id') ?></th>
 											<th data-field="posko_nama" data-sort="1" data-primary-key="0"><?= cclang('posko_nama') ?></th>
+											<th data-field="layanan_posko" data-sort="1" data-primary-key="0"><?= cclang('layanan_posko') ?></th>
 											<th data-field="posko_penanggung_jawab" data-sort="1" data-primary-key="0"><?= cclang('posko_penanggung_jawab') ?></th>
 											<th data-field="posko_pic" data-sort="1" data-primary-key="0"><?= cclang('posko_pic') ?></th>
 											<th>Action</th>
@@ -153,6 +151,7 @@
 											<td><?php if ($posko->kecamatan_id) { echo _ent($posko->kecamatan_nama);}?></td>
 											<td><?php if ($posko->kelurahan_id) { echo _ent($posko->kelurahan_nama);}?></td>
 											<td><span class="list_group-posko-nama"><?= _ent($posko->nama_posko); ?></span></td>
+											<td><span class="list_group-layanan-posko"><?= count(db_get_all_data('layanan_posko', ['posko_id' => $posko->posko_id])) > 0 ? count(db_get_all_data('layanan_posko', ['posko_id' => $posko->posko_id])) : '<i style="color: red; font-weight: bold;">Tidak ada layanan</i>';?></span></td>
 											<td><?php echo !empty($posko->posko_penanggung_jawab) ? _ent($posko->nama_lengkap_penanggung_jawab) : '<i style="color: red;">Belum ditentukan</i>';?></td>
 											<td><?php echo !empty($posko->posko_pic) ? $posko->nama_lengkap_pic : '<i style="color: red;">Belum ditentukan</i>';?></td>
 											<td width="200">

@@ -113,14 +113,11 @@ class Model_posko extends MY_Model {
 							pic.user_nama_lengkap AS nama_lengkap_pic');
 		
 		$this->db->group_by('posko.posko_id');
-							
-
 
 		return $this;
 	}
 
 	public function filter_avaiable() {
-
 		if (!$this->aauth->is_admin()) {
 			$this->db->where($this->table_name.'.posko_user_created', get_user_data('id'));
 		}

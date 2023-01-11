@@ -88,6 +88,24 @@ class Posko extends Admin {
 
 			$save_posko = $id = $this->model_posko->store($save_data);
 
+			$jenis_layanan 	= $this->input->post('jenis_layanan[]');
+			$pic_layanan 	= $this->input->post('pic_layanan[]');
+
+			$data_layanan = [];
+			if (count($jenis_layanan) > 0) {
+				for ($i=0; $i < count($jenis_layanan); $i++) {
+					$data_layanan[] = [
+						'posko_id' 						=> $id,
+						'jenis_layanan_id' 				=> $jenis_layanan[$i],
+						'layanan_posko_pic' 			=> $pic_layanan[$i],
+						'layanan_posko_created_at' 		=> date('Y-m-d H:i:s'),
+						'layanan_posko_user_created' 	=> get_user_data('id'),
+					];
+				}
+			}
+
+			$this->db->insert_batch('layanan_posko', $data_layanan);
+
 			if ($save_posko) {
 				$id = $save_posko;
 

@@ -395,7 +395,7 @@
 	</script>
 
 
-	<script src="<?= BASE_ASSET; ?>/js/custom.js"></script>
+	<script src="<?= BASE_ASSET; ?>js/custom.js"></script>
 </body>
 
 </html>

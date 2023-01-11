@@ -51,6 +51,15 @@
 </style>
 <!-- Main content -->
 <section class="content">
+<?= form_open(base_url('administrator/posko/edit_save/'.$this->uri->segment(4)), [
+		'name' 		=> 'form_posko',
+		// 'class' 	=> 'form-horizontal form-step',
+		'id' 		=> 'form_posko',
+		'method' 	=> 'POST'
+	]);
+
+	$user_groups = $this->model_group->get_user_group_ids();
+?>
 	<div class="row">
 		<div class="col-md-12">
 			<div class="box box-primary">
@@ -67,122 +76,163 @@
 							<h5 class="widget-user-desc">Edit Posko</h5>
 							<hr>
 						</div>
-						<?= form_open(base_url('administrator/posko/edit_save/'.$this->uri->segment(4)), [
-							'name' => 'form_posko',
-							'class' => 'form-horizontal form-step',
-							'id' => 'form_posko',
-							'method' => 'POST'
-						]); ?>
-
-						<?php
-						$user_groups = $this->model_group->get_user_group_ids();
-						?>
-
-						<div class="form-group group-kecamatan-id">
-							<label for="kecamatan_id" class="col-sm-2 control-label">Kecamatan <i class="required">*</i></label>
-							<div class="col-sm-8">
-								<select class="form-control chosen chosen-select-deselect" name="kecamatan_id" id="kecamatan_id" data-placeholder="Pilih Kecamatan">
-									<option value=""></option>
-									<?php
-										$conditions = [
-											];
-										?>
-									<?php foreach (db_get_all_data('kecamatan', $conditions) as $row): ?>
-									<option <?= $row->kecamatan_id == $posko->kecamatan_id ? 'selected' : ''; ?>
-										value="<?= $row->kecamatan_id ?>"><?= $row->kecamatan_nama; ?></option>
-									<?php endforeach; ?>
-								</select>
-								<small class="info help-block"></small>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="form-group group-posko-nama  ">
+									<label for="posko_nama" class="control-label">Nama Posko <i class="required">*</i></label>
+									<input type="text" class="form-control" name="posko_nama" id="posko_nama" placeholder="" value="<?= set_value('posko_nama', $posko->posko_nama); ?>">
+									<small class="info help-block"><b>Input Posko Nama</b> Max Length : 255.</small>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group group-kecamatan-id">
+									<label for="kecamatan_id" class="control-label">Kecamatan <i class="required">*</i></label>
+									<select class="form-control chosen chosen-select-deselect" name="kecamatan_id" id="kecamatan_id" data-placeholder="Pilih Kecamatan">
+										<option value=""></option>
+										<?php
+											$conditions = [
+												];
+											?>
+										<?php foreach (db_get_all_data('kecamatan', $conditions) as $row): ?>
+										<option <?= $row->kecamatan_id == $posko->kecamatan_id ? 'selected' : ''; ?> value="<?= $row->kecamatan_id ?>"><?= $row->kecamatan_nama; ?></option>
+										<?php endforeach; ?>
+									</select>
+									<small class="info help-block"></small>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group group-kelurahan-id">
+									<label for="kelurahan_id" class="control-label">Kelurahan <i class="required">*</i></label>
+									<select class="form-control chosen chosen-select-deselect" name="kelurahan_id" id="kelurahan_id" data-placeholder="Pilih Kelurahan">
+										<option value=""></option>
+									</select>
+									<small class="info help-block"></small>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group group-posko_penanggung_jawab">
+									<label for="posko_penanggung_jawab" class="control-label">Penanggung Jawab Posko</label>
+									<select class="form-control chosen chosen-select-deselect" name="posko_penanggung_jawab" id="posko_penanggung_jawab" data-placeholder="Pilih Nama Penanggung Jawab Posko">
+										<option value=""></option>
+										<?php
+											$conditions = [
+												];
+											?>
+										<?php foreach (db_get_all_data('users', $conditions) as $row): ?>
+										<option <?= $row->user_id == $posko->posko_penanggung_jawab ? 'selected' : ''; ?>
+											value="<?= $row->user_id ?>"><?= $row->user_nama_lengkap; ?></option>
+										<?php endforeach; ?>
+									</select>
+									<small class="info help-block"></small>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group group-posko_pic">
+									<label for="posko_pic" class="control-label">PIC Posko </label>
+									<select class="form-control chosen chosen-select-deselect" name="posko_pic" id="posko_pic" data-placeholder="Pilih Nama PIC Posko">
+										<option value=""></option>
+										<?php
+											$conditions = [
+												];
+											?>
+										<?php foreach (db_get_all_data('users', $conditions) as $row): ?>
+										<option <?= $row->user_id == $posko->posko_pic ? 'selected' : ''; ?>
+											value="<?= $row->user_id ?>"><?= $row->user_nama_lengkap; ?></option>
+										<?php endforeach; ?>
+									</select>
+									<small class="info help-block"></small>
+								</div>
 							</div>
 						</div>
 
-						<div class="form-group group-kelurahan-id">
-							<label for="kelurahan_id" class="col-sm-2 control-label">Kelurahan <i class="required">*</i></label>
-							<div class="col-sm-8">
-								<select class="form-control chosen chosen-select-deselect" name="kelurahan_id" id="kelurahan_id" data-placeholder="Pilih Kelurahan">
-									<option value=""></option>
-								</select>
-								<small class="info help-block"></small>
-							</div>
-						</div>
-
-						<div class="form-group group-posko-nama  ">
-							<label for="posko_nama" class="col-sm-2 control-label">Nama Posko <i class="required">*</i></label>
-							<div class="col-sm-8">
-								<input type="text" class="form-control" name="posko_nama" id="posko_nama" placeholder="" value="<?= set_value('posko_nama', $posko->posko_nama); ?>">
-								<small class="info help-block"><b>Input Posko Nama</b> Max Length : 255.</small>
-							</div>
-						</div>
-
-						<div class="form-group group-posko_penanggung_jawab">
-							<label for="posko_penanggung_jawab" class="col-sm-2 control-label">Penanggung Jawab Posko</label>
-							<div class="col-sm-8">
-								<select class="form-control chosen chosen-select-deselect" name="posko_penanggung_jawab" id="posko_penanggung_jawab" data-placeholder="Pilih Nama Penanggung Jawab Posko">
-									<option value=""></option>
-									<?php
-										$conditions = [
-											];
-										?>
-									<?php foreach (db_get_all_data('users', $conditions) as $row): ?>
-									<option <?= $row->user_id == $posko->posko_penanggung_jawab ? 'selected' : ''; ?>
-										value="<?= $row->user_id ?>"><?= $row->user_nama_lengkap; ?></option>
-									<?php endforeach; ?>
-								</select>
-								<small class="info help-block">
-								</small>
-							</div>
-						</div>
-
-						<div class="form-group group-posko_pic">
-							<label for="posko_pic" class="col-sm-2 control-label">PIC Posko </label>
-							<div class="col-sm-8">
-								<select class="form-control chosen chosen-select-deselect" name="posko_pic" id="posko_pic" data-placeholder="Pilih Nama PIC Posko">
-									<option value=""></option>
-									<?php
-										$conditions = [
-											];
-										?>
-									<?php foreach (db_get_all_data('users', $conditions) as $row): ?>
-									<option <?= $row->user_id == $posko->posko_pic ? 'selected' : ''; ?>
-										value="<?= $row->user_id ?>"><?= $row->user_nama_lengkap; ?></option>
-									<?php endforeach; ?>
-								</select>
-								<small class="info help-block">
-								</small>
-							</div>
-						</div>
-
-						<div class="message"></div>
-						<div class="row-fluid col-md-7 container-button-bottom">
-							<button class="btn btn-flat btn-primary btn_save btn_action" id="btn_save" data-stype='stay'
-								title="<?= cclang('save_button'); ?> (Ctrl+s)">
-								<i class="fa fa-save"></i> <?= cclang('save_button'); ?>
-							</button>
-							<a class="btn btn-flat btn-info btn_save btn_action btn_save_back" id="btn_save"
-								data-stype='back' title="<?= cclang('save_and_go_the_list_button'); ?> (Ctrl+d)">
-								<i class="ion ion-ios-list-outline"></i> <?= cclang('save_and_go_the_list_button'); ?>
-							</a>
-
-							<div class="custom-button-wrapper">
-
-							</div>
-							<a class="btn btn-flat btn-default btn_action" id="btn_cancel"
-								title="<?= cclang('cancel_button'); ?> (Ctrl+x)">
-								<i class="fa fa-undo"></i> <?= cclang('cancel_button'); ?>
-							</a>
-							<span class="loading loading-hide">
-								<img src="<?= BASE_ASSET; ?>/img/loading-spin-primary.svg">
-								<i><?= cclang('loading_saving_data'); ?></i>
-							</span>
-						</div>
-						<?= form_close(); ?>
 					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<div class="box box-primary">
+								<div class="box-header"><h3 class="box-title">Jenis Layanan Posko</h3></div>
+								<div class="box-body">
+									<div class="row">
+										<div class="col-md-12"><a href="javascript:void(0);" id="addRow" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Tambahkan Layanan</a></div>
+									</div>
+									<div class="row">
+										<table class="table table-striped" id="tableJenisLayanan">
+											<thead>
+												<tr>
+													<th>Jenis Layanan</th>
+													<th>PIC Layanan</th>
+													<th>Action</th>
+												</tr>
+											</thead>
+											<tbody>
+										<?php
+											$lajens = db_get_all_data('layanan_posko', ['posko_id' => $posko->posko_id]);
+										?>
+												<tr id="inputFormRow">
+													<td>
+														<select class="form-control chosen chosen-select-deselect" name="jenis_layanan[]" id="jenis_layanan[]" data-placeholder="Pilih Jenis Layanan Posko">
+															<option value=""></option>
+														<?php
+															$conditions = [];
+															foreach (db_get_all_data('jenis_layanan', $conditions) as $row) {
+														?>
+															<option value="<?= $row->jenis_layanan_id;?>" <?= $lajens[1]->jenis_layanan_id == $row->jenis_layanan_id ? 'selected="selected"' : '';?> ><?= $row->jenis_layanan_nama; ?></option>
+														<?php }; ?>
+														</select>
+													</td>
+													<td>
+														<select class="form-control chosen chosen-select-deselect" name="pic_layanan[]" id="pic_layanan[]" data-placeholder="Pilih PIC Layanan Posko">
+															<option value=""></option>
+														<?php
+															$conditions = [];
+															foreach (db_get_all_data('users', $conditions) as $row) {
+														?>
+															<option value="<?= $row->user_id ?>"><?= $row->user_nama_lengkap; ?></option>
+														<?php }; ?>
+														</select>
+													</td>
+													<td>
+														&nbsp;
+													</td>
+												</tr>
+										
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="message"></div>
 				</div>
 				<!--/box body -->
+				<div class="box-footer">
+					<button class="btn btn-flat btn-primary btn_save btn_action" id="btn_save" data-stype='stay'
+						title="<?= cclang('save_button'); ?> (Ctrl+s)">
+						<i class="fa fa-save"></i> <?= cclang('save_button'); ?>
+					</button>
+					<a class="btn btn-flat btn-info btn_save btn_action btn_save_back" id="btn_save"
+						data-stype='back' title="<?= cclang('save_and_go_the_list_button'); ?> (Ctrl+d)">
+						<i class="ion ion-ios-list-outline"></i> <?= cclang('save_and_go_the_list_button'); ?>
+					</a>
+					<a class="btn btn-flat btn-default btn_action" id="btn_cancel"
+						title="<?= cclang('cancel_button'); ?> (Ctrl+x)">
+						<i class="fa fa-undo"></i> <?= cclang('cancel_button'); ?>
+					</a>
+					<span class="loading loading-hide">
+						<img src="<?= BASE_ASSET; ?>/img/loading-spin-primary.svg">
+						<i><?= cclang('loading_saving_data'); ?></i>
+					</span>
+				</div>
 			</div>
 			<!--/box -->
 		</div>
 	</div>
+	<?= form_close(); ?>
 </section>
 <!-- /.content -->
 <!-- Page script -->
@@ -197,6 +247,37 @@
 	*/
 
 		})()
+
+		$("#addRow").on('click', function () {
+			var html = '';
+			html += '<tr id="inputFormRow">';
+			html += '<td><select class="form-control chosen chosen-select-deselect" name="jenis_layanan[]" id="jenis_layanan[]" data-placeholder="Pilih Jenis Layanan Posko"><option value="">- Pilih Layanan -</option>';
+			<?php
+				$conditions = [];
+				foreach (db_get_all_data('jenis_layanan', $conditions) as $row) {
+			?>
+				html += '<option value="<?= $row->jenis_layanan_id ?>"><?= $row->jenis_layanan_nama; ?></option>';
+			<?php }; ?>
+			html +=	'</select></td>';
+			html += '<td><select class="form-control chosen chosen-select-deselect" name="pic_layanan[]" id="pic_layanan[]" data-placeholder="Pilih PIC Layanan Posko"><option value="">- Pilih PIC Layanan -</option>';
+			<?php
+				$conditions = [];
+				foreach (db_get_all_data('users', $conditions) as $row) {
+			?>
+				html += '<option value="<?= $row->user_id ?>"><?= $row->user_nama_lengkap; ?></option>';
+			<?php }; ?>
+			html +=	'</select></td>';
+			html +=	'<td><a href="javascript:void(0);" id="removeRow" class="btn btn-danger btn-sm"><i class="fa fa-times"></i></a></td>';
+			html += '</tr>';
+
+			$('#tableJenisLayanan tr:last').after(html);
+		});
+
+		$(document).on('click', '#removeRow', function () {
+			$(this).closest('#inputFormRow').remove();
+		});
+
+
 
 		$('#btn_cancel').click(function () {
 			swal({

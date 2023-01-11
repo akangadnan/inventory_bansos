@@ -98,11 +98,7 @@
 								<select class="form-control chosen chosen-select-deselect" name="satuan" id="satuan"
 									data-placeholder="Select Satuan">
 									<option value=""></option>
-									<?php
-										$conditions = [
-											];
-										?>
-									<?php foreach (db_get_all_data('satuan', $conditions) as $row): ?>
+									<?php foreach (db_get_all_data('satuan', ['satuan_status' => '1']) as $row): ?>
 									<option <?= $row->id_satuan == $barang->satuan ? 'selected' : ''; ?>
 										value="<?= $row->id_satuan ?>"><?= $row->nama_satuan; ?></option>
 									<?php endforeach; ?>

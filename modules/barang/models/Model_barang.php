@@ -103,6 +103,7 @@ class Model_barang extends MY_Model {
 		$this->db->select('satuan.nama_satuan,barang.*,satuan.nama_satuan as satuan_nama_satuan,satuan.nama_satuan as nama_satuan,SUM( barangmasuk.jumlah ) AS total_bantuan');
 		$this->db->join('satuan', 'satuan.id_satuan = barang.satuan', 'LEFT');
 		$this->db->join('barangmasuk', 'barang.id_barang = barangmasuk.id_barang', 'LEFT');
+		
 		$this->db->group_by('barang.id_barang');
 		$this->db->order_by('barang.id_barang', 'DESC');
 

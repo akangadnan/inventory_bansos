@@ -92,7 +92,7 @@
 									<?php
 									$conditions = [];
 									?>
-									<?php foreach (db_get_all_data('satuan', $conditions) as $row): ?>
+									<?php foreach (db_get_all_data('satuan', ['satuan_status' => '1']) as $row): ?>
 									<option value="<?= $row->id_satuan ?>"><?= $row->nama_satuan; ?></option>
 									<?php endforeach; ?>
 								</select>

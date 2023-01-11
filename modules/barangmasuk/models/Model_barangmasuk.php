@@ -2,31 +2,28 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Model_barangmasuk extends MY_Model {
-
-	private $primary_key    = 'id_barangmasuk';
-	private $table_name     = 'barangmasuk';
-	public $field_search   = ['asal', 'id_barang', 'jumlah', 'keterangan', 'sumber.nama_sumber', 'barang.nama_barang'];
-	public $sort_option = ['id_barangmasuk', 'DESC'];
+	private $primary_key 	= 'id_barangmasuk';
+	private $table_name 	= 'barangmasuk';
+	public $field_search 	= ['asal_posko', 'nama_donatur', 'phone_donatur', 'kecamatan_id', 'kelurahan_id', 'keterangan', 'tanggal', 'posko.posko_nama', 'kecamatan.kecamatan_nama', 'kelurahan.kelurahan_nama'];
+	public $sort_option 	= ['id_barangmasuk', 'DESC'];
 	
-	public function __construct()
-	{
+	public function __construct() {
 		$config = array(
-			'primary_key'   => $this->primary_key,
-			'table_name'    => $this->table_name,
-			'field_search'  => $this->field_search,
-			'sort_option'   => $this->sort_option,
+			'primary_key' 	=> $this->primary_key,
+			'table_name' 	=> $this->table_name,
+			'field_search' 	=> $this->field_search,
+			'sort_option' 	=> $this->sort_option,
 		 );
 
 		parent::__construct($config);
 	}
 
-	public function count_all($q = null, $field = null)
-	{
-		$iterasi = 1;
-		$num = count($this->field_search);
-		$where = NULL;
-		$q = $this->scurity($q);
-		$field = $this->scurity($field);
+	public function count_all($q = null, $field = null) {
+		$iterasi 	= 1;
+		$num 		= count($this->field_search);
+		$where 		= NULL;
+		$q 			= $this->scurity($q);
+		$field 		= $this->scurity($field);
 
 		if (empty($field)) {
 			foreach ($this->field_search as $field) {
@@ -35,11 +32,13 @@ class Model_barangmasuk extends MY_Model {
 				if (strpos($field, '.')) {
 					$f_search = $field;
 				}
+
 				if ($iterasi == 1) {
 					$where .=  $f_search . " LIKE '%" . $q . "%' ";
 				} else {
 					$where .= "OR " .  $f_search . " LIKE '%" . $q . "%' ";
 				}
+
 				$iterasi++;
 			}
 
@@ -55,13 +54,12 @@ class Model_barangmasuk extends MY_Model {
 		return $query->num_rows();
 	}
 
-	public function get($q = null, $field = null, $limit = 0, $offset = 0, $select_field = [])
-	{
-		$iterasi = 1;
-		$num = count($this->field_search);
-		$where = NULL;
-		$q = $this->scurity($q);
-		$field = $this->scurity($field);
+	public function get($q = null, $field = null, $limit = 0, $offset = 0, $select_field = []) {
+		$iterasi 	= 1;
+		$num 		= count($this->field_search);
+		$where 		= NULL;
+		$q 			= $this->scurity($q);
+		$field 		= $this->scurity($field);
 
 		if (empty($field)) {
 			foreach ($this->field_search as $field) {
@@ -75,6 +73,7 @@ class Model_barangmasuk extends MY_Model {
 				} else {
 					$where .= "OR " .$f_search . " LIKE '%" . $q . "%' ";
 				}
+
 				$iterasi++;
 			}
 
@@ -99,13 +98,19 @@ class Model_barangmasuk extends MY_Model {
 	}
 
 	public function join_avaiable() {
-		$this->db->join('sumber', 'sumber.id_sumber = barangmasuk.asal', 'LEFT');
-		$this->db->join('barang', 'barang.id_barang = barangmasuk.id_barang', 'LEFT');
-		$this->db->join('satuan', 'barang.satuan = satuan.id_satuan', 'LEFT');
 		$this->db->join('posko', 'barangmasuk.asal_posko = posko.posko_id', 'LEFT');
-		
-		$this->db->select('sumber.nama_sumber,barang.nama_barang,barangmasuk.*,posko.*,satuan.*,sumber.nama_sumber as sumber_nama_sumber,sumber.nama_sumber as nama_sumber,barang.nama_barang as barang_nama_barang,barang.nama_barang as nama_barang,satuan.nama_satuan AS satuan_nama_satuan');
+		$this->db->join('kecamatan', 'kecamatan.kecamatan_id = barangmasuk.kecamatan_id', 'LEFT');
+		$this->db->join('kelurahan', 'kelurahan.kelurahan_id = barangmasuk.kelurahan_id', 'LEFT');
 
+		$this->db->select('barangmasuk.id_barangmasuk AS id_barangmasuk,
+							barangmasuk.tanggal AS tanggal,
+							barangmasuk.waktu AS waktu,
+							posko.posko_nama AS posko_nama,
+							barangmasuk.nama_donatur AS nama_donatur,
+							barangmasuk.phone_donatur AS kontak_donatur,
+							kecamatan.kecamatan_nama AS kecamatan_nama,
+							kelurahan.kelurahan_nama AS kelurahan_nama,
+							barangmasuk.keterangan AS keterangan');
 
 		return $this;
 	}

@@ -24,8 +24,7 @@ class Barangmasuk extends Admin	{
 	*
 	* @var $offset String
 	*/
-	public function index($offset = 0)
-	{
+	public function index($offset = 0) {
 		$this->is_allowed('barangmasuk_list');
 
 		$filter = $this->input->get('q');
@@ -51,8 +50,7 @@ class Barangmasuk extends Admin	{
 	* Add new barangmasuks
 	*
 	*/
-	public function add()
-	{
+	public function add() {
 		$this->is_allowed('barangmasuk_add');
 
 		$this->template->title('Barang Masuk New');
@@ -64,110 +62,64 @@ class Barangmasuk extends Admin	{
 	*
 	* @return JSON
 	*/
-	public function add_save()
-	{
+	public function add_save() {
 		if (!$this->is_allowed('barangmasuk_add', false)) {
 			echo json_encode([
 				'success' => false,
 				'message' => cclang('sorry_you_do_not_have_permission_to_access')
-				]);
+			]);
+
 			exit;
 		}
-		
-		
 
 		$this->form_validation->set_rules('asal_posko', 'Asal Posko', 'trim|required');
 		$this->form_validation->set_rules('nama_donatur', 'Nama Donatur', 'trim|required');
 		$this->form_validation->set_rules('alamat_donatur', 'Alamat Donatur', 'trim|required');
 		$this->form_validation->set_rules('phone_donatur', 'No Telepon Donatur', 'trim|required');
-		// $this->form_validation->set_rules('asal', 'Asal', 'trim|required');
-		
-
-		// $this->form_validation->set_rules('id_barang', 'Nama Barang', 'trim|required');
-		
-
-		// $this->form_validation->set_rules('jumlah', 'Jumlah Stok', 'trim|required|max_length[12]');
-		
-
 		$this->form_validation->set_rules('tanggal', 'Tanggal', 'trim|required');
-		
-
 		$this->form_validation->set_rules('waktu', 'Waktu', 'trim|required');
-		
-
-		
+		$this->form_validation->set_rules('kecamatan_id', 'Kecamatan', 'trim|required');
+		$this->form_validation->set_rules('kelurahan_id', 'Kelurahan', 'trim|required');
 
 		if ($this->form_validation->run()) {
-			$id_barang 	= $this->input->post('id_barang[]');
+			$barang 	= $this->input->post('id_barang[]');
 			$jumlah 	= $this->input->post('jumlah[]');
+			$keterangan = $this->input->post('keterangan_barang[]');
 
-			$data_barangmasuk = [];
-			if (count($id_barang) > 0) {
-				for ($i=0; $i < count($id_barang); $i++) {
-					$data_layanan[] = [
-						'asal_posko' => $this->input->post('asal_posko'),
-						'nama_donatur' => $this->input->post('nama_donatur'),
-						'alamat_donatur' => $this->input->post('alamat_donatur'),
-						'phone_donatur' => $this->input->post('phone_donatur'),
-						'id_barang' => $id_barang[$i],
-						'jumlah' => $jumlah[$i],
-						'keterangan' => $this->input->post('keterangan'),
-						'tanggal' => $this->input->post('tanggal'),
-						'waktu' => $this->input->post('waktu'),
-						'created_at' => date('Y-m-d H:i:s'),
-						'user_created' => get_user_data('id'),
+			$save_data = [
+				'asal_posko' 		=> $this->input->post('asal_posko'),
+				'nama_donatur' 		=> $this->input->post('nama_donatur'),
+				'alamat_donatur' 	=> $this->input->post('alamat_donatur'),
+				'phone_donatur' 	=> $this->input->post('phone_donatur'),
+				'keterangan' 		=> $this->input->post('keterangan'),
+				'tanggal' 			=> $this->input->post('tanggal'),
+				'waktu' 			=> $this->input->post('waktu'),
+				'kecamatan_id' 		=> $this->input->post('kecamatan_id'),
+				'kelurahan_id' 		=> $this->input->post('kelurahan_id'),
+				'created_at' 		=> date('Y-m-d H:i:s'),
+				'user_created' 		=> get_user_data('id'),
+			];
 
-						// 'posko_id' 						=> $id,
-						// 'jenis_layanan_id' 				=> $jenis_layanan[$i],
-						// 'layanan_posko_pic' 			=> $pic_layanan[$i],
-						// 'layanan_posko_created_at' 		=> date('Y-m-d H:i:s'),
-						// 'layanan_posko_user_created' 	=> get_user_data('id'),
+			$save_barangmasuk = $id = $this->model_barangmasuk->store($save_data);
+
+			if (count($barang) > 0) {
+				$data_barang_masuk = [];
+
+				for ($i=0; $i < count($barang); $i++) {
+					$data_barang_masuk[] = [
+						'barangmasuk_id' 					=> $id,
+						'barang_id' 						=> $barang[$i],
+						'barangmasuk_detail_jumlah' 		=> $jumlah[$i],
+						'barangmasuk_detail_keterangan' 	=> $keterangan[$i],
+						'barangmasuk_detail_user_created' 	=> get_user_data('id'),
+						'barangmasuk_detail_created_at' 	=> date('Y-m-d H:i:s'),
 					];
 				}
-				$barang = $this->db->where('id_barang', $id_barang)->from('barang')->get()->row();
-				$stok 	= ($barang->stok + $jumlah[$i]);
 
-				$update_barang = [
-					'stok' => $stok,
-				];
-				
-				$save_barang = $this->model_barang->change($id_barang, $update_barang);
+				$this->db->insert_batch('barangmasuk_detail', $data_barang_masuk);
 			}
 
-			$this->db->insert_batch('layanan_posko', $data_layanan);
-
-
-			// $save_data = [
-			// 	'asal_posko' => $this->input->post('asal_posko'),
-			// 	'asal' => $this->input->post('asal'),
-			// 	'id_barang' => $id_barang,
-			// 	'jumlah' => $jumlah,
-			// 	'keterangan' => $this->input->post('keterangan'),
-			// 	'tanggal' => $this->input->post('tanggal'),
-			// 	'waktu' => $this->input->post('waktu'),
-			// 	'created_at' => date('Y-m-d H:i:s'),
-			// 	'user_created' => get_user_data('id'),
-			// ];
-			
-			
-			// $save_barangmasuk = $id = $this->model_barangmasuk->store($save_data);
-
-			// $barang = $this->db->where('id_barang', $id_barang)->from('barang')->get()->row();
-			// $stok 	= ($barang->stok + $jumlah);
-
-			// $update_barang = [
-			// 	'stok' => $stok,
-			// ];
-			
-			// $save_barang = $this->model_barang->change($id_barang, $update_barang);
-
 			if ($save_barangmasuk) {
-				
-				$id = $save_barangmasuk;
-				
-				
-					
-				
 				if ($this->input->post('save_type') == 'stay') {
 					$this->data['success'] = true;
 					$this->data['id'] 	   = $save_barangmasuk;
@@ -194,7 +146,6 @@ class Barangmasuk extends Admin	{
 					$this->data['redirect'] = base_url('administrator/barangmasuk');
 				}
 			}
-
 		} else {
 			$this->data['success'] = false;
 			$this->data['message'] = 'Opss validation failed';
@@ -463,8 +414,7 @@ class Barangmasuk extends Admin	{
         $this->pdf->Output($table.'.pdf', 'H');
 	}
 
-	public function ajax_barang($id = null)
-	{
+	public function ajax_barang($id = null) {
 		if (!$this->is_allowed('barangmasuk_list', false)) {
 			echo json_encode([
 				'success' => false,
@@ -479,6 +429,20 @@ class Barangmasuk extends Admin	{
 			$results = $this->db->join('satuan', 'satuan.id_satuan = barang.satuan', 'left')->get('barang')->result();
 		}
 
+		$this->response($results);	
+	}
+
+	public function ajax_kelurahan_id($id = null) {
+		if (!$this->is_allowed('barangmasuk_list', false)) {
+			echo json_encode([
+				'success' => false,
+				'message' => cclang('sorry_you_do_not_have_permission_to_access')
+			]);
+
+			exit;
+		}
+
+		$results = db_get_all_data('kelurahan', ['kecamatan_id' => $id]);
 		$this->response($results);	
 	}
 

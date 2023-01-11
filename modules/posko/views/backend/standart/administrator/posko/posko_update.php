@@ -126,12 +126,10 @@
 									<select class="form-control chosen chosen-select-deselect" name="posko_penanggung_jawab" id="posko_penanggung_jawab" data-placeholder="Pilih Nama Penanggung Jawab Posko">
 										<option value=""></option>
 										<?php
-											$conditions = [
-												];
+											$conditions = [];
 											?>
 										<?php foreach (db_get_all_data('users', $conditions) as $row): ?>
-										<option <?= $row->user_id == $posko->posko_penanggung_jawab ? 'selected' : ''; ?>
-											value="<?= $row->user_id ?>"><?= $row->user_nama_lengkap; ?></option>
+										<option <?= $row->user_id == $posko->posko_penanggung_jawab ? 'selected' : ''; ?> value="<?= $row->user_id ?>"><?= $row->user_nama_lengkap; ?></option>
 										<?php endforeach; ?>
 									</select>
 									<small class="info help-block"></small>
@@ -143,8 +141,7 @@
 									<select class="form-control chosen chosen-select-deselect" name="posko_pic" id="posko_pic" data-placeholder="Pilih Nama PIC Posko">
 										<option value=""></option>
 										<?php
-											$conditions = [
-												];
+											$conditions = [];
 											?>
 										<?php foreach (db_get_all_data('users', $conditions) as $row): ?>
 										<option <?= $row->user_id == $posko->posko_pic ? 'selected' : ''; ?>
@@ -183,8 +180,7 @@
 														<select class="form-control chosen chosen-select-deselect" name="jenis_layanan[]" id="jenis_layanan[]" data-placeholder="Pilih Jenis Layanan Posko">
 															<option value=""></option>
 														<?php
-															$conditions = [];
-															foreach (db_get_all_data('jenis_layanan', $conditions) as $row) {
+															foreach (db_get_all_data('jenis_layanan', ['jenis_layanan_id' => $lajens[0]->jenis_layanan_id]) as $row) {
 														?>
 															<option value="<?= $row->jenis_layanan_id;?>" <?= $lajens[0]->jenis_layanan_id == $row->jenis_layanan_id ? 'selected="selected"' : '';?> ><?= $row->jenis_layanan_nama; ?></option>
 														<?php }; ?>
@@ -194,10 +190,9 @@
 														<select class="form-control chosen chosen-select-deselect" name="pic_layanan[]" id="pic_layanan[]" data-placeholder="Pilih PIC Layanan Posko">
 															<option value=""></option>
 														<?php
-															$conditions = [];
-															foreach (db_get_all_data('users', $conditions) as $row) {
+															foreach (db_get_all_data('users', ['user_id' => $lajens[0]->layanan_posko_pic]) as $row) {
 														?>
-															<option value="<?= $row->user_id ?>" <?= $lajens[1]->layanan_posko_pic == $row->user_id ? 'selected="selected"' : '';?> ><?= $row->user_nama_lengkap; ?></option>
+															<option value="<?= $row->user_id ?>" <?= $lajens[0]->layanan_posko_pic == $row->user_id ? 'selected="selected"' : '';?> ><?= $row->user_nama_lengkap; ?></option>
 														<?php }; ?>
 														</select>
 													</td>
@@ -214,8 +209,7 @@
 														<select class="form-control chosen chosen-select-deselect" name="jenis_layanan[]" id="jenis_layanan[]" data-placeholder="Pilih Jenis Layanan Posko">
 															<option value=""></option>
 														<?php
-															$conditions = [];
-															foreach (db_get_all_data('jenis_layanan', $conditions) as $row) {
+															foreach (db_get_all_data('jenis_layanan', ['jenis_layanan_id' => $lajens[$i]->jenis_layanan_id]) as $row) {
 														?>
 															<option value="<?= $row->jenis_layanan_id;?>" <?= $lajens[$i]->jenis_layanan_id == $row->jenis_layanan_id ? 'selected="selected"' : '';?> ><?= $row->jenis_layanan_nama; ?></option>
 														<?php }; ?>
@@ -225,8 +219,7 @@
 														<select class="form-control chosen chosen-select-deselect" name="pic_layanan[]" id="pic_layanan[]" data-placeholder="Pilih PIC Layanan Posko">
 															<option value=""></option>
 														<?php
-															$conditions = [];
-															foreach (db_get_all_data('users', $conditions) as $row) {
+															foreach (db_get_all_data('users', ['user_id' => $lajens[$i]->layanan_posko_pic]) as $row) {
 														?>
 															<option value="<?= $row->user_id ?>" <?= $lajens[$i]->layanan_posko_pic == $row->user_id ? 'selected="selected"' : '';?> ><?= $row->user_nama_lengkap; ?></option>
 														<?php }; ?>

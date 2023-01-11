@@ -77,11 +77,18 @@
 							<hr>
 						</div>
 						<div class="row">
-							<div class="col-md-12">
+							<div class="col-md-6">
 								<div class="form-group group-posko-nama  ">
 									<label for="posko_nama" class="control-label">Nama Posko <i class="required">*</i></label>
 									<input type="text" class="form-control" name="posko_nama" id="posko_nama" placeholder="" value="<?= set_value('posko_nama', $posko->posko_nama); ?>">
 									<small class="info help-block"><b>Input Posko Nama</b> Max Length : 255.</small>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group group-posko-alamat">
+									<label for="posko_alamat" class="control-label">Alamat Posko <i class="required">*</i></label>
+									<input type="text" class="form-control" name="posko_alamat" id="posko_alamat" placeholder="Alamat Posko" value="<?= set_value('posko_alamat', $posko->posko_alamat); ?>">
+									<small class="info help-block"></small>
 								</div>
 							</div>
 						</div>
@@ -179,7 +186,7 @@
 															$conditions = [];
 															foreach (db_get_all_data('jenis_layanan', $conditions) as $row) {
 														?>
-															<option value="<?= $row->jenis_layanan_id;?>" <?= $lajens[1]->jenis_layanan_id == $row->jenis_layanan_id ? 'selected="selected"' : '';?> ><?= $row->jenis_layanan_nama; ?></option>
+															<option value="<?= $row->jenis_layanan_id;?>" <?= $lajens[0]->jenis_layanan_id == $row->jenis_layanan_id ? 'selected="selected"' : '';?> ><?= $row->jenis_layanan_nama; ?></option>
 														<?php }; ?>
 														</select>
 													</td>
@@ -190,7 +197,7 @@
 															$conditions = [];
 															foreach (db_get_all_data('users', $conditions) as $row) {
 														?>
-															<option value="<?= $row->user_id ?>"><?= $row->user_nama_lengkap; ?></option>
+															<option value="<?= $row->user_id ?>" <?= $lajens[1]->layanan_posko_pic == $row->user_id ? 'selected="selected"' : '';?> ><?= $row->user_nama_lengkap; ?></option>
 														<?php }; ?>
 														</select>
 													</td>
@@ -198,7 +205,40 @@
 														&nbsp;
 													</td>
 												</tr>
-										
+												
+										<?php
+											for ($i=1; $i < count($lajens); $i++) {
+										?>
+												<tr id="inputFormRow">
+													<td>
+														<select class="form-control chosen chosen-select-deselect" name="jenis_layanan[]" id="jenis_layanan[]" data-placeholder="Pilih Jenis Layanan Posko">
+															<option value=""></option>
+														<?php
+															$conditions = [];
+															foreach (db_get_all_data('jenis_layanan', $conditions) as $row) {
+														?>
+															<option value="<?= $row->jenis_layanan_id;?>" <?= $lajens[$i]->jenis_layanan_id == $row->jenis_layanan_id ? 'selected="selected"' : '';?> ><?= $row->jenis_layanan_nama; ?></option>
+														<?php }; ?>
+														</select>
+													</td>
+													<td>
+														<select class="form-control chosen chosen-select-deselect" name="pic_layanan[]" id="pic_layanan[]" data-placeholder="Pilih PIC Layanan Posko">
+															<option value=""></option>
+														<?php
+															$conditions = [];
+															foreach (db_get_all_data('users', $conditions) as $row) {
+														?>
+															<option value="<?= $row->user_id ?>" <?= $lajens[$i]->layanan_posko_pic == $row->user_id ? 'selected="selected"' : '';?> ><?= $row->user_nama_lengkap; ?></option>
+														<?php }; ?>
+														</select>
+													</td>
+													<td>
+														<a href="javascript:void(0);" id="removeRow" class="btn btn-danger btn-sm"><i class="fa fa-times"></i></a>
+													</td>
+												</tr>
+										<?php
+											}
+										?>
 											</tbody>
 										</table>
 									</div>
@@ -277,25 +317,23 @@
 			$(this).closest('#inputFormRow').remove();
 		});
 
-
-
 		$('#btn_cancel').click(function () {
 			swal({
-					title: "Are you sure?",
-					text: "the data that you have created will be in the exhaust!",
-					type: "warning",
-					showCancelButton: true,
-					confirmButtonColor: "#DD6B55",
-					confirmButtonText: "Yes!",
-					cancelButtonText: "No!",
-					closeOnConfirm: true,
-					closeOnCancel: true
-				},
-				function (isConfirm) {
-					if (isConfirm) {
-						window.location.href = BASE_URL + 'administrator/posko';
-					}
-				});
+				title: "Are you sure?",
+				text: "the data that you have created will be in the exhaust!",
+				type: "warning",
+				showCancelButton: true,
+				confirmButtonColor: "#DD6B55",
+				confirmButtonText: "Yes!",
+				cancelButtonText: "No!",
+				closeOnConfirm: true,
+				closeOnCancel: true
+			},
+			function (isConfirm) {
+				if (isConfirm) {
+					window.location.href = BASE_URL + 'administrator/posko';
+				}
+			});
 
 			return false;
 		}); /*end btn cancel*/
@@ -318,7 +356,6 @@
 				})
 			})()
 
-
 			data_post.push({
 				name: 'event_submit_and_action',
 				value: window.event_submit_and_action
@@ -327,51 +364,50 @@
 			$('.loading').show();
 
 			$.ajax({
-					url: form_posko.attr('action'),
-					type: 'POST',
-					dataType: 'json',
-					data: data_post,
-				})
-				.done(function (res) {
-					$('form').find('.form-group').removeClass('has-error');
-					$('form').find('.error-input').remove();
-					$('.steps li').removeClass('error');
-					if (res.success) {
-						var id = $('#posko_image_galery').find('li').attr('qq-file-id');
-						if (save_type == 'back') {
-							window.location.href = res.redirect;
-							return;
-						}
-
-						$('.message').printMessage({
-							message: res.message
-						});
-						$('.message').fadeIn();
-						$('.data_file_uuid').val('');
-
-					} else {
-						if (res.errors) {
-							parseErrorField(res.errors);
-						}
-						$('.message').printMessage({
-							message: res.message,
-							type: 'warning'
-						});
+				url: form_posko.attr('action'),
+				type: 'POST',
+				dataType: 'json',
+				data: data_post,
+			})
+			.done(function (res) {
+				$('form').find('.form-group').removeClass('has-error');
+				$('form').find('.error-input').remove();
+				$('.steps li').removeClass('error');
+				if (res.success) {
+					var id = $('#posko_image_galery').find('li').attr('qq-file-id');
+					if (save_type == 'back') {
+						window.location.href = res.redirect;
+						return;
 					}
 
-				})
-				.fail(function () {
 					$('.message').printMessage({
-						message: 'Error save data',
+						message: res.message
+					});
+					$('.message').fadeIn();
+					$('.data_file_uuid').val('');
+
+				} else {
+					if (res.errors) {
+						parseErrorField(res.errors);
+					}
+					$('.message').printMessage({
+						message: res.message,
 						type: 'warning'
 					});
-				})
-				.always(function () {
-					$('.loading').hide();
-					$('html, body').animate({
-						scrollTop: $(document).height()
-					}, 2000);
+				}
+			})
+			.fail(function () {
+				$('.message').printMessage({
+					message: 'Error save data',
+					type: 'warning'
 				});
+			})
+			.always(function () {
+				$('.loading').hide();
+				$('html, body').animate({
+					scrollTop: $(document).height()
+				}, 2000);
+			});
 
 			return false;
 		}); /*end btn save*/

@@ -77,11 +77,18 @@
 							<hr>
 						</div>
 						<div class="row">
-							<div class="col-md-12">
+							<div class="col-md-6">
 								<div class="form-group group-posko-nama">
 									<label for="posko_nama" class="control-label">Nama Posko <i class="required">*</i></label>
 									<input type="text" class="form-control" name="posko_nama" id="posko_nama" placeholder="Nama Posko" value="<?= set_value('posko_nama'); ?>">
 									<small class="info help-block"><b>Input Posko Nama</b> Max Length : 255.</small>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group group-posko-alamat">
+									<label for="posko_alamat" class="control-label">Alamat Posko <i class="required">*</i></label>
+									<input type="text" class="form-control" name="posko_alamat" id="posko_alamat" placeholder="Alamat Posko" value="<?= set_value('posko_alamat'); ?>">
+									<small class="info help-block"></small>
 								</div>
 							</div>
 						</div>

@@ -74,12 +74,14 @@ class Posko extends Admin {
 		$this->form_validation->set_rules('kecamatan_id', 'Kecamatan', 'trim|required');
 		$this->form_validation->set_rules('kelurahan_id', 'Kelurahan', 'trim|required');
 		$this->form_validation->set_rules('posko_nama', 'Nama Posko', 'trim|required|max_length[255]');
+		$this->form_validation->set_rules('posko_alamat', 'Alamat Posko', 'trim|required');
 
 		if ($this->form_validation->run()) {
 			$save_data = [
 				'kecamatan_id' 				=> $this->input->post('kecamatan_id'),
 				'kelurahan_id' 				=> $this->input->post('kelurahan_id'),
 				'posko_nama' 				=> $this->input->post('posko_nama'),
+				'posko_alamat' 				=> $this->input->post('posko_alamat'),
 				'posko_penanggung_jawab' 	=> $this->input->post('posko_penanggung_jawab'),
 				'posko_pic' 				=> $this->input->post('posko_pic'),
 				'posko_user_created' 		=> get_user_data('id'),
@@ -176,25 +178,41 @@ class Posko extends Admin {
 		$this->form_validation->set_rules('kecamatan_id', 'Kecamatan', 'trim|required');
 		$this->form_validation->set_rules('kelurahan_id', 'Kelurahan', 'trim|required');
 		$this->form_validation->set_rules('posko_nama', 'Nama Posko', 'trim|required|max_length[255]');
+		$this->form_validation->set_rules('posko_alamat', 'Alamat Posko', 'trim|required');
 		
 		if ($this->form_validation->run()) {
 			$save_data = [
 				'kecamatan_id' 				=> $this->input->post('kecamatan_id'),
 				'kelurahan_id' 				=> $this->input->post('kelurahan_id'),
 				'posko_nama' 				=> $this->input->post('posko_nama'),
+				'posko_alamat' 				=> $this->input->post('posko_alamat'),
 				'posko_penanggung_jawab' 	=> $this->input->post('posko_penanggung_jawab'),
 				'posko_pic' 				=> $this->input->post('posko_pic'),
 			];
-			
+
 			$save_posko = $this->model_posko->change($id, $save_data);
 
-			if ($save_posko) {
+			$this->db->delete('layanan_posko', ['posko_id' => $id]);
 
-				
-				
+			$jenis_layanan 	= $this->input->post('jenis_layanan[]');
+			$pic_layanan 	= $this->input->post('pic_layanan[]');
 
-				
-				
+			$data_layanan = [];
+			if (count($jenis_layanan) > 0) {
+				for ($i=0; $i < count($jenis_layanan); $i++) {
+					$data_layanan[] = [
+						'posko_id' 						=> $id,
+						'jenis_layanan_id' 				=> $jenis_layanan[$i],
+						'layanan_posko_pic' 			=> $pic_layanan[$i],
+						'layanan_posko_created_at' 		=> date('Y-m-d H:i:s'),
+						'layanan_posko_user_created' 	=> get_user_data('id'),
+					];
+				}
+			}
+
+			$save_layanan = $this->db->insert_batch('layanan_posko', $data_layanan);
+
+			if ($save_posko || $save_layanan) {
 				if ($this->input->post('save_type') == 'stay') {
 					$this->data['success'] = true;
 					$this->data['id'] 	   = $id;
@@ -202,9 +220,7 @@ class Posko extends Admin {
 						anchor('administrator/posko', ' Go back to list')
 					]);
 				} else {
-					set_message(
-						cclang('success_update_data_redirect', [
-					]), 'success');
+					set_message(cclang('success_update_data_redirect', []), 'success');
 
             		$this->data['success'] = true;
 					$this->data['redirect'] = base_url('administrator/posko');
@@ -233,8 +249,7 @@ class Posko extends Admin {
 	*
 	* @var $id String
 	*/
-	public function delete($id = null)
-	{
+	public function delete($id = null) {
 		$this->is_allowed('posko_delete');
 
 		$this->load->helper('file');
@@ -278,11 +293,8 @@ class Posko extends Admin {
 	*
 	* @var $id String
 	*/
-	private function _remove($id)
-	{
+	private function _remove($id) {
 		$posko = $this->model_posko->find($id);
-
-		
 		
 		return $this->model_posko->remove($id);
 	}

@@ -107,6 +107,7 @@ class Model_barangmasuk extends MY_Model {
 							barangmasuk.waktu AS waktu,
 							posko.posko_nama AS posko_nama,
 							barangmasuk.nama_donatur AS nama_donatur,
+							barangmasuk.alamat_donatur AS alamat_donatur,
 							barangmasuk.phone_donatur AS kontak_donatur,
 							kecamatan.kecamatan_nama AS kecamatan_nama,
 							kelurahan.kelurahan_nama AS kelurahan_nama,
@@ -243,6 +244,18 @@ class Model_barangmasuk extends MY_Model {
 
 		$objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');
 		$objWriter->save('php://output');
+	}
+
+	public function query_detail_barang_masuk($id) {
+		$this->db->select('barang.nama_barang AS nama_barang,
+							barangmasuk_detail.barangmasuk_detail_jumlah AS jumlah,
+							satuan.nama_satuan AS nama_satuan,
+							barangmasuk_detail.barangmasuk_detail_keterangan AS keterangan');
+		$this->db->where('barangmasuk_id', $id);
+		$this->db->join('barang', 'barang.id_barang = barangmasuk_detail.barang_id', 'LEFT');
+		$query = $this->db->join('satuan', 'satuan.id_satuan = barang.satuan', 'LEFT')->get('barangmasuk_detail');
+		
+		return $query;
 	}
 
 }

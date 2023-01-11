@@ -114,6 +114,13 @@ class Barangmasuk extends Admin	{
 						'barangmasuk_detail_user_created' 	=> get_user_data('id'),
 						'barangmasuk_detail_created_at' 	=> date('Y-m-d H:i:s'),
 					];
+
+					/* $data_barang 	= $this->db->where('id_barang', $barang[$i]);
+					$stok_barang 	= $data_barang->stok;
+
+					$hasil_stok 	= $stok_barang + $jumlah[$i];
+
+					$this->db->update('barang', ['stok' => $hasil_stok], ['id_barang' => $barang[$i]]); */
 				}
 
 				$this->db->insert_batch('barangmasuk_detail', $data_barang_masuk);
@@ -160,8 +167,7 @@ class Barangmasuk extends Admin	{
 	*
 	* @var $id String
 	*/
-	public function edit($id)
-	{
+	public function edit($id) {
 		$this->is_allowed('barangmasuk_update');
 
 		$this->data['barangmasuk'] = $this->model_barangmasuk->find($id);
@@ -184,22 +190,13 @@ class Barangmasuk extends Admin	{
 				]);
 			exit;
 		}
+
 		$this->form_validation->set_rules('asal_posko', 'Asal Posko', 'trim|required');
 		$this->form_validation->set_rules('asal', 'Asal', 'trim|required');
-		
-
 		$this->form_validation->set_rules('id_barang', 'Nama Barang', 'trim|required');
-		
-
 		$this->form_validation->set_rules('jumlah', 'Jumlah Stok', 'trim|required|max_length[12]');
-		
-
 		$this->form_validation->set_rules('tanggal', 'Tanggal', 'trim|required');
-		
-
 		$this->form_validation->set_rules('waktu', 'Waktu', 'trim|required');
-		
-
 		
 		if ($this->form_validation->run()) {
 			$id_barang 	= $this->input->post('id_barang');
@@ -335,11 +332,11 @@ class Barangmasuk extends Admin	{
 	*
 	* @var $id String
 	*/
-	public function view($id)
-	{
+	public function view($id) {
 		$this->is_allowed('barangmasuk_view');
 
-		$this->data['barangmasuk'] = $this->model_barangmasuk->join_avaiable()->filter_avaiable()->find($id);
+		$this->data['barangmasuk'] 			= $this->model_barangmasuk->join_avaiable()->filter_avaiable()->find($id);
+		$this->data['detailbarangmasuk'] 	= $this->model_barangmasuk->query_detail_barang_masuk($id)->result();
 
 		$this->template->title('Barang Masuk Detail');
 		$this->render('backend/standart/administrator/barangmasuk/barangmasuk_view', $this->data);
@@ -373,8 +370,7 @@ class Barangmasuk extends Admin	{
 	*
 	* @return Files PDF .pdf
 	*/
-	public function export_pdf()
-	{
+	public function export_pdf() {
 		$this->is_allowed('barangmasuk_export');
 
 		$this->model_barangmasuk->pdf('barangmasuk', 'barangmasuk');

@@ -136,43 +136,21 @@
 								<table class="table table-bordered table-striped dataTable">
 									<thead>
 										<tr class="">
-											<th>
-												<input type="checkbox" class="flat-red toltip" id="check_all"
-													name="check_all" title="check all">
-											</th>
-											<th data-field="nama_barang" data-sort="1" data-primary-key="0">
-												<?= cclang('nama_barang') ?></th>
-											<th data-field="stok" data-sort="1" data-primary-key="0">
-												<?= cclang('stok') ?></th>
-											<!-- <th data-field="total_bantuan" data-sort="1" data-primary-key="0">
-												<?= cclang('total_bantuan') ?></th> -->
-											<th data-field="keterangan" data-sort="1" data-primary-key="0">
-												<?= cclang('keterangan') ?></th>
+											<th><input type="checkbox" class="flat-red toltip" id="check_all" name="check_all" title="check all"></th>
+											<th data-field="nama_barang" data-sort="1" data-primary-key="0"><?= cclang('nama_barang') ?></th>
+											<th data-field="stok" data-sort="1" data-primary-key="0"><?= cclang('satuan') ?></th>
+											<th data-field="keterangan" data-sort="1" data-primary-key="0"><?= cclang('keterangan') ?></th>
 											<th>Action</th>
 										</tr>
 									</thead>
 									<tbody id="tbody_barang">
 										<?php foreach($barangs as $barang): ?>
 										<tr>
-											<td width="5">
-												<input type="checkbox" class="flat-red check" name="id[]"
-													value="<?= $barang->id_barang; ?>">
-											</td>
-
+											<td width="5"><input type="checkbox" class="flat-red check" name="id[]" value="<?= $barang->id_barang; ?>"></td>
 											<td><span class="list_group-nama-barang"><?= _ent($barang->nama_barang); ?></span></td>
-											<td><span class="list_group-stok"><?= _ent($barang->stok).' '._ent($barang->satuan_nama_satuan); ?></span></td>
-											<!-- <td><span class="list_group-stok">
-											<?php
-												if ($barang->total_bantuan != null) {
-													echo _ent($barang->total_bantuan).' '._ent($barang->satuan_nama_satuan);
-												}else{
-													echo '0 '._ent($barang->satuan_nama_satuan);
-												}
-											?>
-											</span></td> -->
+											<td><span class="list_group-stok"><?= _ent($barang->satuan_nama_satuan); ?></span></td>
 											<td><span class="list_group-keterangan"><?= _ent($barang->keterangan); ?></span></td>
 											<td width="200">
-
 												<?php is_allowed('barang_view', function() use ($barang){?>
 												<a href="<?= site_url('administrator/barang/view/' . $barang->id_barang); ?>"
 													class="label-default"><i class="fa fa-newspaper-o"></i>

@@ -76,14 +76,17 @@ class Barangmasuk extends Admin	{
 		
 		
 
-		$this->form_validation->set_rules('asal_posko', 'Asal Poko', 'trim|required');
-		$this->form_validation->set_rules('asal', 'Asal', 'trim|required');
+		$this->form_validation->set_rules('asal_posko', 'Asal Posko', 'trim|required');
+		$this->form_validation->set_rules('nama_donatur', 'Nama Donatur', 'trim|required');
+		$this->form_validation->set_rules('alamat_donatur', 'Alamat Donatur', 'trim|required');
+		$this->form_validation->set_rules('phone_donatur', 'No Telepon Donatur', 'trim|required');
+		// $this->form_validation->set_rules('asal', 'Asal', 'trim|required');
 		
 
-		$this->form_validation->set_rules('id_barang', 'Nama Barang', 'trim|required');
+		// $this->form_validation->set_rules('id_barang', 'Nama Barang', 'trim|required');
 		
 
-		$this->form_validation->set_rules('jumlah', 'Jumlah Stok', 'trim|required|max_length[12]');
+		// $this->form_validation->set_rules('jumlah', 'Jumlah Stok', 'trim|required|max_length[12]');
 		
 
 		$this->form_validation->set_rules('tanggal', 'Tanggal', 'trim|required');
@@ -95,32 +98,68 @@ class Barangmasuk extends Admin	{
 		
 
 		if ($this->form_validation->run()) {
-			$id_barang 	= $this->input->post('id_barang');
-			$jumlah 	= $this->input->post('jumlah');
+			$id_barang 	= $this->input->post('id_barang[]');
+			$jumlah 	= $this->input->post('jumlah[]');
 
-			$save_data = [
-				'asal_posko' => $this->input->post('asal_posko'),
-				'asal' => $this->input->post('asal'),
-				'id_barang' => $id_barang,
-				'jumlah' => $jumlah,
-				'keterangan' => $this->input->post('keterangan'),
-				'tanggal' => $this->input->post('tanggal'),
-				'waktu' => $this->input->post('waktu'),
-				'created_at' => date('Y-m-d H:i:s'),
-				'user_created' => get_user_data('id'),
-			];
+			$data_barangmasuk = [];
+			if (count($id_barang) > 0) {
+				for ($i=0; $i < count($id_barang); $i++) {
+					$data_layanan[] = [
+						'asal_posko' => $this->input->post('asal_posko'),
+						'nama_donatur' => $this->input->post('nama_donatur'),
+						'alamat_donatur' => $this->input->post('alamat_donatur'),
+						'phone_donatur' => $this->input->post('phone_donatur'),
+						'id_barang' => $id_barang[$i],
+						'jumlah' => $jumlah[$i],
+						'keterangan' => $this->input->post('keterangan'),
+						'tanggal' => $this->input->post('tanggal'),
+						'waktu' => $this->input->post('waktu'),
+						'created_at' => date('Y-m-d H:i:s'),
+						'user_created' => get_user_data('id'),
+
+						// 'posko_id' 						=> $id,
+						// 'jenis_layanan_id' 				=> $jenis_layanan[$i],
+						// 'layanan_posko_pic' 			=> $pic_layanan[$i],
+						// 'layanan_posko_created_at' 		=> date('Y-m-d H:i:s'),
+						// 'layanan_posko_user_created' 	=> get_user_data('id'),
+					];
+				}
+				$barang = $this->db->where('id_barang', $id_barang)->from('barang')->get()->row();
+				$stok 	= ($barang->stok + $jumlah[$i]);
+
+				$update_barang = [
+					'stok' => $stok,
+				];
+				
+				$save_barang = $this->model_barang->change($id_barang, $update_barang);
+			}
+
+			$this->db->insert_batch('layanan_posko', $data_layanan);
+
+
+			// $save_data = [
+			// 	'asal_posko' => $this->input->post('asal_posko'),
+			// 	'asal' => $this->input->post('asal'),
+			// 	'id_barang' => $id_barang,
+			// 	'jumlah' => $jumlah,
+			// 	'keterangan' => $this->input->post('keterangan'),
+			// 	'tanggal' => $this->input->post('tanggal'),
+			// 	'waktu' => $this->input->post('waktu'),
+			// 	'created_at' => date('Y-m-d H:i:s'),
+			// 	'user_created' => get_user_data('id'),
+			// ];
 			
 			
-			$save_barangmasuk = $id = $this->model_barangmasuk->store($save_data);
+			// $save_barangmasuk = $id = $this->model_barangmasuk->store($save_data);
 
-			$barang = $this->db->where('id_barang', $id_barang)->from('barang')->get()->row();
-			$stok 	= ($barang->stok + $jumlah);
+			// $barang = $this->db->where('id_barang', $id_barang)->from('barang')->get()->row();
+			// $stok 	= ($barang->stok + $jumlah);
 
-			$update_barang = [
-				'stok' => $stok,
-			];
+			// $update_barang = [
+			// 	'stok' => $stok,
+			// ];
 			
-			$save_barang = $this->model_barang->change($id_barang, $update_barang);
+			// $save_barang = $this->model_barang->change($id_barang, $update_barang);
 
 			if ($save_barangmasuk) {
 				

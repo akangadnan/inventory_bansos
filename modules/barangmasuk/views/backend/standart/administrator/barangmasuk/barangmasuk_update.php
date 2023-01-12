@@ -141,7 +141,51 @@
 								</small>
 							</div>
 						</div>
-						<div class="form-group group-asal">
+
+						<div class="form-group group-asal ">
+	                            <label for="asal" class="col-sm-2 control-label">Nama Donatur <i class="required">*</i>
+	                            </label>
+	                            <!-- <div class="col-sm-8">
+									<select class="form-control chosen chosen-select-deselect" name="asal" id="asal"
+										data-placeholder="Select Asal">
+										<option value=""></option>
+										<?php
+										$conditions = [
+											];
+										?>
+
+										<?php foreach (db_get_all_data('sumber', $conditions) as $row): ?>
+										<option value="<?= $row->id_sumber ?>"><?= $row->nama_sumber; ?></option>
+										<?php endforeach; ?>
+									</select>
+									<small class="info help-block">
+									</small>
+								</div> -->
+	                            <div class="col-sm-8">
+	                                <input type="text" class="form-control" name="nama_donatur" id="nama_donatur"
+	                                    placeholder="Nama Donatur" value="<?= set_value('nama_donatur', $barangmasuk->nama_donatur); ?>">
+	                            </div>
+	                        </div>
+	                        <div class="form-group group-asal ">
+	                            <label for="asal" class="col-sm-2 control-label">Alamat Donatur <i class="required">*</i>
+	                            </label>
+	                            <div class="col-sm-8">
+	                                <input type="text" class="form-control" name="alamat_donatur" id="alamat_donatur"
+	                                    placeholder="Alamat Donatur" value="<?= set_value('alamat_donatur', $barangmasuk->alamat_donatur); ?>">
+	                            </div>
+	                        </div>
+	                        <div class="form-group group-asal ">
+	                            <label for="asal" class="col-sm-2 control-label"> No telepon Donatur<i
+	                                    class="required">*</i>
+	                            </label>
+
+	                            <div class="col-sm-8">
+	                                <input type="number" class="form-control" name="phone_donatur" id="phone_donatur"
+	                                    placeholder="No telepon Donatur" value="<?= set_value('phone_donatur', $barangmasuk->phone_donatur); ?>">
+	                            </div>
+	                        </div>
+
+						<!-- <div class="form-group group-asal">
 							<label for="asal" class="col-sm-2 control-label">Asal <i class="required">*</i>
 							</label>
 							<div class="col-sm-8">
@@ -160,14 +204,14 @@
 								<small class="info help-block">
 								</small>
 							</div>
-						</div>
+						</div> -->
 
 
 
 
 
 
-						<div class="form-group group-id-barang">
+						<!-- <div class="form-group group-id-barang">
 							<label for="id_barang" class="col-sm-2 control-label">Nama Barang <i class="required">*</i>
 							</label>
 							<div class="col-sm-8">
@@ -178,7 +222,7 @@
 								<small class="info help-block">
 								</small>
 							</div>
-						</div>
+						</div> -->
 
 
 
@@ -243,14 +287,66 @@
 							</div>
 						</div>
 
+						<div class="row">
+	                            <div class="col-md-12">
+	                                <div class="box box-primary">
+	                                    <div class="box-header">
+	                                        <h3 class="box-title">Daftar Barang</h3>
+	                                    </div>
+	                                    <div class="box-body">
+	                                        <div class="row">
+	                                            <div class="col-md-12"><a href="javascript:void(0);" id="addRow"
+	                                                    class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Tambah
+	                                                    Barang</a></div>
+	                                        </div>
+	                                        <div class="row">
+	                                            <table class="table table-striped" id="tableJenisLayanan">
+	                                                <thead>
+	                                                    <tr>
+	                                                        <th>Nama Barang</th>
+	                                                        <th>Jumlah Barang</th>
+	                                                        <th>Action</th>
+	                                                    </tr>
+	                                                </thead>
+	                                                <tbody>
+	                                                    <tr id="inputFormRow">
+	                                                        <td>
+	                                                                <select
+	                                                                    class="form-control chosen chosen-select-deselect"
+	                                                                    name="id_barang[]" id="id_barang0"
+	                                                                    data-placeholder="Select Nama Barang">
+	                                                                    <option value=""></option>
+	                                                                </select>
+	                                                                <small class="info help-block">
+	                                                                </small>
+	                                                        </td>
+	                                                        <td>
+	                                                            <input type="number" class="form-control" name="jumlah[]" id="jumlah[]"
+																	placeholder="Jumlah Stok" value="<?= set_value('jumlah'); ?>">
+																<small class="info help-block">
+																	<b>Input Jumlah</b> Max Length : 12.</small>
+	                                                        </td>
+	                                                        <td>
+	                                                            &nbsp;
+	                                                        </td>
+	                                                    </tr>
+	                                                </tbody>
+	                                            </table>
+	                                        </div>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                        </div>
+
+
 
 
 						<div class="message"></div>
 						<div class="row-fluid col-md-7 container-button-bottom">
-							<button class="btn btn-flat btn-primary btn_save btn_action" id="btn_save" data-stype='stay'
+							<!-- <button class="btn btn-flat btn-primary btn_save btn_action" id="btn_save" data-stype='stay'
 								title="<?= cclang('save_button'); ?> (Ctrl+s)">
 								<i class="fa fa-save"></i> <?= cclang('save_button'); ?>
-							</button>
+							</button> -->
 							<a class="btn btn-flat btn-info btn_save btn_action btn_save_back" id="btn_save"
 								data-stype='back' title="<?= cclang('save_and_go_the_list_button'); ?> (Ctrl+d)">
 								<i class="ion ion-ios-list-outline"></i> <?= cclang('save_and_go_the_list_button'); ?>
@@ -296,6 +392,28 @@
 
 
 
+		$("#addRow").on('click', function () {
+			var html = '';
+			html += '<tr id="inputFormRow">';
+			html += '<td><select class="form-control chosen chosen-select-deselect" name="id_barang[]" id="id_barang1 data-placeholder="Select Nama Barang"><option value=""></option>';
+			<?php
+				$conditions = [];
+				foreach (db_get_all_data('barang', $conditions) as $row) {
+			?>
+				html += '<option value="<?= $row->id_barang ?>"><?= $row->nama_barang; ?>( <?= $row->stok; ?>) </option>';
+			<?php }; ?>
+			html +=	'</select><small class="info help-block"></small></td>';
+			html += '<td><input type="number" class="form-control" name="jumlah[]" id="jumlah[]" placeholder="Jumlah Stok" value="<?= set_value('jumlah'); ?>"><small class="info help-block"><b>Input Jumlah</b> Max Length : 12.</small>';
+			html +=	'</td>';
+			html +=	'<td><a href="javascript:void(0);" id="removeRow" class="btn btn-danger btn-sm"><i class="fa fa-times"></i></a></td>';
+			html += '</tr>';
+
+			$('#tableJenisLayanan tr:last').after(html);
+			});
+
+		$(document).on('click', '#removeRow', function () {
+			$(this).closest('#inputFormRow').remove();
+		});
 
 
 

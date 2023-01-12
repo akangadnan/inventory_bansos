@@ -1,28 +1,4 @@
 <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.6/dist/loadingoverlay.min.js"></script>
-
-<script src="<?= BASE_ASSET; ?>/js/jquery.hotkeys.js"></script>
-<script type="text/javascript">
-	function domo() {
-		// Binding keys
-		$('*').bind('keydown', 'Ctrl+s', function assets() {
-			$('#btn_save').trigger('click');
-			return false;
-		});
-
-		$('*').bind('keydown', 'Ctrl+x', function assets() {
-			$('#btn_cancel').trigger('click');
-			return false;
-		});
-
-		$('*').bind('keydown', 'Ctrl+d', function assets() {
-			$('.btn_save_back').trigger('click');
-			return false;
-		});
-	}
-
-	jQuery(document).ready(domo);
-</script>
-<!-- Content Header (Page header) -->
 <section class="content-header">
 	<h1>
 		Barang Masuk <small>Edit Barang Masuk</small>

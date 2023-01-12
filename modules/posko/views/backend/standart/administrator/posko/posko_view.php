@@ -122,15 +122,33 @@
 									<div class="box-body">
 										<table class="table table-striped">
 											<tr>
-												<td>Jenis Layanan</td>
-												<td>PIC</td>
-												<td>Nomor Kontak</td>
+												<th>Jenis Layanan</th>
+												<th>PIC</th>
+												<th>Nomor Kontak</th>
 											</tr>
+									<?php
+										$lapos = db_get_all_data('layanan_posko', ['posko_id' => $posko->posko_id]);
+
+										foreach ($lapos as $item) {
+											$jenis_layanan 	= db_get_all_data('jenis_layanan', ['jenis_layanan_id' => $item->jenis_layanan_id]);
+											$user_layanan 	= db_get_all_data('users', ['user_id' => $item->layanan_posko_pic]);
+											$nkontak_pic 	= db_get_all_data('user_kontak', ['user_id' => $item->layanan_posko_pic]);
+
+											$npic = [];
+											foreach ($nkontak_pic as $nkpic) {
+												$npic[] = $nkpic->user_kontak_name;
+											}
+										
+											$nkontak_pc = implode(', ', $npic);
+									?>
 											<tr>
-												<td>Nomor Kontak PIC</td>
-												<td>:</td>
-												<td><?= _ent($kontak_pc);?></td>
+												<td><?= _ent($jenis_layanan[0]->jenis_layanan_nama);?></td>
+												<td><?= _ent($user_layanan[0]->user_nama_lengkap);?></td>
+												<td><?= _ent($nkontak_pc);?></td>
 											</tr>
+									<?php
+										}
+									?>
 										</table>
 									</div>
 								</div>

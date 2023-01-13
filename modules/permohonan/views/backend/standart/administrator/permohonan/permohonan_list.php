@@ -150,8 +150,23 @@
 											<td><?= !empty($permohonan->posko_id) ? $permohonan->posko_posko_nama : '<i style="color: red; font-weight: bold;">Tidak ditentukan</i>';?></td>
 											<td><?= _ent($permohonan->permohonan_pemohon); ?></td>
 											<td><?= count(db_get_all_data('permohonan_detail', ['permohonan_id' => $permohonan->permohonan_id]));?> barang</td>
-											<td><?= _ent($permohonan->permohonan_keterangan); ?></td>
-											<td><?= $status; ?></td>
+											<td>
+									<?php
+										if (strlen($permohonan->permohonan_keterangan) < 20) {
+											echo _ent($permohonan->permohonan_keterangan);
+										} else {
+											echo substr(_ent($permohonan->permohonan_keterangan), 0, 20) . ' [...]';
+										}
+									?>
+											</td>
+											<td><?= $status; ?>
+									<?php
+										if ($permohonan->permohonan_status == '1') {
+										is_allowed('permohonan_verified', function() use ($permohonan) {
+											echo '&nbsp;<a href="javascript:void(0);" data-href="'.site_url('administrator/permohonan/verified/' . $permohonan->permohonan_id).'" class="btn btn-primary btn-sm verified-data"><i class="fa fa-check"></i> '.cclang('verified').'</a>';
+										});}
+									?>
+											</td>
 											<td><?= _ent($permohonan->permohonan_respon_posko); ?></td>
 											<td><?= !empty($permohonan->permohonan_mengetahui) ? $permohonan->users_user_nama_lengkap : '<i style="color: red; font-weight: bold;">Tidak ditentukan</i>';?></td>
 											<td width="200">
@@ -229,25 +244,47 @@
 		})
 
 		$('.remove-data').click(function () {
-
 			var url = $(this).attr('data-href');
 
 			swal({
-					title: "<?= cclang('are_you_sure'); ?>",
-					text: "<?= cclang('data_to_be_deleted_can_not_be_restored'); ?>",
-					type: "warning",
-					showCancelButton: true,
-					confirmButtonColor: "#DD6B55",
-					confirmButtonText: "<?= cclang('yes_delete_it'); ?>",
-					cancelButtonText: "<?= cclang('no_cancel_plx'); ?>",
-					closeOnConfirm: true,
-					closeOnCancel: true
-				},
-				function (isConfirm) {
-					if (isConfirm) {
-						document.location.href = url;
-					}
-				});
+				title: "<?= cclang('are_you_sure'); ?>",
+				text: "<?= cclang('data_to_be_deleted_can_not_be_restored'); ?>",
+				type: "warning",
+				showCancelButton: true,
+				confirmButtonColor: "#DD6B55",
+				confirmButtonText: "<?= cclang('yes_delete_it'); ?>",
+				cancelButtonText: "<?= cclang('no_cancel_plx'); ?>",
+				closeOnConfirm: true,
+				closeOnCancel: true
+			},
+			function (isConfirm) {
+				if (isConfirm) {
+					document.location.href = url;
+				}
+			});
+
+			return false;
+		});
+
+		$('.verified-data').click(function () {
+			var url = $(this).attr('data-href');
+
+			swal({
+				title: "<?= cclang('are_you_sure_verified_it'); ?>",
+				text: "<?= cclang('data_to_be_verified_can_not_be_restored'); ?>",
+				type: "info",
+				showCancelButton: true,
+				confirmButtonColor: "#DD6B55",
+				confirmButtonText: "<?= cclang('yes_verified_it'); ?>",
+				cancelButtonText: "<?= cclang('no_cancel_plx'); ?>",
+				closeOnConfirm: true,
+				closeOnCancel: true
+			},
+			function (isConfirm) {
+				if (isConfirm) {
+					document.location.href = url;
+				}
+			});
 
 			return false;
 		});

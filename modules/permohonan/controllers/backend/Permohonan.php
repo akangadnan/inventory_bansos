@@ -255,6 +255,18 @@ class Permohonan extends Admin {
 
 		$this->response($this->data);
 	}
+
+	public function verified($id) {
+		$save_data = [
+			'permohonan_status' 		=> '2',
+			'permohonan_verified' 		=> get_user_data('id'),
+			'permohonan_verified_at' 	=> date('Y-m-d H:i:s'),
+		];
+
+		$this->model_permohonan->change($id, $save_data);
+
+		redirect_back();
+	}
 	
 	/**
 	* delete Permohonans

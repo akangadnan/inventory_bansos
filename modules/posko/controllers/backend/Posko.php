@@ -197,8 +197,9 @@ class Posko extends Admin {
 			$jenis_layanan 	= $this->input->post('jenis_layanan[]');
 			$pic_layanan 	= $this->input->post('pic_layanan[]');
 
-			$data_layanan = [];
 			if (count($jenis_layanan) > 0) {
+				$data_layanan = [];
+
 				for ($i=0; $i < count($jenis_layanan); $i++) {
 					$data_layanan[] = [
 						'posko_id' 						=> $id,

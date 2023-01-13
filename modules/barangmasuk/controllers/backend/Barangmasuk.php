@@ -82,12 +82,13 @@ class Barangmasuk extends Admin	{
 		$this->form_validation->set_rules('kelurahan_id', 'Kelurahan', 'trim|required');
 
 		if ($this->form_validation->run()) {
+			$posko_id 	= $this->input->post('asal_posko');
 			$barang 	= $this->input->post('id_barang[]');
 			$jumlah 	= $this->input->post('jumlah[]');
 			$keterangan = $this->input->post('keterangan_barang[]');
 
 			$save_data = [
-				'asal_posko' 		=> $this->input->post('asal_posko'),
+				'asal_posko' 		=> $posko_id,
 				'nama_donatur' 		=> $this->input->post('nama_donatur'),
 				'alamat_donatur' 	=> $this->input->post('alamat_donatur'),
 				'phone_donatur' 	=> $this->input->post('phone_donatur'),
@@ -106,21 +107,22 @@ class Barangmasuk extends Admin	{
 				$data_barang_masuk = [];
 
 				for ($i=0; $i < count($barang); $i++) {
+					$data_barang_posko = $this->model_barangmasuk->query_barang_posko($posko_id, $barang[$i])->result();
+
+					if (count($data_barang_posko->barang_id) > 1) {
+						$keterangan_masuk = $keterangan[$i];
+					}else{
+						$keterangan_masuk = $keterangan[$i].' (Saldo Awal)';
+					}
+
 					$data_barang_masuk[] = [
 						'barangmasuk_id' 					=> $id,
 						'barang_id' 						=> $barang[$i],
 						'barangmasuk_detail_jumlah' 		=> $jumlah[$i],
-						'barangmasuk_detail_keterangan' 	=> $keterangan[$i],
+						'barangmasuk_detail_keterangan' 	=> $keterangan_masuk,
 						'barangmasuk_detail_user_created' 	=> get_user_data('id'),
 						'barangmasuk_detail_created_at' 	=> date('Y-m-d H:i:s'),
 					];
-
-					/* $data_barang 	= $this->db->where('id_barang', $barang[$i]);
-					$stok_barang 	= $data_barang->stok;
-
-					$hasil_stok 	= $stok_barang + $jumlah[$i];
-
-					$this->db->update('barang', ['stok' => $hasil_stok], ['id_barang' => $barang[$i]]); */
 				}
 
 				$this->db->insert_batch('barangmasuk_detail', $data_barang_masuk);
@@ -172,6 +174,9 @@ class Barangmasuk extends Admin	{
 
 		$this->data['barangmasuk'] = $this->model_barangmasuk->find($id);
 
+		// echo json_encode($this->data);
+		// exit;
+
 		$this->template->title('Barang Masuk Update');
 		$this->render('backend/standart/administrator/barangmasuk/barangmasuk_update', $this->data);
 	}
@@ -181,8 +186,7 @@ class Barangmasuk extends Admin	{
 	*
 	* @var $id String
 	*/
-	public function edit_save($id)
-	{
+	public function edit_save($id) {
 		if (!$this->is_allowed('barangmasuk_update', false)) {
 			echo json_encode([
 				'success' => false,
@@ -192,46 +196,66 @@ class Barangmasuk extends Admin	{
 		}
 
 		$this->form_validation->set_rules('asal_posko', 'Asal Posko', 'trim|required');
-		$this->form_validation->set_rules('asal', 'Asal', 'trim|required');
-		$this->form_validation->set_rules('id_barang', 'Nama Barang', 'trim|required');
-		$this->form_validation->set_rules('jumlah', 'Jumlah Stok', 'trim|required|max_length[12]');
+		$this->form_validation->set_rules('nama_donatur', 'Nama Donatur', 'trim|required');
+		$this->form_validation->set_rules('alamat_donatur', 'Alamat Donatur', 'trim|required');
+		$this->form_validation->set_rules('phone_donatur', 'No Telepon Donatur', 'trim|required');
 		$this->form_validation->set_rules('tanggal', 'Tanggal', 'trim|required');
 		$this->form_validation->set_rules('waktu', 'Waktu', 'trim|required');
+		$this->form_validation->set_rules('kecamatan_id', 'Kecamatan', 'trim|required');
+		$this->form_validation->set_rules('kelurahan_id', 'Kelurahan', 'trim|required');
 		
 		if ($this->form_validation->run()) {
-			$id_barang 	= $this->input->post('id_barang');
-			$jumlah 	= $this->input->post('jumlah');
+			$posko_id 	= $this->input->post('asal_posko');
+			$barang 	= $this->input->post('id_barang[]');
+			$jumlah 	= $this->input->post('jumlah[]');
+			$keterangan = $this->input->post('keterangan_barang[]');
 		
 			$save_data = [
-				'asal' 			=> $this->input->post('asal'),
-				'id_barang' 	=> $id_barang,
-				'jumlah' 		=> $jumlah,
-				'keterangan' 	=> $this->input->post('keterangan'),
-				'tanggal' 		=> $this->input->post('tanggal'),
-				'waktu' 		=> $this->input->post('waktu'),
-			];
-
-			$barang_masuk 	= $this->db->where('id_barangmasuk', $id)->get('barangmasuk')->row();
-			$barang 		= $this->db->where('id_barang', $id_barang)->get('barang')->row();
-			$jumlah_masuk 	= $barang_masuk->jumlah;
-
-			if ($jumlah_masuk > $jumlah) {
-				$sisa_jumlah 	= $jumlah_masuk - $jumlah;
-				$stok_barang 	= $barang->stok - $sisa_jumlah;
-			}else{
-				$sisa_jumlah 	= $jumlah - $jumlah_masuk;
-				$stok_barang 	= $barang->stok + $sisa_jumlah;
-			}
-
-			$update_barang = [
-				'stok' => $stok_barang,
+				'asal_posko' 		=> $posko_id,
+				'nama_donatur' 		=> $this->input->post('nama_donatur'),
+				'alamat_donatur' 	=> $this->input->post('alamat_donatur'),
+				'phone_donatur' 	=> $this->input->post('phone_donatur'),
+				'keterangan' 		=> $this->input->post('keterangan'),
+				'tanggal' 			=> $this->input->post('tanggal'),
+				'waktu' 			=> $this->input->post('waktu'),
+				'kecamatan_id' 		=> $this->input->post('kecamatan_id'),
+				'kelurahan_id' 		=> $this->input->post('kelurahan_id'),
 			];
 
 			$save_barangmasuk = $this->model_barangmasuk->change($id, $save_data);
 
-			$save_barang = $this->model_barang->change($id_barang, $update_barang);
+			$this->db->delete('barangmasuk_detail', ['barangmasuk_id' => $id]);
 
-			if ($save_barangmasuk) {
+			if (count($barang) > 0) {
+				$data_barang_masuk = [];
+
+				for ($i=0; $i < count($barang); $i++) {
+					$data_barang_posko = $this->model_barangmasuk->query_barang_posko($posko_id, $barang[$i])->result();
+
+					if (count($data_barang_posko->barang_id) > 1) {
+						$keterangan_masuk = $keterangan[$i];
+					}else{
+						if (stristr($keterangan[$i], ' (Saldo Awal)') === FALSE) {
+							$keterangan_masuk = $keterangan[$i].' (Saldo Awal)';
+						}else{
+							$keterangan_masuk = $keterangan[$i];
+						}
+					}
+
+					$data_barang_masuk[] = [
+						'barangmasuk_id' 					=> $id,
+						'barang_id' 						=> $barang[$i],
+						'barangmasuk_detail_jumlah' 		=> $jumlah[$i],
+						'barangmasuk_detail_keterangan' 	=> $keterangan_masuk,
+						'barangmasuk_detail_user_created' 	=> get_user_data('id'),
+						'barangmasuk_detail_created_at' 	=> date('Y-m-d H:i:s'),
+					];
+				}
+
+				$this->db->insert_batch('barangmasuk_detail', $data_barang_masuk);
+			}
+
+			if ($save_barangmasuk || $data_barang_masuk) {
 				if ($this->input->post('save_type') == 'stay') {
 					$this->data['success'] = true;
 					$this->data['id'] 	   = $id;
@@ -279,42 +303,14 @@ class Barangmasuk extends Admin	{
 		$remove = false;
 
 		if (!empty($id)) {
-			$barang_masuk 	= $this->db->where('id_barangmasuk', $id)->get('barangmasuk')->row();
-
-			$barang 		= $this->db->where('id_barang', $barang_masuk->id_barang)->get('barang')->row();
-
-			if ($barang->stok > $barang_masuk->jumlah) {
-				$stok_akhir 	= $barang->stok - $barang_masuk->jumlah;
-			}else{
-				$stok_akhir 	= $barang_masuk->jumlah - $barang->stok;
-			}
-
-			$update_barang = [
-				'stok' => $stok_akhir,
-			];
-
-			$save_barang = $this->model_barang->change($barang_masuk->id_barang, $update_barang);
-
 			$remove = $this->_remove($id);
+
+			$this->db->delete('barangmasuk_detail', ['barangmasuk_id' => $id]);
 		} elseif (count($arr_id) >0) {
 			foreach ($arr_id as $id) {
-				$barang_masuk 	= $this->db->where('id_barangmasuk', $id)->get('barangmasuk')->row();
-	
-				$barang 		= $this->db->where('id_barang', $barang_masuk->id_barang)->get('barang')->row();
-	
-				if ($barang->stok > $barang_masuk->jumlah) {
-					$stok_akhir 	= $barang->stok - $barang_masuk->jumlah;
-				}else{
-					$stok_akhir 	= $barang_masuk->jumlah - $barang->stok;
-				}
-	
-				$update_barang = [
-					'stok' => $stok_akhir,
-				];
-	
-				$save_barang = $this->model_barang->change($barang_masuk->id_barang, $update_barang);
-
 				$remove = $this->_remove($id);
+
+				$this->db->delete('barangmasuk_detail', ['barangmasuk_id' => $id]);
 			}
 		}
 
@@ -377,8 +373,7 @@ class Barangmasuk extends Admin	{
 	}
 
 
-	public function single_pdf($id = null)
-	{
+	public function single_pdf($id = null) {
 		$this->is_allowed('barangmasuk_export');
 
 		$table = $title = 'barangmasuk';

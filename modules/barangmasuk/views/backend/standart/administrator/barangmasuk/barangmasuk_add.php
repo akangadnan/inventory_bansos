@@ -1,4 +1,4 @@
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.6/dist/loadingoverlay.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.6/dist/loadingoverlay.min.js"></script>
 
 <section class="content-header">
 	<h1>
@@ -15,11 +15,11 @@
 	<div class="row">
 		<div class="col-md-12">
 			<div class="box box-primary">
-				<div class="box-body ">
+				<div class="box-body">
 					<!-- Widget: user widget style 1 -->
 					<div class="box box-widget widget-user-2">
 						<!-- Add the bg color to the header using any of the bg-* classes -->
-						<div class="widget-user-header ">
+						<div class="widget-user-header">
 							<div class="widget-user-image">
 								<img class="img-circle" src="<?= BASE_ASSET; ?>/img/add2.png" alt="User Avatar">
 							</div>
@@ -38,36 +38,31 @@
 						<?php
 					$user_groups = $this->model_group->get_user_group_ids();
 					?>
-						<div class="form-group group-asal-posko ">
+						<div class="form-group group-asal-posko">
 							<label for="asal" class="col-sm-2 control-label">Asal Posko<i class="required">*</i></label>
 							<div class="col-sm-8">
 								<select class="form-control chosen chosen-select-deselect" name="asal_posko" id="asal_posko" data-placeholder="Select Asal">
 									<option value=""></option>
-									<?php
-									$conditions = [
-										];
-									?>
-
-									<?php foreach (db_get_all_data('posko', $conditions) as $row): ?>
+									<?php foreach (db_get_all_data('posko') as $row): ?>
 									<option value="<?= $row->posko_id ?>"><?= $row->posko_nama; ?></option>
 									<?php endforeach; ?>
 								</select>
 								<small class="info help-block"></small>
 							</div>
 						</div>
-						<div class="form-group group-asal ">
+						<div class="form-group group-asal">
 							<label for="asal" class="col-sm-2 control-label">Nama Donatur <i class="required">*</i></label>
 							<div class="col-sm-8">
 								<input type="text" class="form-control" name="nama_donatur" id="nama_donatur" placeholder="Nama Donatur" value="<?= set_value('nama_donatur'); ?>">
 							</div>
 						</div>
-						<div class="form-group group-asal ">
+						<div class="form-group group-asal">
 							<label for="asal" class="col-sm-2 control-label">Alamat Donatur <i class="required">*</i></label>
 							<div class="col-sm-8">
 								<input type="text" class="form-control" name="alamat_donatur" id="alamat_donatur" placeholder="Alamat Donatur" value="<?= set_value('alamat_donatur'); ?>">
 							</div>
 						</div>
-						<div class="form-group group-kecamatan-id ">
+						<div class="form-group group-kecamatan-id">
 							<label for="kecamatan_id" class="col-sm-2 control-label">Kecamatan <i class="required">*</i></label>
 							<div class="col-sm-8">
 								<select class="form-control chosen chosen-select-deselect" name="kecamatan_id" id="kecamatan_id" data-placeholder="Select Kecamatan">
@@ -79,7 +74,7 @@
 								<small class="info help-block"></small>
 							</div>
 						</div>
-						<div class="form-group group-kelurahan-id ">
+						<div class="form-group group-kelurahan-id">
 							<label for="kelurahan_id" class="col-sm-2 control-label">Kelurahan <i class="required">*</i></label>
 							<div class="col-sm-8">
 								<select class="form-control chosen chosen-select-deselect" name="kelurahan_id" id="kelurahan_id" data-placeholder="Select Kelurahan">
@@ -88,7 +83,7 @@
 								<small class="info help-block"></small>
 							</div>
 						</div>
-						<div class="form-group group-asal ">
+						<div class="form-group group-asal">
 							<label for="asal" class="col-sm-2 control-label"> No telepon Donatur<i class="required">*</i></label>
 							<div class="col-sm-8">
 								<input type="number" class="form-control" name="phone_donatur" id="phone_donatur" placeholder="No telepon Donatur" value="<?= set_value('phone_donatur'); ?>">
@@ -106,7 +101,7 @@
 							<label for="tanggal" class="col-sm-2 control-label">Tanggal <i class="required">*</i></label>
 							<div class="col-sm-6">
 								<div class="input-group date col-sm-8">
-									<input type="text" class="form-control pull-right datepicker" name="tanggal" placeholder="Tanggal" id="tanggal">
+									<input type="text" class="form-control pull-right datepicker" name="tanggal" placeholder="Tanggal" id="tanggal" value="<?= set_value('barangmasuk_tanggal'); ?>">
 								</div>
 								<small class="info help-block"></small>
 							</div>
@@ -115,7 +110,7 @@
 							<label for="waktu" class="col-sm-2 control-label">Waktu <i class="required">*</i></label>
 							<div class="col-sm-6">
 								<div class="input-group date col-sm-8">
-									<input type="text" class="form-control pull-right timepicker" name="waktu" id="waktu">
+									<input type="text" class="form-control pull-right timepicker" name="waktu" id="waktu" value="<?= set_value('barangmasuk_waktu'); ?>">
 								</div>
 								<small class="info help-block"></small>
 							</div>
@@ -146,15 +141,18 @@
 												<tbody>
 													<tr id="inputFormRow">
 														<td>
-															<select class="form-control chosen chosen-select-deselect" name="id_barang[]" id="id_barang0" data-placeholder="Select Nama Barang">
+															<select class="form-control chosen chosen-select-deselect" name="id_barang[]" id="id_barang0" data-placeholder="Pilih Nama Barang">
 																<option value=""></option>
+														<?php foreach(db_get_all_data('barang') as $row) {?>
+																<option value="<?= $row->id_barang ?>"><?= $row->nama_barang; ?> ( <?= join_multi_select($row->satuan, 'satuan', 'id_satuan', 'nama_satuan'); ?>) </option>
+														<?php }; ?>
 															</select>
 														</td>
 														<td>
 															<input type="number" class="form-control" name="jumlah[]" id="jumlah[]" placeholder="Masukkan Jumlah Stok">
 														</td>
 														<td>
-															<input type="number" class="form-control" name="keterangan_barang[]" id="keterangan_barang[]" placeholder="Masukkan Keterangan Barang">
+															<input type="text" class="form-control" name="keterangan_barang[]" id="keterangan_barang[]" placeholder="Masukkan Keterangan Barang">
 														</td>
 														<td>
 															&nbsp;
@@ -218,16 +216,13 @@
 			var html = '';
 			html += '<tr id="inputFormRow">';
 			html +=
-				'<td><select class="form-control chosen chosen-select-deselect" name="id_barang[]" id="id_barang[]" data-placeholder="Select Nama Barang"><option value="">- Pilih Nama Barang -</option>';
-		<?php 
-			$conditions = [];
-			foreach(db_get_all_data('barang', $conditions) as $row) {
-		?>
-				html += '<option value="<?= $row->id_barang ?>"><?= $row->nama_barang; ?>( <?= $row->stok; ?>) </option>';
+				'<td><select class="form-control chosen chosen-select-deselect" name="id_barang[]" id="id_barang[]" data-placeholder="Pilih Nama Barang"><option value="">- Pilih Nama Barang -</option>';
+		<?php foreach(db_get_all_data('barang') as $row) {?>
+				html += '<option value="<?= $row->id_barang ?>"><?= $row->nama_barang; ?> ( <?= join_multi_select($row->satuan, 'satuan', 'id_satuan', 'nama_satuan'); ?>) </option>';
 		<?php }; ?>
 			html += '</select><small class="info help-block"></small></td>';
-			html += '<td><input type="number" class="form-control" name="jumlah[]" id="jumlah[]" placeholder="Jumlah Stok"><small class="info help-block"></small></td>';
-			html += '<td><input type="number" class="form-control" name="keterangan_barang[]" id="keterangan_barang[]" placeholder="Masukkan Keterangan Barang"></td>';
+			html += '<td><input type="number" class="form-control" name="jumlah[]" id="jumlah[]" placeholder="Masukkan Jumlah Stok"><small class="info help-block"></small></td>';
+			html += '<td><input type="text" class="form-control" name="keterangan_barang[]" id="keterangan_barang[]" placeholder="Masukkan Keterangan Barang"></td>';
 			html += '<td><a href="javascript:void(0);" id="removeRow" class="btn btn-danger btn-sm"><i class="fa fa-times"></i></a></td>';
 			html += '</tr>';
 
@@ -370,37 +365,5 @@
 				$.LoadingOverlay('hide')
 			});
 		});
-
-		function chained_barang(complete) {
-			$.LoadingOverlay('show');
-			return $.ajax({
-				url: BASE_URL + 'administrator/barangmasuk/ajax_barang/',
-				dataType: 'JSON',
-			})
-			.done(function (res) {
-				var html = '<option value=""></option>';
-				$.each(res, function (index, val) {
-					html += '<option value="' + val.id_barang + '">' + val.nama_barang + ' (' + val.stok + ' ' + val.nama_satuan + ')' + '</option>'
-				});
-
-				$('#id_barang0').html(html);
-				$('#id_barang0').trigger('chosen:updated');
-
-			})
-			.fail(function () {
-				toastr['error']('Error', 'Getting data fail')
-			})
-			.always(function () {
-				$.LoadingOverlay('hide')
-			});
-
-		};
-
-		async function chain() {
-			await chained_barang();
-		}
-
-		chain();
-
 	}); /*end doc ready*/
 </script>

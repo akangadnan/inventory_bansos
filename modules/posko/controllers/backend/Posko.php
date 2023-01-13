@@ -260,9 +260,13 @@ class Posko extends Admin {
 
 		if (!empty($id)) {
 			$remove = $this->_remove($id);
+
+			$this->db->delete('layanan_posko', ['posko_id' => $id]);
 		} elseif (count($arr_id) >0) {
 			foreach ($arr_id as $id) {
 				$remove = $this->_remove($id);
+
+				$this->db->delete('layanan_posko', ['posko_id' => $id]);
 			}
 		}
 

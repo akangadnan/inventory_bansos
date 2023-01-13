@@ -113,13 +113,13 @@
 											</tr>
 									<?php
 										$no = 1;
-										foreach ($detailbarangmasuk as $item) {
+										foreach (db_get_all_data('barangmasuk_detail', ['id_barangmasuk', $barangmasuk->id_barangmasuk]) as $item) {
 									?>
 											<tr>
 												<td><?= $no++;?></td>
-												<td><?= _ent($item->nama_barang);?></td>
-												<td><?= _ent($item->jumlah).' '._ent($item->nama_satuan);?></td>
-												<td><?= _ent($item->keterangan);?></td>
+												<td><?= _ent(join_multi_select($item->barang_id, 'barang', 'id_barang', 'nama_barang'));?></td>
+												<td><?= _ent($item->barangmasuk_detail_jumlah).' '._ent(join_multi_select(join_multi_select($item->barang_id, 'barang', 'id_barang', 'satuan'), 'satuan', 'id_satuan', 'nama_satuan'));?></td>
+												<td><?= _ent($item->barangmasuk_detail_keterangan);?></td>
 											</tr>
 									<?php
 										}

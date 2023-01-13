@@ -1256,7 +1256,7 @@ if (!function_exists('join_multi_select')) {
 			foreach ($result as $row) {
 				$labels[] = $row->{$relation_label};
 			}
-			return implode(',', $labels);
+			return implode(', ', $labels);
 		}
 		return '-';
 	}

@@ -130,21 +130,11 @@
 										$lapos = db_get_all_data('layanan_posko', ['posko_id' => $posko->posko_id]);
 
 										foreach ($lapos as $item) {
-											$jenis_layanan 	= db_get_all_data('jenis_layanan', ['jenis_layanan_id' => $item->jenis_layanan_id]);
-											$user_layanan 	= db_get_all_data('users', ['user_id' => $item->layanan_posko_pic]);
-											$nkontak_pic 	= db_get_all_data('user_kontak', ['user_id' => $item->layanan_posko_pic]);
-
-											$npic = [];
-											foreach ($nkontak_pic as $nkpic) {
-												$npic[] = $nkpic->user_kontak_name;
-											}
-										
-											$nkontak_pc = implode(', ', $npic);
 									?>
 											<tr>
-												<td><?= _ent($jenis_layanan[0]->jenis_layanan_nama);?></td>
-												<td><?= _ent($user_layanan[0]->user_nama_lengkap);?></td>
-												<td><?= _ent($nkontak_pc);?></td>
+												<td><?= _ent(join_multi_select($item->jenis_layanan_id, 'jenis_layanan', 'jenis_layanan_id', 'jenis_layanan_nama'));?></td>
+												<td><?= _ent(join_multi_select($item->layanan_posko_pic, 'users', 'user_id', 'user_nama_lengkap'));?></td>
+												<td><?= _ent(join_multi_select($item->layanan_posko_pic, 'user_kontak', 'user_id', 'user_kontak_name'));?></td>
 											</tr>
 									<?php
 										}

@@ -252,10 +252,10 @@ class Barangmasuk extends Admin	{
 					];
 				}
 
-				$this->db->insert_batch('barangmasuk_detail', $data_barang_masuk);
+				$save_details = $this->db->insert_batch('barangmasuk_detail', $data_barang_masuk);
 			}
 
-			if ($save_barangmasuk || $data_barang_masuk) {
+			if ($save_barangmasuk || $save_details) {
 				if ($this->input->post('save_type') == 'stay') {
 					$this->data['success'] = true;
 					$this->data['id'] 	   = $id;
@@ -332,7 +332,7 @@ class Barangmasuk extends Admin	{
 		$this->is_allowed('barangmasuk_view');
 
 		$this->data['barangmasuk'] 			= $this->model_barangmasuk->join_avaiable()->filter_avaiable()->find($id);
-		$this->data['detailbarangmasuk'] 	= $this->model_barangmasuk->query_detail_barang_masuk($id)->result();
+		// $this->data['detailbarangmasuk'] 	= $this->model_barangmasuk->query_detail_barang_masuk($id)->result();
 
 		$this->template->title('Barang Masuk Detail');
 		$this->render('backend/standart/administrator/barangmasuk/barangmasuk_view', $this->data);

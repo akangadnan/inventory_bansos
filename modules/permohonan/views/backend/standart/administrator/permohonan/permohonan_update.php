@@ -44,11 +44,11 @@
 
 			$user_groups = $this->model_group->get_user_group_ids();
 			?>
-				<div class="box-body ">
+				<div class="box-body">
 					<!-- Widget: user widget style 1 -->
 					<div class="box box-widget widget-user-2">
 						<!-- Add the bg color to the header using any of the bg-* classes -->
-						<div class="widget-user-header ">
+						<div class="widget-user-header">
 							<div class="widget-user-image">
 								<img class="img-circle" src="<?= BASE_ASSET; ?>/img/add2.png" alt="User Avatar">
 							</div>
@@ -185,25 +185,51 @@
 													</tr>
 												</thead>
 												<tbody>
+											<?php
+												$details = db_get_all_data('permohonan_detail', ['permohonan_id' => $permohonan->permohonan_id]);
+											?>
 													<tr id="inputFormRow">
 														<td>
 															<select class="form-control chosen chosen-select-deselect" name="id_barang[]" id="id_barang0" data-placeholder="Select Nama Barang">
 																<option value=""></option>
 														<?php foreach(db_get_all_data('barang') as $row) {?>
-															<option value="<?= $row->id_barang ?>"><?= $row->nama_barang; ?> ( <?= join_multi_select($row->satuan, 'satuan', 'id_satuan', 'nama_satuan'); ?>) </option>
+															<option value="<?= $row->id_barang;?>" <?= $details[0]->barang_id == $row->id_barang ? 'selected="selected"' : '';?>><?= $row->nama_barang; ?> ( <?= join_multi_select($row->satuan, 'satuan', 'id_satuan', 'nama_satuan'); ?>) </option>
 														<?php }?>
 															</select>
 														</td>
 														<td>
-															<input type="number" class="form-control" name="jumlah[]" id="jumlah[]" placeholder="Masukkan Jumlah Stok">
+															<input type="number" class="form-control" name="jumlah[]" id="jumlah[]" placeholder="Masukkan Jumlah Stok" value="<?= $details[0]->permohonan_detail_jumlah;?>">
 														</td>
 														<td>
-															<input type="number" class="form-control" name="keterangan_barang[]" id="keterangan_barang[]" placeholder="Masukkan Keterangan Barang">
+															<input type="text" class="form-control" name="keterangan_barang[]" id="keterangan_barang[]" placeholder="Masukkan Keterangan Barang" value="<?= $details[0]->permohonan_detail_keterangan;?>">
 														</td>
 														<td>
 															&nbsp;
 														</td>
 													</tr>
+											<?php
+												for ($i=1; $i < count($details); $i++) {
+											?>
+													<tr id="inputFormRow">
+														<td>
+															<select class="form-control chosen chosen-select-deselect" name="id_barang[]" id="id_barang0" data-placeholder="Select Nama Barang">
+																<option value=""></option>
+														<?php foreach(db_get_all_data('barang') as $row) {?>
+															<option value="<?= $row->id_barang;?>" <?= $details[$i]->barang_id == $row->id_barang ? 'selected="selected"' : '';?>><?= $row->nama_barang; ?> ( <?= join_multi_select($row->satuan, 'satuan', 'id_satuan', 'nama_satuan'); ?>) </option>
+														<?php }?>
+															</select>
+														</td>
+														<td>
+															<input type="number" class="form-control" name="jumlah[]" id="jumlah[]" placeholder="Masukkan Jumlah Stok" value="<?= $details[$i]->permohonan_detail_jumlah;?>">
+														</td>
+														<td>
+															<input type="text" class="form-control" name="keterangan_barang[]" id="keterangan_barang[]" placeholder="Masukkan Keterangan Barang" value="<?= $details[$i]->permohonan_detail_keterangan;?>">
+														</td>
+														<td><a href="javascript:void(0);" id="removeRow" class="btn btn-danger btn-sm"><i class="fa fa-times"></i></a></td>
+													</tr>
+											<?php
+												}
+											?>
 												</tbody>
 											</table>
 										</div>
@@ -259,8 +285,29 @@
 			var permohonan_status = $('#permohonan_status');
 			var permohonan_respon_posko = $('#permohonan_respon_posko');
 			var permohonan_mengetahui = $('#permohonan_mengetahui');
-
 		})()
+
+		$("#addRow").on('click', function () {
+			var html = '';
+			html += '<tr id="inputFormRow">';
+			html +=
+				'<td><select class="form-control chosen chosen-select-deselect" name="id_barang[]" id="id_barang[]" data-placeholder="Select Nama Barang"><option value="">- Pilih Nama Barang -</option>';
+		<?php foreach(db_get_all_data('barang') as $row) {?>
+				html += '<option value="<?= $row->id_barang ?>"><?= $row->nama_barang; ?> ( <?= join_multi_select($row->satuan, 'satuan', 'id_satuan', 'nama_satuan'); ?>) </option>';
+		<?php }; ?>
+			html += '</select><small class="info help-block"></small></td>';
+			html += '<td><input type="number" class="form-control" name="jumlah[]" id="jumlah[]" placeholder="Jumlah Stok"><small class="info help-block"></small></td>';
+			html += '<td><input type="text" class="form-control" name="keterangan_barang[]" id="keterangan_barang[]" placeholder="Masukkan Keterangan Barang"></td>';
+			html += '<td><a href="javascript:void(0);" id="removeRow" class="btn btn-danger btn-sm"><i class="fa fa-times"></i></a></td>';
+			html += '</tr>';
+
+			$('#tableJenisLayanan tr:last').after(html);
+		});
+
+		$(document).on('click', '#removeRow', function () {
+			$(this).closest('#inputFormRow').remove();
+		});
+
 
 		$('#btn_cancel').click(function () {
 			swal({

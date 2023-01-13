@@ -246,7 +246,7 @@ class Model_barangmasuk extends MY_Model {
 		$objWriter->save('php://output');
 	}
 
-	public function query_detail_barang_masuk($id) {
+	/* public function query_detail_barang_masuk($id) {
 		$this->db->select('barang.nama_barang AS nama_barang,
 							barangmasuk_detail.barangmasuk_detail_jumlah AS jumlah,
 							satuan.nama_satuan AS nama_satuan,
@@ -256,7 +256,7 @@ class Model_barangmasuk extends MY_Model {
 		$query = $this->db->join('satuan', 'satuan.id_satuan = barang.satuan', 'LEFT')->get('barangmasuk_detail');
 		
 		return $query;
-	}
+	} */
 
 	public function query_barang_posko($posko_id, $barang_id) {
 		$this->db->join('barangmasuk', 'barangmasuk.id_barangmasuk = barangmasuk_detail.barangmasuk_id', 'LEFT');

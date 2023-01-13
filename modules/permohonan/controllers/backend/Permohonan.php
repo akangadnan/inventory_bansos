@@ -186,6 +186,10 @@ class Permohonan extends Admin {
 		$this->form_validation->set_rules('permohonan_mengetahui', 'Mengetahui Posko', 'trim|required');
 		
 		if ($this->form_validation->run()) {
+			$barang 	= $this->input->post('id_barang[]');
+			$jumlah 	= $this->input->post('jumlah[]');
+			$keterangan = $this->input->post('keterangan_barang[]');
+
 			$save_data = [
 				'permohonan_tanggal' 		=> $this->input->post('permohonan_tanggal'),
 				'permohonan_waktu' 			=> $this->input->post('permohonan_waktu'),
@@ -198,7 +202,27 @@ class Permohonan extends Admin {
 			
 			$save_permohonan = $this->model_permohonan->change($id, $save_data);
 
-			if ($save_permohonan) {
+			$this->db->delete('permohonan_detail', ['permohonan_id' => $id]);
+
+			$save_details = 0;
+			if (count($barang) > 0) {
+				$data_permohonan_bantuan_barang = [];
+
+				for ($i=0; $i < count($barang); $i++) {
+					$data_permohonan_bantuan_barang[] = [
+						'permohonan_id' 					=> $id,
+						'barang_id' 						=> $barang[$i],
+						'permohonan_detail_jumlah' 			=> $jumlah[$i],
+						'permohonan_detail_keterangan' 		=> $keterangan[$i],
+						'permohonan_detail_created_at' 		=> date('Y-m-d H:i:s'),
+						'permohonan_detail_user_created' 	=> get_user_data('id'),
+					];
+				}
+
+				$save_details = $this->db->insert_batch('permohonan_detail', $data_permohonan_bantuan_barang);
+			}
+
+			if ($save_permohonan || $save_details) {
 				if ($this->input->post('save_type') == 'stay') {
 					$this->data['success'] = true;
 					$this->data['id'] 	   = $id;
@@ -237,8 +261,7 @@ class Permohonan extends Admin {
 	*
 	* @var $id String
 	*/
-	public function delete($id = null)
-	{
+	public function delete($id = null) {
 		$this->is_allowed('permohonan_delete');
 
 		$this->load->helper('file');
@@ -248,9 +271,13 @@ class Permohonan extends Admin {
 
 		if (!empty($id)) {
 			$remove = $this->_remove($id);
+
+			$this->db->delete('permohonan_detail', ['permohonan_id' => $id]);
 		} elseif (count($arr_id) >0) {
 			foreach ($arr_id as $id) {
 				$remove = $this->_remove($id);
+
+				$this->db->delete('permohonan_detail', ['permohonan_id' => $id]);
 			}
 		}
 

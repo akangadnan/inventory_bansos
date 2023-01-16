@@ -286,14 +286,14 @@ class Permohonan extends Admin {
 		// var_dump($getbarang);
 		// var_dump($save_databarangkeluar);
 		// die();
-		$barang = $this->db->where('id_barang', 14)->from('barang')->get()->row();
-		$stok 	= ($barang->stok - 2);
+		// $barang = $this->db->where('id_barang', 14)->from('barang')->get()->row();
+		// $stok 	= ($barang->stok - 2);
 
-		$update_barang = [
-			'stok' => $stok,
-		];
+		// $update_barang = [
+		// 	'stok' => $stok,
+		// ];
 		
-		$save_barang = $this->model_barang->change($barang->id_barang, $update_barang);
+		// $save_barang = $this->model_barang->change($barang->id_barang, $update_barang);
 			
 			$save_data = [
 				'permohonan_status' 		=> '2',

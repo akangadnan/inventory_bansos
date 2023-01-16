@@ -14,6 +14,8 @@ class Permohonan extends Admin {
 		parent::__construct();
 
 		$this->load->model('model_permohonan');
+		$this->load->model('barangkeluar/model_barangkeluar');
+		$this->load->model('barang/model_barang');
 		$this->load->model('group/model_group');
 		$this->lang->load('web_lang', $this->current_lang);
 	}
@@ -74,7 +76,7 @@ class Permohonan extends Admin {
 		$this->form_validation->set_rules('permohonan_waktu', 'Waktu', 'trim|required');
 		$this->form_validation->set_rules('posko_id', 'Posko', 'trim|required');
 		$this->form_validation->set_rules('permohonan_pemohon', 'Pemohon', 'trim|required|max_length[75]');
-		$this->form_validation->set_rules('permohonan_mengetahui', 'Mengetahui Posko', 'trim|required');
+		//$this->form_validation->set_rules('permohonan_mengetahui', 'Mengetahui Posko', 'trim|required');
 
 		if ($this->form_validation->run()) {
 			$barang 	= $this->input->post('id_barang[]');
@@ -257,13 +259,49 @@ class Permohonan extends Admin {
 	}
 
 	public function verified($id) {
-		$save_data = [
-			'permohonan_status' 		=> '2',
-			'permohonan_verified' 		=> get_user_data('id'),
-			'permohonan_verified_at' 	=> date('Y-m-d H:i:s'),
-		];
+		
 
-		$this->model_permohonan->change($id, $save_data);
+		//input ke barang keluar
+		//get id barang
+		$getbarang = $this->model_permohonan->get($id);
+
+		
+		//input ke barang_keluar
+		//id barang belum komplit
+		//jumlah belum keseting
+
+		$save_databarangkeluar = [
+			// 'id_barang' 	=> $getbarang('nama_komunitas'),
+			'id_barang' 	=> 14,
+			'tujuan_posko' 	=> $getbarang[0]->posko_id,
+			'tujuan' 		=> $getbarang[0]->permohonan_pemohon,
+			'jumlah' 		=> 2,
+			// 'jumlah' 		=> $getbarang('nama_komunitas'),
+			'keterangan' 	=> $getbarang[0]->permohonan_keterangan,
+			'tanggal'		=> date('Y-m-d'),
+			'waktu'			=> date('H:i')
+		];
+		$this->db->insert('barangkeluar', $save_databarangkeluar);
+		
+		// var_dump($getbarang);
+		// var_dump($save_databarangkeluar);
+		// die();
+		$barang = $this->db->where('id_barang', 14)->from('barang')->get()->row();
+		$stok 	= ($barang->stok - 2);
+
+		$update_barang = [
+			'stok' => $stok,
+		];
+		
+		$save_barang = $this->model_barang->change($barang->id_barang, $update_barang);
+			
+			$save_data = [
+				'permohonan_status' 		=> '2',
+				'permohonan_verified' 		=> get_user_data('id'),
+				'permohonan_verified_at' 	=> date('Y-m-d H:i:s'),
+			];
+	
+			$this->model_permohonan->change($id, $save_data);
 
 		redirect_back();
 	}

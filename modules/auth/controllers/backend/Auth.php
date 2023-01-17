@@ -8,11 +8,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
  *| For authentication
  *|
  */
-class Auth extends Admin
-{
-
-	public function __construct()
-	{
+class Auth extends Admin {
+	public function __construct() {
 		parent::__construct();
 	}
 
@@ -20,21 +17,24 @@ class Auth extends Admin
 	 * Login user
 	 *
 	 */
-	public function login()
-	{
-
+	public function login() {
 		if ($this->aauth->is_loggedin()) {
 			redirect('administrator/user/profile', 'refresh');
 		}
+
 		$data = [];
 		$this->config->load('site');
 
 		$this->form_validation->set_rules('username', 'Username', 'trim|required');
 		$this->form_validation->set_rules('password', 'Password', 'trim|required');
 
-
 		if ($this->form_validation->run()) {
 			if ($this->aauth->login($this->input->post('username'), $this->input->post('password'), $this->input->post('remember'))) {
+
+				// echo json_encode($this->aauth->login($this->input->post('username'), $this->input->post('password'), $this->input->post('remember')));
+				// echo json_encode($this->session->all_userdata());
+				// exit;
+
 				$ref = $this->session->userdata('redirect');
 
 				if ($ref) {

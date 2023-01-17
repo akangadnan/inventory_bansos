@@ -1,4 +1,6 @@
-<script src="<?= BASE_ASSET; ?>/js/jquery.hotkeys.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.6/dist/loadingoverlay.min.js"></script>
+
+<script src="<?= BASE_ASSET; ?>js/jquery.hotkeys.js"></script>
 <script type="text/javascript">
 	function domo() {
 		// Binding keys
@@ -74,6 +76,27 @@
 										<div class="input-group date col-sm-8">
 											<input type="text" class="form-control pull-right timepicker" name="permohonan_waktu" id="permohonan_waktu">
 										</div>
+										<small class="info help-block"></small>
+									</div>
+								</div>
+								<div class="form-group group-kecamatan-id">
+									<label for="kecamatan_id" class="col-sm-2 control-label">Kecamatan <i class="required">*</i></label>
+									<div class="col-sm-8">
+										<select class="form-control chosen chosen-select-deselect" name="kecamatan_id" id="kecamatan_id" data-placeholder="Select Kecamatan">
+											<option value=""></option>
+									<?php foreach(db_get_all_data('kecamatan') as $row) {?>
+										<option value="<?= $row->kecamatan_id;?>"><?= $row->kecamatan_nama; ?></option>
+									<?php }?>
+										</select>
+										<small class="info help-block"></small>
+									</div>
+								</div>
+								<div class="form-group group-kecamatan-id">
+									<label for="kelurahan_id" class="col-sm-2 control-label">Kelurahan <i class="required">*</i></label>
+									<div class="col-sm-8">
+										<select class="form-control chosen chosen-select-deselect" name="kelurahan_id" id="kelurahan_id" data-placeholder="Select Kelurahan">
+											<option value=""></option>
+										</select>
 										<small class="info help-block"></small>
 									</div>
 								</div>
@@ -309,7 +332,6 @@
 					$('.steps li').removeClass('error');
 					$('form').find('.error-input').remove();
 					if (res.success) {
-
 						if (save_type == 'back') {
 							window.location.href = res.redirect;
 							return;
@@ -321,23 +343,17 @@
 						$('.message').fadeIn();
 						resetForm();
 						$('.chosen option').prop('selected', false).trigger('chosen:updated');
-
 					} else {
 						if (res.errors) {
-
 							$.each(res.errors, function (index, val) {
 								$('form #' + index).parents('.form-group').addClass(
 									'has-error');
-								$('form #' + index).parents('.form-group').find('small')
-									.prepend(`
-					  <div class="error-input">` + val + `</div>
-					  `);
+								$('form #' + index).parents('.form-group').find('small').prepend(`<div class="error-input">` + val + `</div>`);
 							});
 							$('.steps li').removeClass('error');
 							$('.content section').each(function (index, el) {
 								if ($(this).find('.has-error').length) {
-									$('.steps li:eq(' + index + ')').addClass('error').find(
-										'a').trigger('click');
+									$('.steps li:eq(' + index + ')').addClass('error').find('a').trigger('click');
 								}
 							});
 						}
@@ -346,7 +362,6 @@
 							type: 'warning'
 						});
 					}
-
 				})
 				.fail(function () {
 					$('.message').printMessage({
@@ -363,5 +378,29 @@
 
 			return false;
 		}); /*end btn save*/
+
+		$('#kecamatan_id').change(function (event) {
+			var val = $(this).val();
+			$.LoadingOverlay('show')
+			$.ajax({
+				url: BASE_URL + 'administrator/permohonan/ajax_kelurahan_id/' + val,
+				dataType: 'JSON',
+			})
+			.done(function (res) {
+				var html = '<option value=""></option>';
+				$.each(res, function (index, val) {
+					html += '<option value="' + val.kelurahan_id + '">' + val.kelurahan_nama + '</option>'
+				});
+				$('#kelurahan_id').html(html);
+				$('#kelurahan_id').trigger('chosen:updated');
+
+			})
+			.fail(function () {
+				toastr['error']('Error', 'Getting data fail')
+			})
+			.always(function () {
+				$.LoadingOverlay('hide')
+			});
+		});
 	}); /*end doc ready*/
 </script>

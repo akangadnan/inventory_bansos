@@ -76,8 +76,10 @@ class Permohonan extends Admin {
 		$this->form_validation->set_rules('permohonan_waktu', 'Waktu', 'trim|required');
 		$this->form_validation->set_rules('posko_id', 'Posko', 'trim|required');
 		$this->form_validation->set_rules('permohonan_pemohon', 'Pemohon', 'trim|required|max_length[75]');
-		//$this->form_validation->set_rules('permohonan_mengetahui', 'Mengetahui Posko', 'trim|required');
-
+		$this->form_validation->set_rules('permohonan_mengetahui', 'Mengetahui Posko', 'trim|required');
+		$this->form_validation->set_rules('kecamatan_id', 'Posko Kecamatan', 'trim|required');
+		$this->form_validation->set_rules('kelurahan_id', 'Posko Kelurahan', 'trim|required');
+		
 		if ($this->form_validation->run()) {
 			$barang 	= $this->input->post('id_barang[]');
 			$jumlah 	= $this->input->post('jumlah[]');
@@ -87,6 +89,8 @@ class Permohonan extends Admin {
 				'permohonan_tanggal' 		=> $this->input->post('permohonan_tanggal'),
 				'permohonan_waktu' 			=> $this->input->post('permohonan_waktu'),
 				'posko_id' 					=> $this->input->post('posko_id'),
+				'kecamatan_id' 				=> $this->input->post('kecamatan_id'),
+				'kelurahan_id' 				=> $this->input->post('kelurahan_id'),
 				'permohonan_pemohon' 		=> $this->input->post('permohonan_pemohon'),
 				'permohonan_keterangan' 	=> $this->input->post('permohonan_keterangan'),
 				'permohonan_status' 		=> '1',
@@ -186,6 +190,8 @@ class Permohonan extends Admin {
 		$this->form_validation->set_rules('posko_id', 'Posko', 'trim|required');
 		$this->form_validation->set_rules('permohonan_pemohon', 'Pemohon', 'trim|required|max_length[75]');
 		$this->form_validation->set_rules('permohonan_mengetahui', 'Mengetahui Posko', 'trim|required');
+		$this->form_validation->set_rules('kecamatan_id', 'Posko Kecamatan', 'trim|required');
+		$this->form_validation->set_rules('kelurahan_id', 'Posko Kelurahan', 'trim|required');
 		
 		if ($this->form_validation->run()) {
 			$barang 	= $this->input->post('id_barang[]');
@@ -196,6 +202,8 @@ class Permohonan extends Admin {
 				'permohonan_tanggal' 		=> $this->input->post('permohonan_tanggal'),
 				'permohonan_waktu' 			=> $this->input->post('permohonan_waktu'),
 				'posko_id' 					=> $this->input->post('posko_id'),
+				'kecamatan_id' 				=> $this->input->post('kecamatan_id'),
+				'kelurahan_id' 				=> $this->input->post('kelurahan_id'),
 				'permohonan_pemohon' 		=> $this->input->post('permohonan_pemohon'),
 				'permohonan_keterangan' 	=> $this->input->post('permohonan_keterangan'),
 				'permohonan_respon_posko' 	=> $this->input->post('permohonan_respon_posko'),
@@ -259,29 +267,26 @@ class Permohonan extends Admin {
 	}
 
 	public function verified($id) {
-		
-
 		//input ke barang keluar
 		//get id barang
-		$getbarang = $this->model_permohonan->get($id);
+		// $getbarang = $this->model_permohonan->get($id);
 
 		
 		//input ke barang_keluar
 		//id barang belum komplit
 		//jumlah belum keseting
 
-		$save_databarangkeluar = [
-			// 'id_barang' 	=> $getbarang('nama_komunitas'),
-			'id_barang' 	=> 14,
-			'tujuan_posko' 	=> $getbarang[0]->posko_id,
-			'tujuan' 		=> $getbarang[0]->permohonan_pemohon,
-			'jumlah' 		=> 2,
-			// 'jumlah' 		=> $getbarang('nama_komunitas'),
-			'keterangan' 	=> $getbarang[0]->permohonan_keterangan,
-			'tanggal'		=> date('Y-m-d'),
-			'waktu'			=> date('H:i')
-		];
-		$this->db->insert('barangkeluar', $save_databarangkeluar);
+		// $save_databarangkeluar = [
+		// 	'id_barang' 	=> 14,
+		// 	'tujuan_posko' 	=> $getbarang[0]->posko_id,
+		// 	'tujuan' 		=> $getbarang[0]->permohonan_pemohon,
+		// 	'jumlah' 		=> 2,
+		// 	'keterangan' 	=> $getbarang[0]->permohonan_keterangan,
+		// 	'tanggal'		=> date('Y-m-d'),
+		// 	'waktu'			=> date('H:i')
+		// ];
+
+		// $this->db->insert('barangkeluar', $save_databarangkeluar);
 		
 		// var_dump($getbarang);
 		// var_dump($save_databarangkeluar);
@@ -304,6 +309,19 @@ class Permohonan extends Admin {
 			$this->model_permohonan->change($id, $save_data);
 
 		redirect_back();
+	}
+
+	public function process_order($id) {
+		$this->is_allowed('permohonan_proses');
+
+		$this->data['permohonan'] = $this->model_permohonan->join_avaiable()->filter_avaiable()->find($id);
+
+		$this->template->title('Proses Permintaan Bantuan');
+		$this->render('backend/standart/administrator/permohonan/permohonan_proses', $this->data);
+	}
+
+	public function save_proses($id) {
+		echo 'string';
 	}
 	
 	/**
@@ -345,8 +363,7 @@ class Permohonan extends Admin {
 	*
 	* @var $id String
 	*/
-	public function view($id)
-	{
+	public function view($id) {
 		$this->is_allowed('permohonan_view');
 
 		$this->data['permohonan'] = $this->model_permohonan->join_avaiable()->filter_avaiable()->find($id);
@@ -449,11 +466,17 @@ class Permohonan extends Admin {
 		$this->response($results);	
 	}
 
-	public function coba() {
-		$coba = join_multi_select(1, 'satuan', 'id_satuan', 'nama_satuan');
+	public function ajax_kelurahan_id($id = null) {
+		if (!$this->is_allowed('permohonan_list', false)) {
+			echo json_encode([
+				'success' => false,
+				'message' => cclang('sorry_you_do_not_have_permission_to_access')
+				]);
+			exit;
+		}
 
-		// echo json_encode($coba);
-		echo $this->db->last_query();
+		$results = db_get_all_data('kelurahan', ['kecamatan_id' => $id]);
+		$this->response($results);	
 	}
 
 	

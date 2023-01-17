@@ -266,10 +266,10 @@ class Aauth
 			// If email and pass matches
 			// create session
 			$data = array(
-				'id' => $row->id,
-				'username' => $row->username,
-				'email' => $row->email,
-				'loggedin' => TRUE
+				'id' 		=> $row->id,
+				'username' 	=> $row->username,
+				'email' 	=> $row->email,
+				'loggedin' 	=> TRUE
 			);
 
 			if ($set_userdata) {

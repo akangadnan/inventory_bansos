@@ -107,9 +107,9 @@ class Model_permohonan extends MY_Model {
 	}
 
 	public function filter_avaiable() {
-
 		if (!$this->aauth->is_admin()) {
 			$this->db->where($this->table_name.'.permohonan_user_created', get_user_data('id'));
+			// $this->db->where($this->table_name.'.posko_id', get_user_data('posko_id'));
 		}
 
 		return $this;

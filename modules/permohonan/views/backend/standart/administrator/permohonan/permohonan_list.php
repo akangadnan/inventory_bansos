@@ -190,6 +190,15 @@
 													<i class="fa fa-close"></i> <?= cclang('remove_button'); ?></a>
 											<?php });
 												}
+
+												if ($permohonan->permohonan_status == '2') {
+													is_allowed('permohonan_proses', function() use ($permohonan) {
+											?>
+												<a href="<?= site_url('administrator/permohonan/process_order/' . $permohonan->permohonan_id);?>" class="label-default">
+													<i class="fa fa-calendar-plus-o"></i> <?= cclang('process_order');?></a>
+											<?php
+													});
+												}
 											?>
 											</td>
 										</tr>

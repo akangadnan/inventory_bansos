@@ -152,6 +152,12 @@
 				<div class="box-footer">
 				<?php
 					if ($permohonan->permohonan_status == '1') {
+						is_allowed('permohonan_verified', function() use ($permohonan) {
+					?>
+						<a href="javascript:void(0);" data-href="<?= site_url('administrator/permohonan/verified/'.$permohonan->permohonan_id);?>" class="btn btn-flat btn_action btn-primary verified-data"><i class="fa fa-check"></i> <?= cclang('verified', ['Permohonan']);?></a>
+					<?php
+						});
+
 						is_allowed('permohonan_update', function() use ($permohonan) {
 				?>
 					<a class="btn btn-flat btn-info btn_edit btn_action" id="btn_edit" data-stype='back' title="edit permohonan (Ctrl+e)" href="<?= site_url('administrator/permohonan/edit/'.$permohonan->permohonan_id); ?>">
@@ -184,5 +190,27 @@
 			var permohonan_mengetahui = $('.detail_group-permohonan-mengetahui');
 		})()
 
+		$('.verified-data').click(function () {
+			var url = $(this).attr('data-href');
+
+			swal({
+				title: "<?= cclang('are_you_sure_verified_it'); ?>",
+				text: "<?= cclang('data_to_be_verified_can_not_be_restored'); ?>",
+				type: "info",
+				showCancelButton: true,
+				confirmButtonColor: "#DD6B55",
+				confirmButtonText: "<?= cclang('yes_verified_it'); ?>",
+				cancelButtonText: "<?= cclang('no_cancel_plx'); ?>",
+				closeOnConfirm: true,
+				closeOnCancel: true
+			},
+			function (isConfirm) {
+				if (isConfirm) {
+					document.location.href = url;
+				}
+			});
+
+			return false;
+		});
 	});
 </script>

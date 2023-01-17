@@ -1,5 +1,4 @@
-<script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.6/dist/loadingoverlay.min.js">
-</script>
+<script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.6/dist/loadingoverlay.min.js"></script>
 
 <script src="<?= BASE_ASSET; ?>/js/jquery.hotkeys.js"></script>
 <script type="text/javascript">

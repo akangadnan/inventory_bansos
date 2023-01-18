@@ -200,12 +200,12 @@ class Barangkeluar extends Admin {
 							'barangkeluar_detail_jumlah' 		=> $jumlah[$i],
 							'barangkeluar_detail_status' 		=> '1',
 							'barangkeluar_detail_keterangan' 	=> $keterangan[$i],
-							'barangkeluar_detail_user_created' 	=> ,
-							'barangkeluar_detail_created_at' 	=> ,
+							'barangkeluar_detail_user_created' 	=> get_user_data('id'),
+							'barangkeluar_detail_created_at' 	=> date('Y-m-d H:i:s'),
 						];
 					}
 	
-					$this->db->insert_batch('permohonan_detail', $data_permohonan_bantuan_barang);
+					$this->db->insert_batch('barangkeluar_detail', $data_barang_keluar);
 				}
 	
 				if ($save_barangkeluar) {

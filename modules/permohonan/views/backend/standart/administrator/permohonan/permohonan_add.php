@@ -131,8 +131,8 @@
 									<div class="col-sm-8">
 										<select class="form-control chosen chosen-select-deselect" name="permohonan_mengetahui" id="permohonan_mengetahui" data-placeholder="Select Mengetahui Posko">
 											<option value=""></option>
-											<?php foreach (db_get_all_data('aauth_users') as $row): ?>
-											<option value="<?= $row->id ?>"><?= $row->full_name; ?></option>
+											<?php foreach (db_get_all_data('users') as $row): ?>
+											<option value="<?= $row->user_id;?>"><?= $row->user_nama_lengkap; ?></option>
 											<?php endforeach; ?>
 										</select>
 										<small class="info help-block"></small>
@@ -164,8 +164,8 @@
 										<table class="table table-striped" id="tableJenisLayanan">
 											<thead>
 												<tr>
-													<th>Nama Barang</th>
-													<th>Jumlah Barang</th>
+													<th>Nama Barang <i class="required">*</i></th>
+													<th>Jumlah Barang <i class="required">*</i></th>
 													<th>Keterangan Barang</th>
 													<th>Action</th>
 												</tr>
@@ -346,8 +346,7 @@
 					} else {
 						if (res.errors) {
 							$.each(res.errors, function (index, val) {
-								$('form #' + index).parents('.form-group').addClass(
-									'has-error');
+								$('form #' + index).parents('.form-group').addClass('has-error');
 								$('form #' + index).parents('.form-group').find('small').prepend(`<div class="error-input">` + val + `</div>`);
 							});
 							$('.steps li').removeClass('error');
@@ -359,14 +358,14 @@
 						}
 						$('.message').printMessage({
 							message: res.message,
-							type: 'warning'
+							type: 'danger'
 						});
 					}
 				})
 				.fail(function () {
 					$('.message').printMessage({
 						message: 'Error save data',
-						type: 'warning'
+						type: 'danger'
 					});
 				})
 				.always(function () {

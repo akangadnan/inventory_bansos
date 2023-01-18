@@ -42,7 +42,6 @@
 <!-- Main content -->
 <section class="content">
 	<div class="row">
-
 		<div class="col-md-12">
 			<div class="box box-primary">
 				<div class="box-body ">
@@ -58,12 +57,12 @@
 										class="fa fa-plus-square-o"></i>
 									<?= cclang('add_new_button', [cclang('barangkeluar')]); ?></a>
 								<?php }) ?>
-								<?php is_allowed('barangkeluar_export', function(){?>
+								<!-- <?php is_allowed('barangkeluar_export', function(){?>
 								<a class="btn btn-flat btn-success"
 									title="<?= cclang('export'); ?> <?= cclang('barangkeluar') ?> "
 									href="<?= site_url('administrator/barangkeluar/export?q='.$this->input->get('q').'&f='.$this->input->get('f')); ?>"><i
 										class="fa fa-file-excel-o"></i> <?= cclang('export'); ?> XLS</a>
-								<?php }) ?>
+								<?php }) ?> -->
 							</div>
 							<div class="widget-user-image">
 								<img class="img-circle" src="<?= BASE_ASSET; ?>/img/list.png" alt="User Avatar">
@@ -75,11 +74,7 @@
 							</h5>
 						</div>
 
-						<form name="form_barangkeluar" id="form_barangkeluar"
-							action="<?= base_url('administrator/barangkeluar/index'); ?>">
-
-
-
+						<form name="form_barangkeluar" id="form_barangkeluar" action="<?= base_url('administrator/barangkeluar/index'); ?>">
 							<!-- /.widget-user -->
 							<div class="row">
 								<div class="col-md-8">
@@ -99,32 +94,27 @@
 											value="<?= $this->input->get('q'); ?>">
 									</div>
 									<div class="col-sm-3 padd-left-0 ">
-										<select type="text" class="form-control chosen chosen-select" name="f"
-											id="field">
+										<select type="text" class="form-control chosen chosen-select" name="f" id="field">
 											<option value=""><?= cclang('all'); ?></option>
 											<option <?= $this->input->get('f') == 'tujuan_posko' ? 'selected' :''; ?> value="tujuan_posko">Tujuan Posko</option>
-											<option <?= $this->input->get('f') == 'tujuan' ? 'selected' :''; ?> value="tujuan">Penerima</option>
+											<option <?= $this->input->get('f') == 'pemohon' ? 'selected' :''; ?> value="tujuan">Penerima</option>
 											<option <?= $this->input->get('f') == 'id_barang' ? 'selected' :''; ?> value="id_barang">Nama Barang</option>
 											<option <?= $this->input->get('f') == 'jumlah' ? 'selected' :''; ?> value="jumlah">Banyaknya</option>
 										</select>
 									</div>
 									<div class="col-sm-1 padd-left-0 ">
-										<button type="submit" class="btn btn-flat" name="sbtn" id="sbtn" value="Apply"
-											title="<?= cclang('filter_search'); ?>">
+										<button type="submit" class="btn btn-flat" name="sbtn" id="sbtn" value="Apply" title="<?= cclang('filter_search'); ?>">
 											Filter
 										</button>
 									</div>
 									<div class="col-sm-1 padd-left-0 ">
-										<a class="btn btn-default btn-flat" name="reset" id="reset" value="Apply"
-											href="<?= base_url('administrator/barangkeluar');?>"
-											title="<?= cclang('reset_filter'); ?>">
+										<a class="btn btn-default btn-flat" name="reset" id="reset" value="Apply" href="<?= base_url('administrator/barangkeluar');?>" title="<?= cclang('reset_filter'); ?>">
 											<i class="fa fa-undo"></i>
 										</a>
 									</div>
 								</div>
 								<div class="col-md-4">
-									<div class="dataTables_paginate paging_simple_numbers pull-right"
-										id="example2_paginate">
+									<div class="dataTables_paginate paging_simple_numbers pull-right" id="example2_paginate">
 										<?= $pagination; ?>
 									</div>
 								</div>
@@ -135,37 +125,25 @@
 								<table class="table table-bordered table-striped dataTable">
 									<thead>
 										<tr class="">
-											<th>
-												<input type="checkbox" class="flat-red toltip" id="check_all"
-													name="check_all" title="check all">
-											</th>
+											<th><input type="checkbox" class="flat-red toltip" id="check_all" name="check_all" title="check all"></th>
 											<th data-field="tanggal" data-sort="1" data-primary-key="0"><?= cclang('tanggal') ?></th>
 											<th data-field="tujuan_posko" data-sort="1" data-primary-key="0"><?= cclang('tujuan_posko') ?></th>
 											<th data-field="kecamatan_id" data-sort="1" data-primary-key="0"><?= cclang('kecamatan') ?></th>
 											<th data-field="kelurahan_id" data-sort="1" data-primary-key="0"><?= cclang('kelurahan') ?></th>
-											<!-- <th data-field="tujuan" data-sort="1" data-primary-key="0"><?= cclang('tujuan') ?></th> -->
-											<th data-field="id_barang" data-sort="1" data-primary-key="0"><?= cclang('nama_barang') ?></th>
-											<th data-field="jumlah" data-sort="1" data-primary-key="0"><?= cclang('jumlah') ?></th>
+											<th data-field="tujuan" data-sort="1" data-primary-key="0"><?= cclang('pemohon') ?></th>
 											<th>Action</th>
 										</tr>
 									</thead>
 									<tbody id="tbody_barangkeluar">
 										<?php foreach($barangkeluars as $barangkeluar): ?>
 										<tr>
-											<td width="5">
-												<input type="checkbox" class="flat-red check" name="id[]" value="<?= $barangkeluar->id_barangkeluar; ?>">
-											</td>
+											<td width="5"><input type="checkbox" class="flat-red check" name="id[]" value="<?= $barangkeluar->id_barangkeluar; ?>"></td>
 											<td><?php echo $barangkeluar->tanggal;?></td>
 											<td><?php echo $barangkeluar->posko_nama;?></td>
 											<td><?php echo $barangkeluar->kecamatan_nama;?></td>
 											<td><?php echo $barangkeluar->kelurahan_nama;?></td>
-											<!-- <td><?php echo $barangkeluar->sumber_nama_sumber;?></td> -->
-											<td><?php echo $barangkeluar->barang_nama_barang;?></td>
-
-											<td><span class="list_group-jumlah"><?= _ent($barangkeluar->jumlah).' '._ent($barangkeluar->nama_satuan); ?></span>
-											</td>
+											<td><?php echo $barangkeluar->pemohon;?></td>
 											<td width="200">
-
 												<?php is_allowed('barangkeluar_view', function() use ($barangkeluar){?>
 												<a href="<?= site_url('administrator/barangkeluar/view/' . $barangkeluar->id_barangkeluar); ?>"
 													class="label-default"><i class="fa fa-newspaper-o"></i>

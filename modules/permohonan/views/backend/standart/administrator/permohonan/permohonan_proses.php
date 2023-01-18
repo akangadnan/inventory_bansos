@@ -2,7 +2,10 @@
 
 <style type="text/css">
 	label.form-control {
-		font-weight: normal !important;
+		font-weight: normal;
+		cursor: not-allowed;
+		background-color: #eee;
+		opacity: 1;
 	}
 </style>
 
@@ -104,11 +107,11 @@
 										<h3 class="box-title">Daftar Proses Permintaan Bantuan Barang</h3>
 									</div>
 									<div class="box-body">
-										<div class="row">
+										<!-- <div class="row">
 											<div class="col-md-12">
 												<a href="javascript:void(0);" id="addRow" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Tambah Barang</a>
 											</div>
-										</div>
+										</div> -->
 										<div class="row">
 											<table class="table table-striped" id="tableJenisLayanan">
 												<thead>
@@ -151,14 +154,14 @@
 				<!--/box body -->
 				<div class="box-footer">
 					<a class="btn btn-flat btn-success btn_save btn_action btn_save_back" id="btn_save" data-stype='back' title="<?= cclang('save_and_go_the_list_button'); ?>">
-						<i class="ion ion-ios-list-outline"></i> <?= cclang('save_and_send_button'); ?>
+						<i class="ion ion-ios-paperplane-outline"></i> <?= cclang('save_and_send_button'); ?>
 					</a>
 
 					<a class="btn btn-flat btn-default btn_action" id="btn_cancel" title="<?= cclang('cancel_button'); ?>">
 						<i class="fa fa-undo"></i> <?= cclang('cancel_button'); ?>
 					</a>
 					<span class="loading loading-hide">
-						<img src="<?= BASE_ASSET; ?>/img/loading-spin-primary.svg">
+						<img src="<?= BASE_ASSET; ?>img/loading-spin-primary.svg">
 						<i><?= cclang('loading_saving_data'); ?></i>
 					</span>
 				</div>
@@ -199,7 +202,7 @@
 				html += '<option value="<?= $row->id_barang ?>"><?= $row->nama_barang; ?> ( <?= join_multi_select($row->satuan, 'satuan', 'id_satuan', 'nama_satuan'); ?>) </option>';
 		<?php }; ?>
 			html += '</select><small class="info help-block"></small></td>';
-			html += '<td>&nbsp;</td><td>&nbsp;</td>';
+			html += '<td><input type="text" class="form-control" disabled></td><td><input type="text" class="form-control" disabled></td>';
 			html += '<td><input type="number" class="form-control" name="jumlah[]" id="jumlah[]" placeholder="Jumlah Stok"><small class="info help-block"></small></td>';
 			html += '<td><input type="text" class="form-control" name="keterangan_barang[]" id="keterangan_barang[]" placeholder="Masukkan Keterangan Barang"></td>';
 			html += '<td><a href="javascript:void(0);" id="removeRow" class="btn btn-danger btn-sm"><i class="fa fa-times"></i></a></td>';
@@ -272,6 +275,9 @@
 						type: 'POST',
 						dataType: 'json',
 						data: data_post,
+						beforeSend: function(){
+							$('.loading').show();
+						},
 					})
 					.done(function (res) {
 						$('form').find('.form-group').removeClass('has-error');
@@ -394,43 +400,6 @@
 
 			return false;
 		}); */ /*end btn save*/
-
-		function chained_kelurahan_id(selected, complete) {
-			var val = $('#kecamatan_id').val();
-			$.LoadingOverlay('show')
-			return $.ajax({
-				url: BASE_URL + 'administrator/permohonan/ajax_kelurahan_id/' + val,
-				dataType: 'JSON',
-			})
-			.done(function (res) {
-				var html = '<option value=""></option>';
-				$.each(res, function (index, val) {
-					html += '<option ' + (selected == val.kelurahan_id ? 'selected' : '') + ' value="' + val.kelurahan_id + '">' + val.kelurahan_nama + '</option>'
-				});
-				$('#kelurahan_id').html(html);
-				$('#kelurahan_id').attr('disabled', true);
-				$('#kelurahan_id').trigger('chosen:updated');
-				if (typeof complete != 'undefined') {
-					complete();
-				}
-			})
-			.fail(function () {
-				toastr['error']('Error', 'Getting data fail')
-			})
-			.always(function () {
-				$.LoadingOverlay('hide')
-			});
-		}
-
-		$('#kecamatan_id').change(function (event) {
-			chained_kelurahan_id('')
-		});
-
-		async function chain() {
-			await chained_kelurahan_id("<?= $permohonan->kelurahan_id;?>");
-		}
-
-		chain();
 
 	}); /*end doc ready*/
 </script>

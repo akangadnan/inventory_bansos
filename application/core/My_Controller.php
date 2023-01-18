@@ -537,7 +537,7 @@ class Admin extends MY_Controller
             } else {
                 if ($redirect) {
                     $this->session->set_flashdata('f_message', 'Sorry you do not have permission to access ');
-                    $this->session->set_flashdata('f_type', 'warning');
+                    $this->session->set_flashdata('f_type', 'danger');
                     redirect('administrator/dashboard', 'refresh');
                 }
                 return false;
@@ -812,7 +812,7 @@ class Front extends MY_Controller
      *
      * @return JSON
      */
-    public function is_allowed($perm, $redirect = true)
+    /* public function is_allowed($perm, $redirect = true)
     {
         if ($perm == null) {
             return $this->aauth->is_loggedin();
@@ -830,13 +830,13 @@ class Front extends MY_Controller
             } else {
                 if ($redirect) {
                     $this->session->set_flashdata('f_message', 'Sorry you do not have permission to access ');
-                    $this->session->set_flashdata('f_type', 'warning');
+                    $this->session->set_flashdata('f_type', 'danger');
                     redirect('administrator/dashboard', 'refresh');
                 }
                 return false;
             }
         }
-    }
+    } */
 
     /**
      * Upload Files tmp

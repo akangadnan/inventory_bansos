@@ -49,6 +49,8 @@ class Model_permohonan extends MY_Model {
 
 		$this->join_avaiable()->filter_avaiable();
 		$this->db->where($where);
+		$this->db->order_by('permohonan_id', 'DESC');
+		
 		$query = $this->db->get($this->table_name);
 
 		return $query->num_rows();
@@ -88,6 +90,7 @@ class Model_permohonan extends MY_Model {
 		$this->join_avaiable()->filter_avaiable();
 		$this->db->where($where);
 		$this->db->limit($limit, $offset);
+		$this->db->order_by('permohonan_id', 'DESC');
 		
 		$this->sortable();
 		

@@ -24,8 +24,7 @@ class Barangkeluar extends Admin {
 	*
 	* @var $offset String
 	*/
-	public function index($offset = 0)
-	{
+	public function index($offset = 0) {
 		$this->is_allowed('barangkeluar_list');
 
 		$filter = $this->input->get('q');
@@ -51,8 +50,7 @@ class Barangkeluar extends Admin {
 	* Add new barangkeluars
 	*
 	*/
-	public function add()
-	{
+	public function add() {
 		$this->is_allowed('barangkeluar_add');
 
 		$this->template->title('Barangkeluar New');
@@ -73,43 +71,26 @@ class Barangkeluar extends Admin {
 			exit;
 		}
 
-		$this->form_validation->set_rules('id_barang', 'Nama Barang', 'trim|required');
-		// $this->form_validation->set_rules('tujuan_posko', 'Tujuan Posko', 'trim|required');
-		// $this->form_validation->set_rules('tujuan', 'Penerima', 'trim|required');
-		$this->form_validation->set_rules('kecamatan', 'Kecamatan', 'trim|required');
-		$this->form_validation->set_rules('kelurahan', 'Kelurahan', 'trim|required');
-		$this->form_validation->set_rules('jumlah', 'Banyaknya', 'trim|required|max_length[12]');
+		$this->form_validation->set_rules('tujuan_posko', 'Tujuan Posko', 'trim|required');
+		$this->form_validation->set_rules('kecamatan_id', 'Kecamatan', 'trim|required');
+		$this->form_validation->set_rules('kelurahan_id', 'Kelurahan', 'trim|required');
+		$this->form_validation->set_rules('pemohon', 'Pemohon', 'trim|required');
 		$this->form_validation->set_rules('tanggal', 'Tanggal', 'trim|required');
 		$this->form_validation->set_rules('waktu', 'Waktu', 'trim|required');
 
 		if ($this->form_validation->run()) {
-			$id_barang 	= $this->input->post('id_barang');
-			$jumlah 	= $this->input->post('jumlah');
-		
 			$save_data = [
-				'id_barang' 	=> $id_barang,
 				'tujuan_posko' 	=> $this->input->post('tujuan_posko'),
-				'tujuan' 		=> $this->input->post('tujuan'),
 				'kecamatan_id' 	=> $this->input->post('kecamatan_id'),
 				'kelurahan_id' 	=> $this->input->post('kelurahan_id'),
-				'jumlah' 		=> $jumlah,
 				'keterangan' 	=> $this->input->post('keterangan'),
 				'tanggal' 		=> $this->input->post('tanggal'),
 				'waktu' 		=> $this->input->post('waktu'),
 				'created_at' 	=> date('Y-m-d H:i:s'),
 				'user_created' 	=> get_user_data('id'),
 			];
-			
+
 			$save_barangkeluar = $id = $this->model_barangkeluar->store($save_data);
-
-			$barang = $this->db->where('id_barang', $id_barang)->from('barang')->get()->row();
-			$stok 	= ($barang->stok - $jumlah);
-
-			$update_barang = [
-				'stok' => $stok,
-			];
-			
-			$save_barang = $this->model_barang->change($id_barang, $update_barang);
 
 			if ($save_barangkeluar) {
 				if ($this->input->post('save_type') == 'stay') {
@@ -178,73 +159,79 @@ class Barangkeluar extends Admin {
 		}
 
 		$this->form_validation->set_rules('id_barang', 'Nama Barang', 'trim|required');
-		// $this->form_validation->set_rules('tujuan_posko', 'Tujuan Posko', 'trim|required');
-		// $this->form_validation->set_rules('tujuan', 'Penerima', 'trim|required');
+		$this->form_validation->set_rules('tujuan_posko', 'Tujuan Posko', 'trim|required');
+		$this->form_validation->set_rules('pemohon', 'Pemohon', 'trim|required');
 		$this->form_validation->set_rules('kecamatan', 'Kecamatan', 'trim|required');
 		$this->form_validation->set_rules('kelurahan', 'Kelurahan', 'trim|required');
 		$this->form_validation->set_rules('jumlah', 'Banyaknya', 'trim|required|max_length[12]');
 		$this->form_validation->set_rules('tanggal', 'Tanggal', 'trim|required');
 		$this->form_validation->set_rules('waktu', 'Waktu', 'trim|required');
+
+		$barang 	= $this->input->post('id_barang[]');
+		$jumlah 	= $this->input->post('jumlah[]');
+		$keterangan = $this->input->post('keterangan_barang[]');
 		
 		if ($this->form_validation->run()) {
-			$id_barang 	= $this->input->post('id_barang');
-			$jumlah 	= $this->input->post('jumlah');
-
-			$save_data = [
-				'id_barang'		=> $id_barang,
-				'tujuan_posko' 	=> $this->input->post('tujuan_posko'),
-				'tujuan' 		=> $this->input->post('tujuan'),
-				'kecamatan_id' 	=> $this->input->post('kecamatan_id'),
-				'kelurahan_id' 	=> $this->input->post('kelurahan_id'),
-				'jumlah' 		=> $jumlah,
-				'keterangan' 	=> $this->input->post('keterangan'),
-				'tanggal' 		=> $this->input->post('tanggal'),
-				'waktu' 		=> $this->input->post('waktu'),
-			];
-
-			$barang_keluar 	= $this->db->where('id_barangkeluar', $id)->get('barangkeluar')->row();
-			$barang 		= $this->db->where('id_barang', $id_barang)->get('barang')->row();
-			$jumlah_keluar 	= $barang_keluar->jumlah;
-
-			if ($jumlah_keluar > $jumlah) {
-				$sisa_jumlah 	= $jumlah_keluar - $jumlah;
-				$stok_barang 	= $barang->stok + $sisa_jumlah;
+			if (empty($barang[0]) || empty($jumlah[0])) {
+				$this->data['success'] = false;
+				$this->data['message'] = 'Tidak ada data barang yang di input!';
 			}else{
-				$sisa_jumlah 	= $jumlah - $jumlah_keluar;
-				$stok_barang 	= $barang->stok - $sisa_jumlah;
-			}
+				$save_data = [
+					'tujuan_posko' 	=> $this->input->post('tujuan_posko'),
+					'pemohon' 		=> $this->input->post('pemohon'),
+					'kecamatan_id' 	=> $this->input->post('kecamatan_id'),
+					'kelurahan_id' 	=> $this->input->post('kelurahan_id'),
+					'keterangan' 	=> $this->input->post('keterangan'),
+					'tanggal' 		=> $this->input->post('tanggal'),
+					'waktu' 		=> $this->input->post('waktu'),
+				];
+	
+				$save_barangkeluar = $this->model_barangkeluar->change($id, $save_data);
+	
+				$this->db->delete('barangkeluar', ['barangkeluar_id' => $id]);
 
-			$update_barang = [
-				'stok' => $stok_barang,
-			];
-			
-			$save_barangkeluar = $this->model_barangkeluar->change($id, $save_data);
-
-			$save_barang = $this->model_barang->change($id_barang, $update_barang);
-
-			if ($save_barangkeluar) {
-				if ($this->input->post('save_type') == 'stay') {
-					$this->data['success'] = true;
-					$this->data['id'] 	   = $id;
-					$this->data['message'] = cclang('success_update_data_stay', [
-						anchor('administrator/barangkeluar', ' Go back to list')
-					]);
-				} else {
-					set_message(
-						cclang('success_update_data_redirect', [
-					]), 'success');
-
-            		$this->data['success'] = true;
-					$this->data['redirect'] = base_url('administrator/barangkeluar');
+				if (count($barang) > 0) {
+					$data_barang_keluar = [];
+	
+					for ($i=0; $i < count($barang); $i++) {
+						$data_barang_keluar[] = [
+							'barangkeluar_id' 					=> $id,
+							'barang_id' 						=> $barang[$i],
+							'barangkeluar_detail_jumlah' 		=> $jumlah[$i],
+							'barangkeluar_detail_status' 		=> '1',
+							'barangkeluar_detail_keterangan' 	=> $keterangan[$i],
+							'barangkeluar_detail_user_created' 	=> ,
+							'barangkeluar_detail_created_at' 	=> ,
+						];
+					}
+	
+					$this->db->insert_batch('permohonan_detail', $data_permohonan_bantuan_barang);
 				}
-			} else {
-				if ($this->input->post('save_type') == 'stay') {
-					$this->data['success'] = false;
-					$this->data['message'] = cclang('data_not_change');
+	
+				if ($save_barangkeluar) {
+					if ($this->input->post('save_type') == 'stay') {
+						$this->data['success'] = true;
+						$this->data['id'] 	   = $id;
+						$this->data['message'] = cclang('success_update_data_stay', [
+							anchor('administrator/barangkeluar', ' Go back to list')
+						]);
+					} else {
+						set_message(
+							cclang('success_update_data_redirect', [
+						]), 'success');
+	
+						$this->data['success'] = true;
+						$this->data['redirect'] = base_url('administrator/barangkeluar');
+					}
 				} else {
-            		$this->data['success'] = false;
-            		$this->data['message'] = cclang('data_not_change');
-					$this->data['redirect'] = base_url('administrator/barangkeluar');
+					if ($this->input->post('save_type') == 'stay') {
+						$this->data['success'] = false;
+						$this->data['message'] = cclang('data_not_change');
+					} else {
+						$this->data['success'] = false;
+						$this->data['message'] = cclang('data_not_change');
+						$this->data['redirect'] = base_url('administrator/barangkeluar');
+					}
 				}
 			}
 		} else {

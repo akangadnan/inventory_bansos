@@ -191,7 +191,7 @@
 											<?php });
 												}
 
-												if ($permohonan->permohonan_status == '2') {
+												if ($permohonan->permohonan_status == '2' || $permohonan->permohonan_status == '3') {
 													is_allowed('permohonan_proses', function() use ($permohonan) {
 											?>
 												<a href="<?= site_url('administrator/permohonan/process_order/' . $permohonan->permohonan_id);?>" class="label-default">

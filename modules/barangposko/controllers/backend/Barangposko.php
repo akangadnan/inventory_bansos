@@ -24,24 +24,24 @@ class Barangposko extends Admin {
 	* @var $offset String
 	*/
 	public function index($offset = 0) {
-		$this->is_allowed('barang_list');
+		// $this->is_allowed('barang_list');
 
-		$filter = $this->input->get('q');
-		$field 	= $this->input->get('f');
+		// $filter = $this->input->get('q');
+		// $field 	= $this->input->get('f');
 
-		$this->data['barangs'] = $this->model_barangposko->get($filter, $field, $this->limit_page, $offset);
-		$this->data['barang_counts'] = $this->model_barangposko->count_all($filter, $field);
+		// $this->data['barangs'] = $this->model_barangposko->get($filter, $field, $this->limit_page, $offset);
+		// $this->data['barang_counts'] = $this->model_barangposko->count_all($filter, $field);
 
-		$config = [
-			'base_url'     => 'administrator/barang/index/',
-			'total_rows'   => $this->data['barang_counts'],
-			'per_page'     => $this->limit_page,
-			'uri_segment'  => 4,
-		];
+		// $config = [
+		// 	'base_url'     => 'administrator/barang/index/',
+		// 	'total_rows'   => $this->data['barang_counts'],
+		// 	'per_page'     => $this->limit_page,
+		// 	'uri_segment'  => 4,
+		// ];
 
-		$this->data['pagination'] = $this->pagination($config);
+		// $this->data['pagination'] = $this->pagination($config);
 
-		$this->template->title('Barang List');
+		$this->template->title('Stok Barang Posko');
 		$this->render('backend/standart/administrator/barangposko/barangposko_list', $this->data);
 	}
 	
@@ -49,10 +49,42 @@ class Barangposko extends Admin {
 	public function getdata() {
 		$posko_id = $this->input->get('id');
 	
-        $data = $this->model_barangposko->get_posko($posko_id);
-		var_dump($data);
-		die();
-        echo json_encode($data);
+        $data_barang 	= db_get_all_data('barang');
+        $data_masuk 	= $this->model_barangposko->posko_barang_masuk($posko_id)->result();
+        $data_keluar 	= $this->model_barangposko->posko_barang_keluar($posko_id)->result();
+
+		$array_masuk 	= [];
+		$array_keluar 	= [];
+
+		foreach ($data_masuk as $item) {
+			$array_masuk[] = [
+				'barang_id' 	=> $item->id_barang,
+				'barang_nama' 	=> $item->nama_barang,
+				'barang_satuan' => $item->nama_satuan,
+				'jumlah' 		=> $item->jumlah_masuk,
+			];
+		}
+
+		foreach ($data_keluar as $item) {
+			$array_keluar[] = [
+				'barang_id' 	=> $item->id_barang,
+				'barang_nama' 	=> $item->nama_barang,
+				'barang_satuan' => $item->nama_satuan,
+				'jumlah' 		=> $item->jumlah_keluar,
+			];
+		}
+
+		// $results_arrays = array_keys($array_masuk);
+
+		// echo json_encode($array_masuk);
+		// echo json_encode($array_keluar);
+		// echo json_encode($results_arrays);
+
+		$this->data = [
+			'data' => $data_masuk,
+		];
+
+		$this->load->view('backend/standart/administrator/barangposko/barangposko_view', $this->data);
 	}
 }
 

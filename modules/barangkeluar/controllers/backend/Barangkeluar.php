@@ -158,12 +158,10 @@ class Barangkeluar extends Admin {
 			exit;
 		}
 
-		$this->form_validation->set_rules('id_barang', 'Nama Barang', 'trim|required');
 		$this->form_validation->set_rules('tujuan_posko', 'Tujuan Posko', 'trim|required');
 		$this->form_validation->set_rules('pemohon', 'Pemohon', 'trim|required');
-		$this->form_validation->set_rules('kecamatan', 'Kecamatan', 'trim|required');
-		$this->form_validation->set_rules('kelurahan', 'Kelurahan', 'trim|required');
-		$this->form_validation->set_rules('jumlah', 'Banyaknya', 'trim|required|max_length[12]');
+		$this->form_validation->set_rules('kecamatan_id', 'Kecamatan', 'trim|required');
+		$this->form_validation->set_rules('kelurahan_id', 'Kelurahan', 'trim|required');
 		$this->form_validation->set_rules('tanggal', 'Tanggal', 'trim|required');
 		$this->form_validation->set_rules('waktu', 'Waktu', 'trim|required');
 
@@ -192,7 +190,7 @@ class Barangkeluar extends Admin {
 
 				if (count($barang) > 0) {
 					$data_barang_keluar = [];
-	
+
 					for ($i=0; $i < count($barang); $i++) {
 						$data_barang_keluar[] = [
 							'barangkeluar_id' 					=> $id,

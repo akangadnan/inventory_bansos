@@ -24,58 +24,13 @@
 
 	jQuery(document).ready(domo);
 </script>
-<style>
-	/* .group-id-barang */
-	.group-id-barang {}
-
-	.group-id-barang .control-label {}
-
-	.group-id-barang .col-sm-8 {}
-
-	.group-id-barang .form-control {}
-
-	.group-id-barang .help-block {}
-
-	/* end .group-id-barang */
-
-
-
-	/* .group-tujuan */
-	.group-tujuan {}
-
-	.group-tujuan .control-label {}
-
-	.group-tujuan .col-sm-8 {}
-
-	.group-tujuan .form-control {}
-
-	.group-tujuan .help-block {}
-
-	/* end .group-tujuan */
-
-
-
-	/* .group-jumlah */
-	.group-jumlah {}
-
-	.group-jumlah .control-label {}
-
-	.group-jumlah .col-sm-8 {}
-
-	.group-jumlah .form-control {}
-
-	.group-jumlah .help-block {}
-
-	/* end .group-jumlah */
-</style>
-<!-- Content Header (Page header) -->
 <section class="content-header">
 	<h1>
-		Barangkeluar <small><?= cclang('new', ['Barangkeluar']); ?> </small>
+		Barang Keluar <small><?= cclang('new', ['Barangkeluar']); ?> </small>
 	</h1>
 	<ol class="breadcrumb">
 		<li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-		<li class=""><a href="<?= site_url('administrator/barangkeluar'); ?>">Barangkeluar</a></li>
+		<li class=""><a href="<?= site_url('administrator/barangkeluar'); ?>">Barang Keluar</a></li>
 		<li class="active"><?= cclang('new'); ?></li>
 	</ol>
 </section>
@@ -103,8 +58,8 @@
 								<img class="img-circle" src="<?= BASE_ASSET; ?>/img/add2.png" alt="User Avatar">
 							</div>
 							<!-- /.widget-user-image -->
-							<h3 class="widget-user-username">Barangkeluar</h3>
-							<h5 class="widget-user-desc"><?= cclang('new', ['Barangkeluar']); ?></h5>
+							<h3 class="widget-user-username">Barang Keluar</h3>
+							<h5 class="widget-user-desc"><?= cclang('new', ['Barang Keluar']); ?></h5>
 							<hr>
 						</div>
 						<div class="form-group group-kecamatan-id ">
@@ -143,14 +98,14 @@
 						<div class="form-group group-keterangan ">
 							<label for="pemohon" class="col-sm-2 control-label">Pemohon <i class="required">*</i></label>
 							<div class="col-sm-8">
-								<input id="pemohon" name="pemohon" class="form-control" placeholder="pemohon"><?= set_value('pemohon'); ?></input>
+								<input id="pemohon" name="pemohon" class="form-control" placeholder="pemohon" value="<?= set_value('pemohon'); ?>"></input>
 								<small class="info help-block"></small>
 							</div>
 						</div>
 						<div class="form-group group-keterangan ">
 							<label for="keterangan" class="col-sm-2 control-label">Keterangan </label>
 							<div class="col-sm-8">
-								<input id="keterangan" name="keterangan" class="form-control" placeholder="Keterangan"><?= set_value('keterangan'); ?></input>
+								<input id="keterangan" name="keterangan" class="form-control" placeholder="Keterangan" value="<?= set_value('keterangan'); ?>"></input>
 								<small class="info help-block"></small>
 							</div>
 						</div>

@@ -13,8 +13,8 @@
 	?>
 		<tr>
 			<td><?= $no++;?></td>
-			<td><?= $item->nama_barang;?></td>
-			<td><?= $item->jumlah_masuk.'&nbsp;'.$item->nama_satuan;?></td>
+			<td><?= join_multi_select($item->barang_id, 'barang', 'id_barang', 'nama_barang');?></td>
+			<td><?= $item->stok_posko_total.'&nbsp;'.join_multi_select(join_multi_select($item->barang_id, 'barang', 'id_barang', 'satuan'), 'satuan', 'id_satuan', 'nama_satuan');?></td>
 		</tr>
 	<?php
 		}

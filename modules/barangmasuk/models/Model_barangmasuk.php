@@ -49,6 +49,8 @@ class Model_barangmasuk extends MY_Model {
 
 		$this->join_avaiable()->filter_avaiable();
 		$this->db->where($where);
+		$this->db->order_by('barangmasuk.id_barangmasuk', 'DESC');
+
 		$query = $this->db->get($this->table_name);
 
 		return $query->num_rows();
@@ -91,6 +93,7 @@ class Model_barangmasuk extends MY_Model {
 		$this->db->limit($limit, $offset);
 		
 		$this->sortable();
+		$this->db->order_by('barangmasuk.id_barangmasuk', 'DESC');
 		
 		$query = $this->db->get($this->table_name);
 
@@ -258,7 +261,15 @@ class Model_barangmasuk extends MY_Model {
 		return $query;
 	} */
 
-	public function query_barang_posko($posko_id, $barang_id) {
+	public function query_barangmasuk($id) {
+		$this->db->join('barangmasuk', 'barangmasuk.id_barangmasuk = barangmasuk_detail.barangmasuk_id', 'LEFT');
+		$this->db->where('barangmasuk.id_barangmasuk', $id);
+		$query = $this->db->get('barangmasuk_detail');
+		
+		return $query;
+	}
+
+	public function query_barangmasuk_posko($posko_id, $barang_id) {
 		$this->db->join('barangmasuk', 'barangmasuk.id_barangmasuk = barangmasuk_detail.barangmasuk_id', 'LEFT');
 		$this->db->where(['barangmasuk.asal_posko' => $posko_id, 'barangmasuk_detail.barang_id' => $barang_id]);
 		$query = $this->db->get('barangmasuk_detail');

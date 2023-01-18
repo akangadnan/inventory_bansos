@@ -15,6 +15,16 @@
 	<div class="row">
 		<div class="col-md-12">
 			<div class="box box-primary">
+			<?= form_open('', [
+					'name' => 'form_barangmasuk',
+					'class' => 'form-horizontal form-step',
+					'id' => 'form_barangmasuk',
+					'enctype' => 'multipart/form-data',
+					'method' => 'POST'
+				]);
+
+				$user_groups = $this->model_group->get_user_group_ids();
+			?>
 				<div class="box-body">
 					<!-- Widget: user widget style 1 -->
 					<div class="box box-widget widget-user-2">
@@ -28,16 +38,6 @@
 							<h5 class="widget-user-desc"><?= cclang('new', ['Barang Masuk']); ?></h5>
 							<hr>
 						</div>
-						<?= form_open('', [
-						'name' => 'form_barangmasuk',
-						'class' => 'form-horizontal form-step',
-						'id' => 'form_barangmasuk',
-						'enctype' => 'multipart/form-data',
-						'method' => 'POST'
-					]); ?>
-						<?php
-					$user_groups = $this->model_group->get_user_group_ids();
-					?>
 						<div class="form-group group-asal-posko">
 							<label for="asal" class="col-sm-2 control-label">Asal Posko<i class="required">*</i></label>
 							<div class="col-sm-8">
@@ -167,31 +167,23 @@
 						</div>
 
 						<div class="message"></div>
-						<div class="row-fluid col-md-7 container-button-bottom">
-							<!-- <button class="btn btn-flat btn-primary btn_save btn_action" id="btn_save" data-stype='stay' title="<?= cclang('save_button'); ?> (Ctrl+s)">
-								<i class="fa fa-save"></i> <?= cclang('save_button'); ?>
-							</button> -->
-							<a class="btn btn-flat btn-info btn_save btn_action btn_save_back" id="btn_save"
-								data-stype='back' title="<?= cclang('save_and_go_the_list_button'); ?> (Ctrl+d)">
-								<i class="ion ion-ios-list-outline"></i> <?= cclang('save_and_go_the_list_button'); ?>
-							</a>
-
-							<div class="custom-button-wrapper"></div>
-
-							<a class="btn btn-flat btn-default btn_action" id="btn_cancel"
-								title="<?= cclang('cancel_button'); ?> (Ctrl+x)">
-								<i class="fa fa-undo"></i> <?= cclang('cancel_button'); ?>
-							</a>
-
-							<span class="loading loading-hide">
-								<img src="<?= BASE_ASSET; ?>/img/loading-spin-primary.svg">
-								<i><?= cclang('loading_saving_data'); ?></i>
-							</span>
-						</div>
-						<?= form_close(); ?>
 					</div>
 				</div>
 				<!--/box body -->
+				<div class="box-footer">
+					<a class="btn btn-flat btn-info btn_save btn_action btn_save_back" id="btn_save" data-stype='back' title="<?= cclang('save_and_go_the_list_button'); ?> (Ctrl+d)">
+						<i class="ion ion-ios-list-outline"></i> <?= cclang('save_and_go_the_list_button'); ?>
+					</a>
+					<a class="btn btn-flat btn-default btn_action" id="btn_cancel" title="<?= cclang('cancel_button'); ?> (Ctrl+x)">
+						<i class="fa fa-undo"></i> <?= cclang('cancel_button'); ?>
+					</a>
+
+					<span class="loading loading-hide">
+						<img src="<?= BASE_ASSET; ?>/img/loading-spin-primary.svg">
+						<i><?= cclang('loading_saving_data'); ?></i>
+					</span>
+				</div>
+				<?= form_close(); ?>
 			</div>
 			<!--/box -->
 		</div>

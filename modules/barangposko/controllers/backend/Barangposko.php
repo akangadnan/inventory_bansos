@@ -49,8 +49,9 @@ class Barangposko extends Admin {
 	public function getdata() {
 		$posko_id = $this->input->get('id');
 	
-        $data_barang 	= db_get_all_data('barang');
-        $data_masuk 	= $this->model_barangposko->posko_barang_masuk($posko_id)->result();
+        $data_stok_posko 	= db_get_all_data('stok_posko', ['posko_id' => $posko_id]);
+
+        /* $data_masuk 	= $this->model_barangposko->posko_barang_masuk($posko_id)->result();
         $data_keluar 	= $this->model_barangposko->posko_barang_keluar($posko_id)->result();
 
 		$array_masuk 	= [];
@@ -72,7 +73,7 @@ class Barangposko extends Admin {
 				'barang_satuan' => $item->nama_satuan,
 				'jumlah' 		=> $item->jumlah_keluar,
 			];
-		}
+		} */
 
 		// $results_arrays = array_keys($array_masuk);
 
@@ -81,7 +82,7 @@ class Barangposko extends Admin {
 		// echo json_encode($results_arrays);
 
 		$this->data = [
-			'data' => $data_masuk,
+			'data' => $data_stok_posko,
 		];
 
 		$this->load->view('backend/standart/administrator/barangposko/barangposko_view', $this->data);

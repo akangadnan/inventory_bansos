@@ -146,7 +146,7 @@
 															<select class="form-control chosen chosen-select-deselect" name="id_barang[]" id="id_barang0" data-placeholder="Select Nama Barang">
 																<option value=""></option>
 														<?php foreach(db_get_all_data('barang') as $row) {?>
-														<option value="<?= $row->id_barang; ?>" <?= $row->id_barang == $detail_barang[0]->barang_id ? 'selected="selected"' : '';?>><?= $row->nama_barang; ?> ( <?= $row->stok; ?> <?= join_multi_select($row->satuan, 'satuan', 'id_satuan', 'nama_satuan'); ?>) </option>
+														<option value="<?= $row->id_barang; ?>" <?= $row->id_barang == $detail_barang[0]->barang_id ? 'selected="selected"' : '';?>><?= $row->nama_barang; ?> ( <?= join_multi_select($row->satuan, 'satuan', 'id_satuan', 'nama_satuan'); ?>) </option>
 														<?php }; ?>
 															</select>
 															<small class="info help-block"></small>
@@ -170,7 +170,7 @@
 															<select class="form-control chosen chosen-select-deselect" name="id_barang[]" id="id_barang0" data-placeholder="Select Nama Barang">
 																<option value=""></option>
 														<?php foreach(db_get_all_data('barang') as $row) {?>
-														<option value="<?= $row->id_barang; ?>" <?= $row->id_barang == $detail_barang[$i]->barang_id ? 'selected="selected"' : '';?>><?= $row->nama_barang; ?> ( <?= $row->stok.' '.join_multi_select($row->satuan, 'satuan', 'id_satuan', 'nama_satuan'); ?>) </option>
+														<option value="<?= $row->id_barang; ?>" <?= $row->id_barang == $detail_barang[$i]->barang_id ? 'selected="selected"' : '';?>><?= $row->nama_barang; ?> ( <?= join_multi_select($row->satuan, 'satuan', 'id_satuan', 'nama_satuan'); ?>) </option>
 														<?php }; ?>
 															</select>
 															<small class="info help-block"></small>
@@ -245,7 +245,7 @@
 			html += '<tr id="inputFormRow">';
 			html += '<td><select class="form-control chosen chosen-select-deselect" name="id_barang[]" id="id_barang1 data-placeholder="Select Nama Barang"><option value=""></option>';
 		<?php foreach(db_get_all_data('barang') as $row) { ?>
-			html += '<option value="<?= $row->id_barang ?>"><?= $row->nama_barang; ?> ( <?= $row->stok.' '.join_multi_select($row->satuan, 'satuan', 'id_satuan', 'nama_satuan'); ?>) </option>';
+			html += '<option value="<?= $row->id_barang ?>"><?= $row->nama_barang; ?> ( <?= join_multi_select($row->satuan, 'satuan', 'id_satuan', 'nama_satuan'); ?>) </option>';
 		<?php }; ?>
 			html += '</select><small class="info help-block"></small></td>';
 			html += '<td><input type="number" class="form-control" name="jumlah[]" id="jumlah[]" placeholder="Jumlah Stok"><small class="info help-block"></small></td>';

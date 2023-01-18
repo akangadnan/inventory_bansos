@@ -185,7 +185,7 @@ class Barangkeluar extends Admin {
 				];
 	
 				$save_barangkeluar = $this->model_barangkeluar->change($id, $save_data);
-	
+
 				$this->db->delete('barangkeluar', ['barangkeluar_id' => $id]);
 
 				if (count($barang) > 0) {

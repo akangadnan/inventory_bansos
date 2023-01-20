@@ -120,7 +120,9 @@ class Model_barangmasuk extends MY_Model {
 	}
 
 	public function filter_avaiable() {
-		if (!$this->aauth->is_admin()) {}
+		if (!$this->aauth->is_admin() || get_user_group_id(get_user_data('id')) !== 5) {
+			$this->db->where($this->table_name.'.asal_posko', $this->session->userdata('posko_id'));
+		}
 
 		return $this;
 	}

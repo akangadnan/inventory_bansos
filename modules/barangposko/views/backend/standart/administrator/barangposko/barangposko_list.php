@@ -56,9 +56,19 @@
 						<div class="padd-left-0 ">
 							<select class="form-control chosen chosen-select" name="posko" id="posko">
 								<option value="">Pilih Posko</option>
-								<?php foreach (db_get_all_data('posko') as $row): ?>
+						<?php
+							if (array_keys([1, 5], get_user_group_id(get_user_data('id')))) {
+								$condition = [];
+							}else{
+								$condition = ['posko_id' => $this->session->userdata('posko_id')];
+							}
+
+							foreach (db_get_all_data('posko', $condition) as $row) {
+						?>
 								<option value="<?= $row->posko_id ?>"><?= $row->posko_nama; ?></option>
-								<?php endforeach; ?>
+						<?php
+							};
+						?>
 							</select>
 						</div>
 					</div>

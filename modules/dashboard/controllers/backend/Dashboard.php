@@ -27,6 +27,7 @@ class Dashboard extends Admin {
 			'keluar' 	=> db_get_all_data('barangkeluar'),
 			'retur' 	=> db_get_all_data('retur'),
 		];
+
 		$this->render('backend/standart/administrator/dashboard', $data);
 	}
 

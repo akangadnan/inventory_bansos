@@ -31,6 +31,19 @@ class Auth extends Admin {
 		if ($this->form_validation->run()) {
 			if ($this->aauth->login($this->input->post('username'), $this->input->post('password'), $this->input->post('remember'))) {
 
+				$id 		= $this->session->userdata('id');
+				$data_users = $this->db->get_where('users', ['aauth_user_id' => $id])->row();
+
+				// echo json_encode($data_users);
+				// exit;
+
+				$data_session = [
+					'user_id' 	=> $data_users->user_id,
+					'posko_id' 	=> $data_users->posko_id,
+				];
+
+				$this->session->set_userdata($data_session);
+
 				// echo json_encode($this->aauth->login($this->input->post('username'), $this->input->post('password'), $this->input->post('remember')));
 				// echo json_encode($this->session->all_userdata());
 				// exit;
@@ -59,8 +72,7 @@ class Auth extends Admin {
 	 * Register user member
 	 *
 	 */
-	public function register()
-	{
+	public function register() {
 		$data = [];
 
 		$this->form_validation->set_rules('username', 'Username', 'trim|required|is_unique[aauth_users.username]');

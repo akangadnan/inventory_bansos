@@ -127,10 +127,11 @@
 										<tr class="">
 											<th><input type="checkbox" class="flat-red toltip" id="check_all" name="check_all" title="check all"></th>
 											<th data-field="tanggal" data-sort="1" data-primary-key="0"><?= cclang('tanggal') ?></th>
+											<th data-sort="1" data-primary-key="0"><?= cclang('asal_posko') ?></th>
 											<th data-field="tujuan_posko" data-sort="1" data-primary-key="0"><?= cclang('tujuan_posko') ?></th>
 											<th data-field="kecamatan_id" data-sort="1" data-primary-key="0"><?= cclang('kecamatan') ?></th>
 											<th data-field="kelurahan_id" data-sort="1" data-primary-key="0"><?= cclang('kelurahan') ?></th>
-											<th data-field="tujuan" data-sort="1" data-primary-key="0"><?= cclang('pemohon') ?></th>
+											<th data-field="jumlah" data-sort="1" data-primary-key="0"><?= cclang('jumlah_item') ?></th>
 											<th>Action</th>
 										</tr>
 									</thead>
@@ -138,11 +139,12 @@
 										<?php foreach($barangkeluars as $barangkeluar): ?>
 										<tr>
 											<td width="5"><input type="checkbox" class="flat-red check" name="id[]" value="<?= $barangkeluar->id_barangkeluar; ?>"></td>
-											<td><?php echo $barangkeluar->tanggal;?></td>
-											<td><?php echo $barangkeluar->posko_nama;?></td>
-											<td><?php echo $barangkeluar->kecamatan_nama;?></td>
-											<td><?php echo $barangkeluar->kelurahan_nama;?></td>
-											<td><?php echo $barangkeluar->pemohon;?></td>
+											<td><?= $barangkeluar->tanggal;?></td>
+											<td><?= join_multi_select($barangkeluar->barangkeluar_asal_posko, 'posko', 'posko_id', 'posko_nama');?></td>
+											<td><?= $barangkeluar->posko_nama;?></td>
+											<td><?= $barangkeluar->kecamatan_nama;?></td>
+											<td><?= $barangkeluar->kelurahan_nama;?></td>
+											<td><?= count(db_get_all_data('barangkeluar_detail', ['barangkeluar_id' => $barangkeluar->id_barangkeluar])) > 0 ? count(db_get_all_data('barangkeluar_detail', ['barangkeluar_id' => $barangkeluar->id_barangkeluar])).' barang' : '<i style="color: red; font-weight: bold;">Tidak ada data barang keluar</i>';?></td>
 											<td width="200">
 												<?php is_allowed('barangkeluar_view', function() use ($barangkeluar){?>
 												<a href="<?= site_url('administrator/barangkeluar/view/' . $barangkeluar->id_barangkeluar); ?>"

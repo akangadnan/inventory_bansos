@@ -78,48 +78,88 @@ class Barangkeluar extends Admin {
 		$this->form_validation->set_rules('tanggal', 'Tanggal', 'trim|required');
 		$this->form_validation->set_rules('waktu', 'Waktu', 'trim|required');
 
+		$posko_id 	= $this->input->post('tujuan_posko');
+		$barang 	= $this->input->post('id_barang[]');
+		$jumlah 	= $this->input->post('jumlah[]');
+		$keterangan = $this->input->post('keterangan_barang[]');
+
 		if ($this->form_validation->run()) {
-			$save_data = [
-				'tujuan_posko' 	=> $this->input->post('tujuan_posko'),
-				'kecamatan_id' 	=> $this->input->post('kecamatan_id'),
-				'kelurahan_id' 	=> $this->input->post('kelurahan_id'),
-				'keterangan' 	=> $this->input->post('keterangan'),
-				'tanggal' 		=> $this->input->post('tanggal'),
-				'waktu' 		=> $this->input->post('waktu'),
-				'created_at' 	=> date('Y-m-d H:i:s'),
-				'user_created' 	=> get_user_data('id'),
-			];
+			if (empty($barang[0]) || empty($jumlah[0])) {
+				$this->data['success'] = false;
+				$this->data['message'] = 'Tidak ada data barang yang di input!';
+			}else{
+				if (count($barang) > 0) {
+					$save_data = [
+						'barangkeluar_asal_posko' 	=> $this->session->userdata('posko_id'),
+						'tujuan_posko' 				=> $posko_id,
+						'kecamatan_id' 				=> $this->input->post('kecamatan_id'),
+						'kelurahan_id' 				=> $this->input->post('kelurahan_id'),
+						'keterangan' 				=> $this->input->post('keterangan'),
+						'pemohon' 					=> $this->input->post('pemohon'),
+						'tanggal' 					=> $this->input->post('tanggal'),
+						'waktu' 					=> $this->input->post('waktu'),
+						'created_at' 				=> date('Y-m-d H:i:s'),
+						'user_created' 				=> get_user_data('id'),
+					];
+		
+					$save_barangkeluar = $id = $this->model_barangkeluar->store($save_data);
 
-			$save_barangkeluar = $id = $this->model_barangkeluar->store($save_data);
+					for ($i=0; $i < count($barang); $i++) {
+						$data_barang_keluar = [
+							'barangkeluar_id' 					=> $id,
+							'barang_id' 						=> $barang[$i],
+							'barangkeluar_detail_jumlah' 		=> $jumlah[$i],
+							'barangkeluar_detail_status' 		=> '1',
+							'barangkeluar_detail_keterangan' 	=> $keterangan[$i],
+							'barangkeluar_detail_user_created' 	=> get_user_data('id'),
+							'barangkeluar_detail_created_at' 	=> date('Y-m-d H:i:s'),
+						];
 
-			if ($save_barangkeluar) {
-				if ($this->input->post('save_type') == 'stay') {
-					$this->data['success'] = true;
-					$this->data['id'] 	   = $save_barangkeluar;
-					$this->data['message'] = cclang('success_save_data_stay', [
-						anchor('administrator/barangkeluar/edit/' . $save_barangkeluar, 'Edit Barangkeluar'),
-						anchor('administrator/barangkeluar', ' Go back to list')
-					]);
-				} else {
-					set_message(
-						cclang('success_save_data_redirect', [
-						anchor('administrator/barangkeluar/edit/' . $save_barangkeluar, 'Edit Barangkeluar')
-					]), 'success');
+						$this->db->insert('barangkeluar_detail', $data_barang_keluar);
 
-            		$this->data['success'] = true;
-					$this->data['redirect'] = base_url('administrator/barangkeluar');
-				}
-			} else {
-				if ($this->input->post('save_type') == 'stay') {
+						$stok_barang_posko 	= $this->db->get_where('stok_posko', ['posko_id' => $posko_id, 'barang_id' => $barang[$i]])->row();
+
+						if (count($stok_barang_posko) > 0) {
+							$stok_posko_total 	= $stok_barang_posko->stok_posko_total;
+
+							$hasil = $stok_posko_total - $jumlah[$i];
+
+							$this->db->update('stok_posko', ['stok_posko_total' => $hasil], ['posko_id' => $posko_id, 'barang_id' => $barang[$i]]);
+						}
+					}
+
+					if ($save_barangkeluar) {
+						if ($this->input->post('save_type') == 'stay') {
+							$this->data['success'] = true;
+							$this->data['id'] 	   = $save_barangkeluar;
+							$this->data['message'] = cclang('success_save_data_stay', [
+								anchor('administrator/barangkeluar/edit/' . $save_barangkeluar, 'Edit Barangkeluar'),
+								anchor('administrator/barangkeluar', ' Go back to list')
+							]);
+						} else {
+							set_message(
+								cclang('success_save_data_redirect', [
+								anchor('administrator/barangkeluar/edit/' . $save_barangkeluar, 'Edit Barangkeluar')
+							]), 'success');
+		
+							$this->data['success'] = true;
+							$this->data['redirect'] = base_url('administrator/barangkeluar');
+						}
+					} else {
+						if ($this->input->post('save_type') == 'stay') {
+							$this->data['success'] = false;
+							$this->data['message'] = cclang('data_not_change');
+						} else {
+							$this->data['success'] = false;
+							$this->data['message'] = cclang('data_not_change');
+							$this->data['redirect'] = base_url('administrator/barangkeluar');
+						}
+					}
+				}else{
 					$this->data['success'] = false;
-					$this->data['message'] = cclang('data_not_change');
-				} else {
-            		$this->data['success'] = false;
-            		$this->data['message'] = cclang('data_not_change');
-					$this->data['redirect'] = base_url('administrator/barangkeluar');
+					$this->data['message'] = 'Tidak ada data barang yang di input!';
 				}
 			}
-
 		} else {
 			$this->data['success'] = false;
 			$this->data['message'] = 'Opss validation failed';
@@ -134,8 +174,7 @@ class Barangkeluar extends Admin {
 	*
 	* @var $id String
 	*/
-	public function edit($id)
-	{
+	public function edit($id) {
 		$this->is_allowed('barangkeluar_update');
 
 		$this->data['barangkeluar'] = $this->model_barangkeluar->find($id);
@@ -246,8 +285,7 @@ class Barangkeluar extends Admin {
 	*
 	* @var $id String
 	*/
-	public function delete($id = null)
-	{
+	public function delete($id = null) {
 		$this->is_allowed('barangkeluar_delete');
 
 		$this->load->helper('file');
@@ -418,7 +456,15 @@ class Barangkeluar extends Admin {
 		$this->response($results);	
 	}
 
-	
+	public function coba() {
+		$posko_id 	= $this->input->get('id');
+		$barang_id 	= $this->input->get('barang');
+
+		$this->model_barangkeluar->query_barangkeluar_posko($posko_id, $barang_id);
+
+		echo $this->db->last_query();
+		exit;
+	}
 }
 
 

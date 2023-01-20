@@ -40,12 +40,32 @@
 						<div class="form-group group-asal-posko">
 							<label for="asal" class="col-sm-2 control-label">Asal Posko<i class="required">*</i></label>
 							<div class="col-sm-8">
+							<?php
+								if (!array_keys([1, 5], $user_groups[0])) {
+							?>
+									<label class="form-control"><?= join_multi_select($this->session->userdata('posko_id'), 'posko', 'posko_id', 'posko_nama')?></label>
+							<?php
+								}else{
+							?>
 								<select class="form-control chosen chosen-select-deselect" name="asal_posko" id="asal_posko" data-placeholder="Select Asal">
+									<option value=""></option>
+							<?php
+								foreach (db_get_all_data('posko') as $row):
+							?>
+									<option value="<?= $row->posko_id ?>"><?= $row->posko_nama; ?></option>
+							<?php
+								endforeach;
+							?>
+									</select>
+							<?php
+								}
+							?>
+								<!-- <select class="form-control chosen chosen-select-deselect" name="asal_posko" id="asal_posko" data-placeholder="Select Asal">
 									<option value=""></option>
 									<?php foreach (db_get_all_data('posko') as $row): ?>
 									<option value="<?= $row->posko_id ?>" <?= $row->posko_id == $barangmasuk->asal_posko ? 'selected="selected"' : ''; ?>><?= $row->posko_nama; ?></option>
 									<?php endforeach; ?>
-								</select>
+								</select> -->
 								<small class="info help-block"></small>
 							</div>
 						</div>

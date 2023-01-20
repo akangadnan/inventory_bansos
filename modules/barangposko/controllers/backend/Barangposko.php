@@ -87,6 +87,7 @@ class Barangposko extends Admin {
 
 		$this->load->view('backend/standart/administrator/barangposko/barangposko_view', $this->data);
 	}
+
 }
 
 

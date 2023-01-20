@@ -235,6 +235,14 @@ class Model_barangkeluar extends MY_Model {
 		$objWriter->save('php://output');
 	}
 
+	public function query_barangkeluar($id) {
+		$this->db->join('barangkeluar', 'barangkeluar.id_barangkeluar = barangkeluar_detail.barangkeluar_id', 'LEFT');
+		$this->db->where('barangkeluar.id_barangkeluar', $id);
+		
+		$query = $this->db->get('barangkeluar_detail');
+		return $query;
+	}
+
 	public function query_barangkeluar_posko($posko_id, $barang_id) {
 		$this->db->join('barangkeluar', 'barangkeluar.id_barangkeluar = barangkeluar_detail.barangkeluar_id', 'LEFT');
 		$this->db->where(['barangkeluar.tujuan_posko' => $posko_id, 'barangkeluar_detail.barang_id' => $barang_id]);

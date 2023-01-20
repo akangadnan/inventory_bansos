@@ -245,13 +245,16 @@ class Barangmasuk extends Admin	{
 		$this->form_validation->set_rules('waktu', 'Waktu', 'trim|required');
 		$this->form_validation->set_rules('kecamatan_id', 'Kecamatan', 'trim|required');
 		$this->form_validation->set_rules('kelurahan_id', 'Kelurahan', 'trim|required');
-		
-		if ($this->form_validation->run()) {
-			$barang 	= $this->input->post('id_barang[]');
-			$jumlah 	= $this->input->post('jumlah[]');
-			$keterangan = $this->input->post('keterangan_barang[]');
 
-			if (count($barang) > 0) {
+		$barang 	= $this->input->post('id_barang[]');
+		$jumlah 	= $this->input->post('jumlah[]');
+		$keterangan = $this->input->post('keterangan_barang[]');
+
+		if ($this->form_validation->run()) {
+			if (empty($barang[0]) || empty($jumlah[0])) {
+				$this->data['success'] = false;
+				$this->data['message'] = 'Tidak ada data barang yang di input!';
+			}else{
 				$save_data = [
 					'asal_posko' 		=> $posko_id,
 					'nama_donatur' 		=> $this->input->post('nama_donatur'),
@@ -340,9 +343,6 @@ class Barangmasuk extends Admin	{
 						$this->data['redirect'] = base_url('administrator/barangmasuk');
 					}
 				} */
-			}else{
-				$this->data['success'] = false;
-				$this->data['message'] = cclang('data_not_change');
 			}
 		} else {
 			$this->data['success'] = false;

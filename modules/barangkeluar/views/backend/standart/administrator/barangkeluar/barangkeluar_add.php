@@ -62,6 +62,32 @@
 							<h5 class="widget-user-desc"><?= cclang('new', ['Barang Keluar']); ?></h5>
 							<hr>
 						</div>
+						<div class="form-group group-asal-posko">
+							<label for="asal" class="col-sm-2 control-label">Posko <i class="required">*</i></label>
+							<div class="col-sm-8">
+						<?php
+							if (!array_keys([1, 5], $user_groups[0])) {
+						?>
+								<label class="form-control"><?= join_multi_select($this->session->userdata('posko_id'), 'posko', 'posko_id', 'posko_nama')?></label>
+						<?php
+							}else{
+						?>
+							<select class="form-control chosen chosen-select-deselect" name="asal_posko" id="asal_posko" data-placeholder="Select Asal">
+								<option value=""></option>
+						<?php
+							foreach (db_get_all_data('posko') as $row):
+						?>
+								<option value="<?= $row->posko_id ?>"><?= $row->posko_nama; ?></option>
+						<?php
+							endforeach;
+						?>
+								</select>
+						<?php
+							}
+						?>
+								<small class="info help-block"></small>
+							</div>
+						</div>
 						<div class="form-group group-kecamatan-id ">
 							<label for="kecamatan_id" class="col-sm-2 control-label">Kecamatan <i class="required">*</i></label>
 							<div class="col-sm-8">
@@ -153,13 +179,20 @@
 													</tr>
 												</thead>
 												<tbody>
-													<tr id="inputFormRow">
+													<tr>
 														<td>
 															<select class="form-control chosen chosen-select-deselect" name="id_barang[]" id="id_barang0" data-placeholder="Pilih Nama Barang">
 																<option value=""></option>
-														<?php foreach(db_get_all_data('barang') as $row) {?>
-																<option value="<?= $row->id_barang ?>"><?= $row->nama_barang; ?> ( <?= join_multi_select($row->satuan, 'satuan', 'id_satuan', 'nama_satuan'); ?>) </option>
-														<?php }; ?>
+													<?php
+														$conditions = [];
+
+														if (!array_keys([1, 5], $user_groups[0])) {
+															$conditions = ['posko_id' => $this->session->userdata('posko_id')];
+														}
+
+														foreach(db_get_all_data('stok_posko', $conditions) as $row) {?>
+															<option value="<?= $row->barang_id;?>"><?= join_multi_select($row->barang_id, 'barang', 'id_barang', 'nama_barang'); ?> ( <?= join_multi_select(join_multi_select($row->barang_id, 'barang', 'id_barang', 'satuan'), 'satuan', 'id_satuan', 'nama_satuan'); ?>) </option>
+													<?php }; ?>
 															</select>
 														</td>
 														<td>
@@ -293,7 +326,6 @@
 				})
 			})()
 
-
 			$('.loading').show();
 
 			$.ajax({
@@ -307,7 +339,6 @@
 					$('.steps li').removeClass('error');
 					$('form').find('.error-input').remove();
 					if (res.success) {
-
 						if (save_type == 'back') {
 							window.location.href = res.redirect;
 							return;
@@ -327,15 +358,12 @@
 								$('form #' + index).parents('.form-group').addClass(
 									'has-error');
 								$('form #' + index).parents('.form-group').find('small')
-									.prepend(`
-					<div class="error-input">` + val + `</div>
-					`);
+									.prepend(`<div class="error-input">` + val + `</div>`);
 							});
 							$('.steps li').removeClass('error');
 							$('.content section').each(function (index, el) {
 								if ($(this).find('.has-error').length) {
-									$('.steps li:eq(' + index + ')').addClass('error')
-										.find('a').trigger('click');
+									$('.steps li:eq(' + index + ')').addClass('error').find('a').trigger('click');
 								}
 							});
 						}
@@ -344,7 +372,6 @@
 							type: 'warning'
 						});
 					}
-
 				})
 				.fail(function () {
 					$('.message').printMessage({
@@ -378,6 +405,41 @@
 				$('#kelurahan_id').html(html);
 				$('#kelurahan_id').trigger('chosen:updated');
 
+			})
+			.fail(function () {
+				toastr['error']('Error', 'Getting data fail')
+			})
+			.always(function () {
+				$.LoadingOverlay('hide')
+			});
+		});
+
+		$('#asal_posko').change(function (event) {
+			var val = $(this).val();
+			$.LoadingOverlay('show');
+			$.ajax({
+				url: BASE_URL + 'administrator/barangkeluar/ajax_stok_posko/' + val,
+				dataType: 'JSON',
+			})
+			.done(function (res) {
+				$('tr').closest('#inputFormRow').remove();
+
+				var html = '<option value=""></option>';
+
+				$.each(res, function (index, val) {
+					var dis 	= '';
+					var stok 	= val.barang_stok+' '+val.barang_satuan;
+
+					if (val.barang_stok === '0') {
+						dis 	= 'disabled="disabled" style="color: #faa;"';
+						stok 	= 'Stok Habis';
+					}
+
+					html += '<option value="' + val.barang_id + '" '+dis+'>'+val.barang_nama+' ('+stok+')</option>';
+				});
+
+				$('#id_barang0').html(html);
+				$('#id_barang0').trigger('chosen:updated');
 			})
 			.fail(function () {
 				toastr['error']('Error', 'Getting data fail')

@@ -105,7 +105,9 @@ class Model_barangkeluar extends MY_Model {
 	}
 
 	public function filter_avaiable() {
-		if (!$this->aauth->is_admin()) {}
+		if (!$this->aauth->is_admin() || get_user_group_id(get_user_data('id')) !== 5) {
+			$this->db->where($this->table_name.'.barangkeluar_asal_posko', $this->session->userdata('posko_id'));
+		}
 
 		return $this;
 	}
@@ -231,6 +233,22 @@ class Model_barangkeluar extends MY_Model {
 
 		$objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');
 		$objWriter->save('php://output');
+	}
+
+	public function query_barangkeluar($id) {
+		$this->db->join('barangkeluar', 'barangkeluar.id_barangkeluar = barangkeluar_detail.barangkeluar_id', 'LEFT');
+		$this->db->where('barangkeluar.id_barangkeluar', $id);
+		
+		$query = $this->db->get('barangkeluar_detail');
+		return $query;
+	}
+
+	public function query_barangkeluar_posko($posko_id, $barang_id) {
+		$this->db->join('barangkeluar', 'barangkeluar.id_barangkeluar = barangkeluar_detail.barangkeluar_id', 'LEFT');
+		$this->db->where(['barangkeluar.tujuan_posko' => $posko_id, 'barangkeluar_detail.barang_id' => $barang_id]);
+		$query = $this->db->get('barangkeluar_detail');
+		
+		return $query;
 	}
 
 }

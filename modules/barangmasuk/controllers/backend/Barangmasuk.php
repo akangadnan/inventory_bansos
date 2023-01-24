@@ -72,7 +72,14 @@ class Barangmasuk extends Admin	{
 			exit;
 		}
 
-		$this->form_validation->set_rules('asal_posko', 'Asal Posko', 'trim|required');
+		if (!array_keys([1, 5], get_user_group_id(get_user_data('id')))) {
+			$posko_id 	= $this->session->userdata('posko_id');
+		} else {
+			$this->form_validation->set_rules('asal_posko', 'Asal Posko', 'trim|required');
+
+			$posko_id 	= $this->input->post('asal_posko');
+		}
+
 		$this->form_validation->set_rules('nama_donatur', 'Nama Donatur', 'trim|required');
 		$this->form_validation->set_rules('alamat_donatur', 'Alamat Donatur', 'trim|required');
 		$this->form_validation->set_rules('phone_donatur', 'No Telepon Donatur', 'trim|required');
@@ -80,79 +87,107 @@ class Barangmasuk extends Admin	{
 		$this->form_validation->set_rules('waktu', 'Waktu', 'trim|required');
 		$this->form_validation->set_rules('kecamatan_id', 'Kecamatan', 'trim|required');
 		$this->form_validation->set_rules('kelurahan_id', 'Kelurahan', 'trim|required');
+		
+		$barang 	= $this->input->post('id_barang[]');
+		$jumlah 	= $this->input->post('jumlah[]');
+		$keterangan = $this->input->post('keterangan_barang[]');
 
 		if ($this->form_validation->run()) {
-			$posko_id 	= $this->input->post('asal_posko');
-			$barang 	= $this->input->post('id_barang[]');
-			$jumlah 	= $this->input->post('jumlah[]');
-			$keterangan = $this->input->post('keterangan_barang[]');
-
-			$save_data = [
-				'asal_posko' 		=> $posko_id,
-				'nama_donatur' 		=> $this->input->post('nama_donatur'),
-				'alamat_donatur' 	=> $this->input->post('alamat_donatur'),
-				'phone_donatur' 	=> $this->input->post('phone_donatur'),
-				'keterangan' 		=> $this->input->post('keterangan'),
-				'tanggal' 			=> $this->input->post('tanggal'),
-				'waktu' 			=> $this->input->post('waktu'),
-				'kecamatan_id' 		=> $this->input->post('kecamatan_id'),
-				'kelurahan_id' 		=> $this->input->post('kelurahan_id'),
-				'created_at' 		=> date('Y-m-d H:i:s'),
-				'user_created' 		=> get_user_data('id'),
-			];
-
-			$save_barangmasuk = $id = $this->model_barangmasuk->store($save_data);
-
-			if (count($barang) > 0) {
-				$data_barang_masuk = [];
-
-				for ($i=0; $i < count($barang); $i++) {
-					$data_barang_posko = $this->model_barangmasuk->query_barang_posko($posko_id, $barang[$i])->result();
-
-					if (count($data_barang_posko->barang_id) > 1) {
-						$keterangan_masuk = $keterangan[$i];
-					}else{
-						$keterangan_masuk = $keterangan[$i].' (Saldo Awal)';
-					}
-
-					$data_barang_masuk[] = [
-						'barangmasuk_id' 					=> $id,
-						'barang_id' 						=> $barang[$i],
-						'barangmasuk_detail_jumlah' 		=> $jumlah[$i],
-						'barangmasuk_detail_keterangan' 	=> $keterangan_masuk,
-						'barangmasuk_detail_user_created' 	=> get_user_data('id'),
-						'barangmasuk_detail_created_at' 	=> date('Y-m-d H:i:s'),
+			if (empty($barang[0]) || empty($jumlah[0])) {
+				$this->data['success'] = false;
+				$this->data['message'] = 'Tidak ada data barang yang di input!';
+			}else{
+				if (count($barang) > 0) {
+					$save_data = [
+						'asal_posko' 		=> $posko_id,
+						'nama_donatur' 		=> $this->input->post('nama_donatur'),
+						'alamat_donatur' 	=> $this->input->post('alamat_donatur'),
+						'phone_donatur' 	=> $this->input->post('phone_donatur'),
+						'keterangan' 		=> $this->input->post('keterangan'),
+						'tanggal' 			=> $this->input->post('tanggal'),
+						'waktu' 			=> $this->input->post('waktu'),
+						'kecamatan_id' 		=> $this->input->post('kecamatan_id'),
+						'kelurahan_id' 		=> $this->input->post('kelurahan_id'),
+						'created_at' 		=> date('Y-m-d H:i:s'),
+						'user_created' 		=> get_user_data('id'),
 					];
-				}
-
-				$this->db->insert_batch('barangmasuk_detail', $data_barang_masuk);
-			}
-
-			if ($save_barangmasuk) {
-				if ($this->input->post('save_type') == 'stay') {
-					$this->data['success'] = true;
-					$this->data['id'] 	   = $save_barangmasuk;
-					$this->data['message'] = cclang('success_save_data_stay', [
-						anchor('administrator/barangmasuk/edit/' . $save_barangmasuk, 'Edit Barangmasuk'),
-						anchor('administrator/barangmasuk', ' Go back to list')
-					]);
-				} else {
-					set_message(
-						cclang('success_save_data_redirect', [
-						anchor('administrator/barangmasuk/edit/' . $save_barangmasuk, 'Edit Barangmasuk')
-					]), 'success');
-
-            		$this->data['success'] = true;
-					$this->data['redirect'] = base_url('administrator/barangmasuk');
-				}
-			} else {
-				if ($this->input->post('save_type') == 'stay') {
+		
+					$save_barangmasuk = $id = $this->model_barangmasuk->store($save_data);
+		
+					if ($save_barangmasuk) {
+						for ($i=0; $i < count($barang); $i++) {
+							$data_barang_posko = $this->model_barangmasuk->query_barangmasuk_posko($posko_id, $barang[$i])->result();
+	
+							if (count($data_barang_posko) >= 1) {
+								$keterangan_masuk = $keterangan[$i];
+							}else{
+								if (empty($keterangan[$i])) {
+									$keterangan_masuk = 'Saldo Awal';
+								}else{
+									$keterangan_masuk = $keterangan[$i].' (Saldo Awal)';
+								}
+							}
+	
+							$data_barang_masuk = [
+								'barangmasuk_id' 					=> $id,
+								'barang_id' 						=> $barang[$i],
+								'barangmasuk_detail_jumlah' 		=> $jumlah[$i],
+								'barangmasuk_detail_keterangan' 	=> $keterangan_masuk,
+								'barangmasuk_detail_user_created' 	=> get_user_data('id'),
+								'barangmasuk_detail_created_at' 	=> date('Y-m-d H:i:s'),
+							];
+	
+							$this->db->insert('barangmasuk_detail', $data_barang_masuk);
+	
+							$stok_barang_posko 	= $this->db->get_where('stok_posko', ['posko_id' => $posko_id, 'barang_id' => $barang[$i]])->row();
+	
+							if (count($stok_barang_posko) > 0) {
+								$stok_posko_total 	= $stok_barang_posko->stok_posko_total;
+	
+								$hasil = $stok_posko_total + $jumlah[$i];
+	
+								$this->db->update('stok_posko', ['stok_posko_total' => $hasil], ['posko_id' => $posko_id, 'barang_id' => $barang[$i]]);
+							}else{
+								$simpan_stok_posko = [
+									'posko_id' 			=> $posko_id,
+									'barang_id' 		=> $barang[$i],
+									'stok_posko_total' 	=> $jumlah[$i],
+								];
+	
+								$this->db->insert('stok_posko', $simpan_stok_posko);
+							}
+						}
+	
+						if ($this->input->post('save_type') == 'stay') {
+							$this->data['success'] = true;
+							$this->data['id'] 	   = $save_barangmasuk;
+							$this->data['message'] = cclang('success_save_data_stay', [
+								anchor('administrator/barangmasuk/edit/' . $save_barangmasuk, 'Edit Barangmasuk'),
+								anchor('administrator/barangmasuk', ' Go back to list')
+							]);
+						} else {
+							set_message(
+								cclang('success_save_data_redirect', [
+								anchor('administrator/barangmasuk/edit/' . $save_barangmasuk, 'Edit Barangmasuk')
+							]), 'success');
+		
+							$this->data['success'] = true;
+							$this->data['redirect'] = base_url('administrator/barangmasuk');
+						}
+	
+					} else {
+						if ($this->input->post('save_type') == 'stay') {
+							$this->data['success'] = false;
+							$this->data['message'] = cclang('data_not_change');
+						} else {
+							$this->data['success'] = false;
+							$this->data['message'] = cclang('data_not_change');
+							$this->data['redirect'] = base_url('administrator/barangmasuk');
+						}
+					}
+				}else{
 					$this->data['success'] = false;
 					$this->data['message'] = cclang('data_not_change');
-				} else {
-            		$this->data['success'] = false;
-            		$this->data['message'] = cclang('data_not_change');
-					$this->data['redirect'] = base_url('administrator/barangmasuk');
 				}
 			}
 		} else {
@@ -194,8 +229,15 @@ class Barangmasuk extends Admin	{
 				]);
 			exit;
 		}
+		
+		if (!array_keys([1, 5], get_user_group_id(get_user_data('id')))) {
+			$posko_id 	= $this->session->userdata('posko_id');
+		} else {
+			$this->form_validation->set_rules('asal_posko', 'Asal Posko', 'trim|required');
 
-		$this->form_validation->set_rules('asal_posko', 'Asal Posko', 'trim|required');
+			$posko_id 	= $this->input->post('asal_posko');
+		}
+
 		$this->form_validation->set_rules('nama_donatur', 'Nama Donatur', 'trim|required');
 		$this->form_validation->set_rules('alamat_donatur', 'Alamat Donatur', 'trim|required');
 		$this->form_validation->set_rules('phone_donatur', 'No Telepon Donatur', 'trim|required');
@@ -203,82 +245,104 @@ class Barangmasuk extends Admin	{
 		$this->form_validation->set_rules('waktu', 'Waktu', 'trim|required');
 		$this->form_validation->set_rules('kecamatan_id', 'Kecamatan', 'trim|required');
 		$this->form_validation->set_rules('kelurahan_id', 'Kelurahan', 'trim|required');
-		
+
+		$barang 	= $this->input->post('id_barang[]');
+		$jumlah 	= $this->input->post('jumlah[]');
+		$keterangan = $this->input->post('keterangan_barang[]');
+
 		if ($this->form_validation->run()) {
-			$posko_id 	= $this->input->post('asal_posko');
-			$barang 	= $this->input->post('id_barang[]');
-			$jumlah 	= $this->input->post('jumlah[]');
-			$keterangan = $this->input->post('keterangan_barang[]');
-		
-			$save_data = [
-				'asal_posko' 		=> $posko_id,
-				'nama_donatur' 		=> $this->input->post('nama_donatur'),
-				'alamat_donatur' 	=> $this->input->post('alamat_donatur'),
-				'phone_donatur' 	=> $this->input->post('phone_donatur'),
-				'keterangan' 		=> $this->input->post('keterangan'),
-				'tanggal' 			=> $this->input->post('tanggal'),
-				'waktu' 			=> $this->input->post('waktu'),
-				'kecamatan_id' 		=> $this->input->post('kecamatan_id'),
-				'kelurahan_id' 		=> $this->input->post('kelurahan_id'),
-			];
+			if (empty($barang[0]) || empty($jumlah[0])) {
+				$this->data['success'] = false;
+				$this->data['message'] = 'Tidak ada data barang yang di input!';
+			}else{
+				$save_data = [
+					'asal_posko' 		=> $posko_id,
+					'nama_donatur' 		=> $this->input->post('nama_donatur'),
+					'alamat_donatur' 	=> $this->input->post('alamat_donatur'),
+					'phone_donatur' 	=> $this->input->post('phone_donatur'),
+					'keterangan' 		=> $this->input->post('keterangan'),
+					'tanggal' 			=> $this->input->post('tanggal'),
+					'waktu' 			=> $this->input->post('waktu'),
+					'kecamatan_id' 		=> $this->input->post('kecamatan_id'),
+					'kelurahan_id' 		=> $this->input->post('kelurahan_id'),
+				];
 
-			$save_barangmasuk = $this->model_barangmasuk->change($id, $save_data);
+				$data_barangmasuk 	= $this->model_barangmasuk->query_barangmasuk($id)->result();
 
-			$this->db->delete('barangmasuk_detail', ['barangmasuk_id' => $id]);
+				foreach ($data_barangmasuk as $item) {
+					$posko_masuk 	= $item->asal_posko;
+					$barang_masuk 	= $item->barang_id;
+					$jumlah_masuk 	= $item->barangmasuk_detail_jumlah;
 
-			if (count($barang) > 0) {
+					$data_stok_posko = $this->db->get_where('stok_posko', ['posko_id' => $posko_masuk, 'barang_id' => $barang_masuk])->row();
+					$stok_posko 	= $data_stok_posko->stok_posko_total;
+
+					$hasil 			= $stok_posko - $jumlah_masuk;
+
+					$this->db->update('stok_posko', ['stok_posko_total' => $hasil], ['posko_id' => $posko_masuk, 'barang_id' => $barang_masuk]);
+					$this->db->delete('barangmasuk_detail', ['barangmasuk_id' => $id, 'barang_id' => $barang_masuk]);
+				}
+
+				$save_barangmasuk = $this->model_barangmasuk->change($id, $save_data);
+
 				$data_barang_masuk = [];
 
 				for ($i=0; $i < count($barang); $i++) {
-					$data_barang_posko = $this->model_barangmasuk->query_barang_posko($posko_id, $barang[$i])->result();
-
-					if (count($data_barang_posko->barang_id) > 1) {
-						$keterangan_masuk = $keterangan[$i];
-					}else{
-						if (stristr($keterangan[$i], ' (Saldo Awal)') === FALSE) {
-							$keterangan_masuk = $keterangan[$i].' (Saldo Awal)';
-						}else{
-							$keterangan_masuk = $keterangan[$i];
-						}
-					}
-
-					$data_barang_masuk[] = [
+					$data_barang_masuk = [
 						'barangmasuk_id' 					=> $id,
 						'barang_id' 						=> $barang[$i],
 						'barangmasuk_detail_jumlah' 		=> $jumlah[$i],
-						'barangmasuk_detail_keterangan' 	=> $keterangan_masuk,
+						'barangmasuk_detail_keterangan' 	=> $keterangan[$i],
 						'barangmasuk_detail_user_created' 	=> get_user_data('id'),
 						'barangmasuk_detail_created_at' 	=> date('Y-m-d H:i:s'),
 					];
+
+					$this->db->insert('barangmasuk_detail', $data_barang_masuk);
+
+					$stok_barang_posko 	= $this->db->get_where('stok_posko', ['posko_id' => $posko_id, 'barang_id' => $barang[$i]])->row();
+
+					if (count($stok_barang_posko) > 0) {
+						$stok_posko_total 	= $stok_barang_posko->stok_posko_total;
+
+						$hasil = $stok_posko_total + $jumlah[$i];
+
+						$this->db->update('stok_posko', ['stok_posko_total' => $hasil], ['posko_id' => $posko_id, 'barang_id' => $barang[$i]]);
+					}else{
+						$simpan_stok_posko = [
+							'posko_id' 			=> $posko_id,
+							'barang_id' 		=> $barang[$i],
+							'stok_posko_total' 	=> $jumlah[$i],
+						];
+
+						$this->db->insert('stok_posko', $simpan_stok_posko);
+					}
 				}
 
-				$save_details = $this->db->insert_batch('barangmasuk_detail', $data_barang_masuk);
-			}
+				// if ($save_barangmasuk) {
+					if ($this->input->post('save_type') == 'stay') {
+						$this->data['success'] = true;
+						$this->data['id'] 	   = $id;
+						$this->data['message'] = cclang('success_update_data_stay', [
+							anchor('administrator/barangmasuk', ' Go back to list')
+						]);
+					} else {
+						set_message(
+							cclang('success_update_data_redirect', [
+						]), 'success');
 
-			if ($save_barangmasuk || $save_details) {
-				if ($this->input->post('save_type') == 'stay') {
-					$this->data['success'] = true;
-					$this->data['id'] 	   = $id;
-					$this->data['message'] = cclang('success_update_data_stay', [
-						anchor('administrator/barangmasuk', ' Go back to list')
-					]);
-				} else {
-					set_message(
-						cclang('success_update_data_redirect', [
-					]), 'success');
-
-            		$this->data['success'] = true;
-					$this->data['redirect'] = base_url('administrator/barangmasuk');
-				}
-			} else {
-				if ($this->input->post('save_type') == 'stay') {
-					$this->data['success'] = false;
-					$this->data['message'] = cclang('data_not_change');
-				} else {
-            		$this->data['success'] = false;
-            		$this->data['message'] = cclang('data_not_change');
-					$this->data['redirect'] = base_url('administrator/barangmasuk');
-				}
+						$this->data['success'] = true;
+						$this->data['redirect'] = base_url('administrator/barangmasuk');
+					}
+				/* } else {
+					if ($this->input->post('save_type') == 'stay') {
+						$this->data['success'] = false;
+						$this->data['message'] = cclang('data_not_change');
+					} else {
+						$this->data['success'] = false;
+						$this->data['message'] = cclang('data_not_change');
+						$this->data['redirect'] = base_url('administrator/barangmasuk');
+					}
+				} */
 			}
 		} else {
 			$this->data['success'] = false;
@@ -303,11 +367,35 @@ class Barangmasuk extends Admin	{
 		$remove = false;
 
 		if (!empty($id)) {
+			$barang_masuk 	= $this->db->get_where('barangmasuk', ['id_barangmasuk' => $id])->row();
+
+			foreach (db_get_all_data('barangmasuk_detail', ['barangmasuk_id' => $id]) as $item) {
+				$jumlah_masuk 	= $item->barangmasuk_detail_jumlah;
+				$stok_posko 	= $this->db->get_where('stok_posko', ['posko_id' => $barang_masuk->asal_posko, 'barang_id' => $item->barang_id])->row();
+				$jumlah_stok 	= $stok_posko->stok_posko_total;
+
+				$hasil 			= $jumlah_stok - $jumlah_masuk;
+
+				$this->db->update('stok_posko', ['stok_posko_total' => $hasil], ['posko_id' => $barang_masuk->asal_posko, 'barang_id' => $item->barang_id]);
+			}
+			
 			$remove = $this->_remove($id);
 
 			$this->db->delete('barangmasuk_detail', ['barangmasuk_id' => $id]);
 		} elseif (count($arr_id) >0) {
 			foreach ($arr_id as $id) {
+				$barang_masuk 	= $this->db->get_where('barangmasuk', ['id_barangmasuk' => $id])->row();
+
+				foreach (db_get_all_data('barangmasuk_detail', ['barangmasuk_id' => $id]) as $item) {
+					$jumlah_masuk 	= $item->barangmasuk_detail_jumlah;
+					$stok_posko 	= $this->db->get_where('stok_posko', ['posko_id' => $barang_masuk->asal_posko, 'barang_id' => $item->barang_id])->row();
+					$jumlah_stok 	= $stok_posko->stok_posko_total;
+
+					$hasil 			= $jumlah_stok - $jumlah_masuk;
+
+					$this->db->update('stok_posko', ['stok_posko_total' => $hasil], ['posko_id' => $barang_masuk->asal_posko, 'barang_id' => $item->barang_id]);
+				}
+
 				$remove = $this->_remove($id);
 
 				$this->db->delete('barangmasuk_detail', ['barangmasuk_id' => $id]);
@@ -436,7 +524,6 @@ class Barangmasuk extends Admin	{
 		$results = db_get_all_data('kelurahan', ['kecamatan_id' => $id]);
 		$this->response($results);	
 	}
-
 	
 }
 

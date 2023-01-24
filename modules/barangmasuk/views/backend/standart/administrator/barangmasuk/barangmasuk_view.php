@@ -113,7 +113,7 @@
 											</tr>
 									<?php
 										$no = 1;
-										foreach (db_get_all_data('barangmasuk_detail', ['id_barangmasuk', $barangmasuk->id_barangmasuk]) as $item) {
+										foreach (db_get_all_data('barangmasuk_detail', ['barangmasuk_id'=> $barangmasuk->id_barangmasuk]) as $item) {
 									?>
 											<tr>
 												<td><?= $no++;?></td>

@@ -28,7 +28,7 @@
 	</h1>
 	<ol class="breadcrumb">
 		<li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-		<li class=""><a href="<?= site_url('administrator/barangkeluar'); ?>">Barangkeluar</a></li>
+		<li class=""><a href="<?= site_url('administrator/barangkeluar'); ?>">Barang Keluar</a></li>
 		<li class="active"><?= cclang('new'); ?></li>
 	</ol>
 </section>
@@ -37,7 +37,7 @@
 	<div class="row">
 		<div class="col-md-12">
 			<div class="box box-primary">
-			<?= form_open('', [
+			<?= form_open(base_url('administrator/barangkeluar/edit_save/'.$this->uri->segment(4)), [
 					'name' 		=> 'form_barangkeluar',
 					'class' 	=> 'form-horizontal form-step',
 					'id' 		=> 'form_barangkeluar',
@@ -57,8 +57,34 @@
 							</div>
 							<!-- /.widget-user-image -->
 							<h3 class="widget-user-username">Barangkeluar</h3>
-							<h5 class="widget-user-desc"><?= cclang('new', ['Barangkeluar']); ?></h5>
+							<h5 class="widget-user-desc"><?= cclang('new', ['Barang_keluar']); ?></h5>
 							<hr>
+						</div>
+						<div class="form-group group-asal-posko">
+							<label for="asal" class="col-sm-2 control-label">Posko <i class="required">*</i></label>
+							<div class="col-sm-8">
+						<?php
+							if (!array_keys([1, 5], $user_groups[0])) {
+						?>
+								<label class="form-control"><?= join_multi_select($this->session->userdata('posko_id'), 'posko', 'posko_id', 'posko_nama')?></label>
+						<?php
+							}else{
+						?>
+							<select class="form-control chosen chosen-select-deselect" name="asal_posko" id="asal_posko" data-placeholder="Select Asal">
+								<option value=""></option>
+						<?php
+							foreach (db_get_all_data('posko') as $row):
+						?>
+								<option value="<?= $row->posko_id ?>" <?= $row->posko_id == $barangkeluar->barangkeluar_asal_posko ? 'selected="selected"' : '';?> ><?= $row->posko_nama; ?></option>
+						<?php
+							endforeach;
+						?>
+								</select>
+						<?php
+							}
+						?>
+								<small class="info help-block"></small>
+							</div>
 						</div>
 						<div class="form-group group-kecamatan-id ">
 							<label for="kecamatan_id" class="col-sm-2 control-label">Kecamatan <i class="required">*</i></label>
@@ -96,7 +122,7 @@
 						<div class="form-group group-keterangan ">
 							<label for="pemohon" class="col-sm-2 control-label">Pemohon <i class="required">*</i></label>
 							<div class="col-sm-8">
-								<input id="pemohon" name="pemohon" class="form-control" placeholder="pemohon"><?= set_value('pemohon', $barangkeluar->pemohon); ?></input>
+								<input id="pemohon" name="pemohon" class="form-control" placeholder="pemohon" value="<?= set_value('pemohon', $barangkeluar->pemohon); ?>"></input>
 								<small class="info help-block"></small>
 							</div>
 						</div>
@@ -273,24 +299,23 @@
 			$(this).closest('#inputFormRow').remove();
 		});
 
-
 		$('#btn_cancel').click(function () {
 			swal({
-					title: "<?= cclang('are_you_sure'); ?>",
-					text: "<?= cclang('data_to_be_deleted_can_not_be_restored'); ?>",
-					type: "warning",
-					showCancelButton: true,
-					confirmButtonColor: "#DD6B55",
-					confirmButtonText: "Yes!",
-					cancelButtonText: "No!",
-					closeOnConfirm: true,
-					closeOnCancel: true
-				},
-				function (isConfirm) {
-					if (isConfirm) {
-						window.location.href = BASE_URL + 'administrator/barangkeluar';
-					}
-				});
+				title: "<?= cclang('are_you_sure'); ?>",
+				text: "<?= cclang('data_to_be_deleted_can_not_be_restored'); ?>",
+				type: "warning",
+				showCancelButton: true,
+				confirmButtonColor: "#DD6B55",
+				confirmButtonText: "Yes!",
+				cancelButtonText: "No!",
+				closeOnConfirm: true,
+				closeOnCancel: true
+			},
+			function (isConfirm) {
+				if (isConfirm) {
+					window.location.href = BASE_URL + 'administrator/barangkeluar';
+				}
+			});
 
 			return false;
 		}); /*end btn cancel*/
@@ -301,15 +326,9 @@
 			var form_barangkeluar = $('#form_barangkeluar');
 			var data_post = form_barangkeluar.serializeArray();
 			var save_type = $(this).attr('data-stype');
-
 			data_post.push({
 				name: 'save_type',
 				value: save_type
-			});
-
-			data_post.push({
-				name: 'event_submit_and_action',
-				value: window.event_submit_and_action
 			});
 
 			(function () {
@@ -319,71 +338,57 @@
 				})
 			})()
 
+			data_post.push({
+				name: 'event_submit_and_action',
+				value: window.event_submit_and_action
+			});
 
 			$('.loading').show();
 
 			$.ajax({
-					url: BASE_URL + '/administrator/barangkeluar/add_save',
-					type: 'POST',
-					dataType: 'json',
-					data: data_post,
-				})
-				.done(function (res) {
-					$('form').find('.form-group').removeClass('has-error');
-					$('.steps li').removeClass('error');
-					$('form').find('.error-input').remove();
-					if (res.success) {
-
-						if (save_type == 'back') {
-							window.location.href = res.redirect;
-							return;
-						}
-
-						$('.message').printMessage({
-							message: res.message
-						});
-						$('.message').fadeIn();
-						resetForm();
-						$('.chosen option').prop('selected', false).trigger('chosen:updated');
-
-					} else {
-						if (res.errors) {
-
-							$.each(res.errors, function (index, val) {
-								$('form #' + index).parents('.form-group').addClass(
-									'has-error');
-								$('form #' + index).parents('.form-group').find('small')
-									.prepend(`
-					<div class="error-input">` + val + `</div>
-					`);
-							});
-							$('.steps li').removeClass('error');
-							$('.content section').each(function (index, el) {
-								if ($(this).find('.has-error').length) {
-									$('.steps li:eq(' + index + ')').addClass('error')
-										.find('a').trigger('click');
-								}
-							});
-						}
-						$('.message').printMessage({
-							message: res.message,
-							type: 'warning'
-						});
+				url: form_barangkeluar.attr('action'),
+				type: 'POST',
+				dataType: 'json',
+				data: data_post,
+			})
+			.done(function (res) {
+				$('form').find('.form-group').removeClass('has-error');
+				$('form').find('.error-input').remove();
+				$('.steps li').removeClass('error');
+				if (res.success) {
+					var id = $('#barangkeluar_image_galery').find('li').attr('qq-file-id');
+					if (save_type == 'back') {
+						window.location.href = res.redirect;
+						return;
 					}
 
-				})
-				.fail(function () {
 					$('.message').printMessage({
-						message: 'Error save data',
+						message: res.message
+					});
+					$('.message').fadeIn();
+					$('.data_file_uuid').val('');
+				} else {
+					if (res.errors) {
+						parseErrorField(res.errors);
+					}
+					$('.message').printMessage({
+						message: res.message,
 						type: 'warning'
 					});
-				})
-				.always(function () {
-					$('.loading').hide();
-					$('html, body').animate({
-						scrollTop: $(document).height()
-					}, 2000);
+				}
+			})
+			.fail(function () {
+				$('.message').printMessage({
+					message: 'Error save data',
+					type: 'warning'
 				});
+			})
+			.always(function () {
+				$('.loading').hide();
+				$('html, body').animate({
+					scrollTop: $(document).height()
+				}, 2000);
+			});
 
 			return false;
 		}); /*end btn save*/

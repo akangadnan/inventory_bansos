@@ -277,6 +277,105 @@ class Permohonan extends Admin {
 		$this->response($this->data);
 	}
 
+	public function konfirmasi_barangterima($id) {
+		$this->is_allowed('permohonan_terima');
+
+		$this->data['permohonan'] = $this->model_permohonan->find($id);
+
+		$this->template->title('Konfirmasi Barang');
+		$this->render('backend/standart/administrator/permohonan/permohonan_terima', $this->data);
+	}
+
+	public function terima_save($id) {
+		$barang 	= $this->input->post('id_barang[]');
+		$jumlah 	= $this->input->post('jumlah[]');
+		$keterangan = $this->input->post('keterangan_barang[]');
+
+		$this->form_validation->set_rules('permohonan_tanggal', 'Tanggal Permohonan', 'trim|required');
+		$this->form_validation->set_rules('permohonan_waktu', 'Waktu', 'trim|required');
+		$this->form_validation->set_rules('posko_id', 'Posko', 'trim|required');
+		$this->form_validation->set_rules('permohonan_pemohon', 'Pemohon', 'trim|required|max_length[75]');
+		$this->form_validation->set_rules('permohonan_mengetahui', 'Mengetahui Posko', 'trim|required');
+		$this->form_validation->set_rules('kecamatan_id', 'Posko Kecamatan', 'trim|required');
+		$this->form_validation->set_rules('kelurahan_id', 'Posko Kelurahan', 'trim|required');
+		
+		if ($this->form_validation->run()) {
+			if (empty($barang[0]) || empty($jumlah[0])) {
+				$this->data['success'] = false;
+				$this->data['message'] = 'Tidak ada data barang yang di input!';
+			}else{
+				$save_data = [
+					'permohonan_tanggal' 		=> $this->input->post('permohonan_tanggal'),
+					'permohonan_waktu' 			=> $this->input->post('permohonan_waktu'),
+					'posko_id' 					=> $this->input->post('posko_id'),
+					'kecamatan_id' 				=> $this->input->post('kecamatan_id'),
+					'kelurahan_id' 				=> $this->input->post('kelurahan_id'),
+					'permohonan_pemohon' 		=> $this->input->post('permohonan_pemohon'),
+					'permohonan_keterangan' 	=> $this->input->post('permohonan_keterangan'),
+					'permohonan_respon_posko' 	=> $this->input->post('permohonan_respon_posko'),
+					'permohonan_mengetahui' 	=> $this->input->post('permohonan_mengetahui'),
+				];
+				
+				var_dump($save_data);
+				die();
+
+				$save_permohonan = $this->model_permohonan->change($id, $save_data);
+	
+				$this->db->delete('permohonan_detail', ['permohonan_id' => $id]);
+	
+				$save_details = 0;
+				if (count($barang) > 0) {
+					$data_permohonan_bantuan_barang = [];
+	
+					for ($i=0; $i < count($barang); $i++) {
+						$data_permohonan_bantuan_barang[] = [
+							'permohonan_id' 					=> $id,
+							'barang_id' 						=> $barang[$i],
+							'permohonan_detail_jumlah' 			=> $jumlah[$i],
+							'permohonan_detail_keterangan' 		=> $keterangan[$i],
+							'permohonan_detail_created_at' 		=> date('Y-m-d H:i:s'),
+							'permohonan_detail_user_created' 	=> get_user_data('id'),
+						];
+					}
+	
+					$save_details = $this->db->insert_batch('permohonan_detail', $data_permohonan_bantuan_barang);
+				}
+	
+				if ($save_permohonan || $save_details) {
+					if ($this->input->post('save_type') == 'stay') {
+						$this->data['success'] = true;
+						$this->data['id'] 	   = $id;
+						$this->data['message'] = cclang('success_update_data_stay', [
+							anchor('administrator/permohonan', ' Go back to list')
+						]);
+					} else {
+						set_message(
+							cclang('success_update_data_redirect', [
+						]), 'success');
+	
+						$this->data['success'] = true;
+						$this->data['redirect'] = base_url('administrator/permohonan');
+					}
+				} else {
+					if ($this->input->post('save_type') == 'stay') {
+						$this->data['success'] = false;
+						$this->data['message'] = cclang('data_not_change');
+					} else {
+						$this->data['success'] = false;
+						$this->data['message'] = cclang('data_not_change');
+						$this->data['redirect'] = base_url('administrator/permohonan');
+					}
+				}
+			}
+		} else {
+			$this->data['success'] = false;
+			$this->data['message'] = 'Opss validation failed';
+			$this->data['errors'] = $this->form_validation->error_array();
+		}
+
+		$this->response($this->data);
+	}
+
 	public function verified($id) {
 		//input ke barang keluar
 		//get id barang

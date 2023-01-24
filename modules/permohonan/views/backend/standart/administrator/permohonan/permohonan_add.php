@@ -131,8 +131,8 @@
 									<div class="col-sm-8">
 										<select class="form-control chosen chosen-select-deselect" name="permohonan_mengetahui" id="permohonan_mengetahui" data-placeholder="Select Mengetahui Posko">
 											<option value=""></option>
-											<?php foreach (db_get_all_data('users') as $row): ?>
-											<option value="<?= $row->user_id;?>"><?= $row->user_nama_lengkap; ?></option>
+											<?php foreach (db_get_all_data('aauth_users') as $row): ?>
+											<option value="<?= $row->id;?>"><?= $row->full_name; ?></option>
 											<?php endforeach; ?>
 										</select>
 										<small class="info help-block"></small>

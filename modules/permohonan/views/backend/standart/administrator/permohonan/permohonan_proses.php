@@ -24,7 +24,7 @@
 	<div class="row">
 		<div class="col-md-12">
 			<div class="box box-primary">
-			<?= form_open(base_url('administrator/permohonan/save_proses/'.$this->uri->segment(4)), [
+			<?= form_open(base_url('administrator/permohonan/save_terima/'.$this->uri->segment(4)), [
 				'name' 		=> 'form_permohonan',
 				'class' 	=> 'form-horizontal form-step',
 				'id' 		=> 'form_permohonan',

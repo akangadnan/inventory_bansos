@@ -199,7 +199,14 @@
 											<?php
 													});
 												}
-											?>
+												if ($permohonan->permohonan_status == '4'){
+													?>
+									
+														<a class="label-default" id="terima" title="Terima" 
+															href="<?= site_url('administrator/permohonan/konfirmasi_barangterima/'. $permohonan->permohonan_id); ?>">
+															<i class="fa fa-check-square"></i> Cek Barang</a>
+											<?php } ?>
+											
 											</td>
 										</tr>
 									<?php

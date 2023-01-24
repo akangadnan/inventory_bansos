@@ -249,7 +249,7 @@ class Barangkeluar extends Admin {
 					$data_stok_posko = $this->db->get_where('stok_posko', ['posko_id' => $posko_keluar, 'barang_id' => $barang_keluar])->row();
 					$stok_posko 	= $data_stok_posko->stok_posko_total;
 
-					$hasil 			= $stok_posko - $jumlah_keluar;
+					$hasil 			= $stok_posko + $jumlah_keluar;
 
 					$this->db->update('stok_posko', ['stok_posko_total' => $hasil], ['posko_id' => $posko_keluar, 'barang_id' => $barang_keluar]);
 					$this->db->delete('barangkeluar_detail', ['barangkeluar_id' => $id, 'barang_id' => $barang_keluar]);
@@ -276,7 +276,7 @@ class Barangkeluar extends Admin {
 						if (count($stok_barang_posko) > 0) {
 							$stok_posko_total 	= $stok_barang_posko->stok_posko_total;
 
-							$hasil = $stok_posko_total + $jumlah[$i];
+							$hasil = $stok_posko_total - $jumlah[$i];
 
 							$this->db->update('stok_posko', ['stok_posko_total' => $hasil], ['posko_id' => $posko_id, 'barang_id' => $barang[$i]]);
 						}else{
@@ -340,38 +340,40 @@ class Barangkeluar extends Admin {
 		$remove = false;
 
 		if (!empty($id)) {
-			$barang_keluar 	= $this->db->where('id_barangkeluar', $id)->get('barangkeluar')->row();
+			$barang_keluar 	= $this->db->get_where('barangkeluar', ['id_barangkeluar' => $id])->row();
 
-			$barang 		= $this->db->where('id_barang', $barang_keluar->id_barang)->get('barang')->row();
+			foreach (db_get_all_data('barangkeluar_detail', ['barangkeluar_id' => $id]) as $item) {
+				$jumlah_keluar 	= $item->barangkeluar_detail_jumlah;
+				$stok_posko 	= $this->db->get_where('stok_posko', ['posko_id' => $barang_keluar->barangkeluar_asal_posko, 'barang_id' => $item->barang_id])->row();
 
-			$stok_akhir 	= $barang_keluar->jumlah + $barang->stok;
+				$jumlah_stok 	= $stok_posko->stok_posko_total;
 
-			$update_barang = [
-				'stok' => $stok_akhir,
-			];
+				$hasil 			= $jumlah_stok + $jumlah_keluar;
 
-			$this->model_barang->change($barang_keluar->id_barang, $update_barang);
+				$this->db->update('stok_posko', ['stok_posko_total' => $hasil], ['posko_id' => $barang_keluar->barangkeluar_asal_posko, 'barang_id' => $item->barang_id]);
+			}
 
 			$remove = $this->_remove($id);
+
+			$this->db->delete('barangkeluar_detail', ['barangkeluar_id' => $id]);
 		} elseif (count($arr_id) >0) {
 			foreach ($arr_id as $id) {
-				$barang_keluar 	= $this->db->where('id_barangkeluar', $id)->get('barangkeluar')->row();
-	
-				$barang 		= $this->db->where('id_barang', $barang_keluar->id_barang)->get('barang')->row();
-	
-				if ($barang->stok > $barang_keluar->jumlah) {
-					$stok_akhir 	= $barang->stok - $barang_keluar->jumlah;
-				}else{
-					$stok_akhir 	= $barang_keluar->jumlah - $barang->stok;
-				}
-	
-				$update_barang = [
-					'stok' => $stok_akhir,
-				];
+				$barang_keluar 	= $this->db->get_where('barangkeluar', ['id_barangkeluar' => $id])->row();
 
-				$this->model_barang->change($barang_keluar->id_barang, $update_barang);
+				foreach (db_get_all_data('barangkeluar_detail', ['barangkeluar_id' => $id]) as $item) {
+					$jumlah_keluar 	= $item->barangkeluar_detail_jumlah;
+					$stok_posko 	= $this->db->get_where('stok_posko', ['posko_id' => $barang_keluar->barangkeluar_asal_posko, 'barang_id' => $item->barang_id])->row();
+
+					$jumlah_stok 	= $stok_posko->stok_posko_total;
+
+					$hasil 			= $jumlah_stok + $jumlah_keluar;
+
+					$this->db->update('stok_posko', ['stok_posko_total' => $hasil], ['posko_id' => $barang_keluar->barangkeluar_asal_posko, 'barang_id' => $item->barang_id]);
+				}
 
 				$remove = $this->_remove($id);
+
+				$this->db->delete('barangkeluar_detail', ['barangkeluar_id' => $id]);
 			}
 		}
 

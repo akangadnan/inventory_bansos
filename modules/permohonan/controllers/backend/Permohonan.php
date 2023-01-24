@@ -368,6 +368,7 @@ class Permohonan extends Admin {
 			$this->model_permohonan->change($id, $update_data);
 
 			$save_barangkeluar = [
+				'permohonan_id' => $id,
 				'kecamatan_id' 	=> $permohonan->kecamatan_id,
 				'kelurahan_id' 	=> $permohonan->kelurahan_id,
 				'tujuan_posko' 	=> $permohonan->posko_id,
